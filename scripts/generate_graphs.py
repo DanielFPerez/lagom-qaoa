@@ -13,95 +13,8 @@ import numpy as np
 sys.path.append("../")
 from src.utils.logger import setup_logger
 import src.utils.config as utils_config 
-from src.utils.graphs import save_list_graphs_to_json
+from src.utils.graphs import save_list_graphs_to_json, GRAPH_BUILDERS, REQUIRED_PARAMS
 
-
-GRAPH_BUILDERS = {
-    "erdos_renyi": lambda p: erdos_renyi_with_retry(n=p["n"], p=p["p"]),
-    "barabasi_albert": lambda p: barabasi_albert(n=p["n"], m=p["m"]),
-    "realistic_geometric": lambda p: realistic_geometric_with_retry(n=p["n"]),
-    #"caveman": lambda p: nx.caveman_graph(l=p["nc"], k=p["nk"]),
-    #"ladder": lambda p: nx.ladder_graph(n=p["n"])
-}
-
-REQUIRED_PARAMS = {
-    "erdos_renyi": {"n", "p"}, # n: number of nodes, p: probability of edge creation
-    "barabasi_albert": {"n", "m"}, # n: number of nodes, m: edges to attach from a new node to existing nodes
-    "realistic_geometric": {"n"},
-    #"caveman": {"nc", "nk"},
-    #"ladder": {"n"}
-}
-
-
-def with_spring_layout(g: nx.Graph, seed=None, scale=1.0):
-    """Assign spring-layout positions as node features."""
-    positions = nx.spring_layout(g, seed=seed, scale=scale)
-    for node, pos in positions.items():
-        g.nodes[node]["pos"] = tuple(pos)
-    return g
-
-
-def barabasi_albert(n: int, m: int, scale=1.0):
-    """Generate a Barabasi-Albert graph with spring layout."""
-    if m < 1 or m >= n:
-        raise ValueError("Parameter 'm' must be in the range [1, n-1].")
-    g = nx.barabasi_albert_graph(n, m)
-    g.graph["n"] = n
-    g.graph["m"] = m
-    g.graph["topology"] = "barabasi_albert"
-    return with_spring_layout(g, scale=scale)
-
-
-def erdos_renyi_with_retry(n: int, p: float, max_retries=1000):
-
-    """Generate an Erdos-Renyi graph with retries on failure."""
-    attempt = 0
-    while attempt < max_retries:
-        attempt += 1
-        g = nx.erdos_renyi_graph(n, p)
-        if nx.is_connected(g):
-            g.graph["n"] = n
-            g.graph["p"] = p
-            g.graph["topology"] = "erdos_renyi"
-            return with_spring_layout(g)
-    
-    raise Exception(f"Failed to generate a connected Erdos-Renyi graph "
-                    f"in {max_retries} tries.")
-
-
-def realistic_geometric_with_retry(n: int, side: int = 100, max_retries: int = 1000):
-    """Generate a realistic geometric graph with retries on failure."""
-
-    _CC2538_TX_POWER = 7
-    _ANT_GAIN = 3
-    _FREQUENCY = 2.45e9
-    _WAVELENGTH = scipy.constants.c / _FREQUENCY # Wavelength in m, for frequency G=2.45GHz #
-    _THR_DISTANCE = 50
-    scale_ratio = n/12
-
-    def generate_positions(n_nodes, in_side, in_scale_ratio):
-        scale = in_side * np.sqrt(in_scale_ratio)
-        return {
-            i: (np.random.uniform(high=scale), np.random.uniform(high=scale))
-            for i in range(n_nodes)
-        }
-
-    attempt = 0
-    while attempt < max_retries:
-        attempt += 1
-        positions = generate_positions(n, side, scale_ratio)
-        g = nx.random_geometric_graph(n, _THR_DISTANCE, pos=positions)
-        if nx.is_connected(g):
-            g.graph["n"] = n
-            g.graph["side"] = side
-            g.graph["scale_ratio"] = scale_ratio
-            g.graph["topology"] = "realistic_geometric"
-            for node_id, pos in positions.items():
-                g.nodes[node_id]['pos'] = pos
-            return g
-        
-    raise Exception(f"Failed to generate a connected graph "
-                    f"in {max_retries} tries.")
 
 
 def build_graphs(gtype: str, params, num: int):
@@ -159,6 +72,7 @@ def get_parser():
     return parser
 
 
+
 def main(args):
     try:
         param_dict = parse_kv_pairs(args.params)
@@ -190,6 +104,7 @@ def main(args):
     save_list_graphs_to_json(graphs, file_path)
 
     logging.info(f"Saved {len(graphs)} graph(s) to {file_path}")
+    
     
 
 if __name__ == '__main__':
