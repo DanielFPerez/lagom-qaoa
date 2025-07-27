@@ -1,4 +1,6 @@
 import os
+import json
+import hashlib
 
 def check_save_folder(save_folder: str) -> bool:
     """
@@ -37,3 +39,10 @@ def get_project_root(target_name="lagom-qaoa") -> str:
     if ctr <= 0:
         raise FileNotFoundError(f"Could not find project root directory with name: {target_name}")
     return current_dir
+
+
+def hash_graph_dict(d: dict, length: int = 16) -> str:
+    # Ensure consistent ordering with sort_keys=True
+    serialized = json.dumps(d, sort_keys=True)
+    full_hash = hashlib.sha256(serialized.encode()).hexdigest()
+    return full_hash[:length]  # Truncate to 16 hex characters

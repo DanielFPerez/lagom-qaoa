@@ -1,6 +1,7 @@
 import os 
 import networkx as nx
-from typing import List
+from typing import List, Dict
+import numpy as np
 
 
 GRAPH_BUILDERS = {
@@ -8,7 +9,7 @@ GRAPH_BUILDERS = {
     "barabasi_albert": lambda p: barabasi_albert(n=p["n"], m=p["m"]),
     "realistic_geometric": lambda p: realistic_geometric_with_retry(n=p["n"]),
     "cycle": lambda p: cycle_with_spring_layout(n=p["n"]),
-    #"caveman": lambda p: nx.caveman_graph(l=p["nc"], k=p["nk"]),
+    "caveman": lambda p: caveman_with_spring_layout(nc=p["nc"], ck=p["ck"]),
     #"ladder": lambda p: nx.ladder_graph(n=p["n"])
 }
 
@@ -16,8 +17,8 @@ REQUIRED_PARAMS = {
     "erdos_renyi": {"n", "p"}, # n: number of nodes, p: probability of edge creation
     "barabasi_albert": {"n", "m"}, # n: number of nodes, m: edges to attach from a new node to existing nodes
     "realistic_geometric": {"n"},
-    "cycle": {"n"}
-    #"caveman": {"nc", "nk"},
+    "cycle": {"n"},
+    "caveman": {"nc", "ck"},
     #"ladder": {"n"}
 }
 
@@ -49,6 +50,17 @@ def cycle_with_spring_layout(n: int, scale=1.0):
     return with_spring_layout(g, scale=scale)
 
 
+def caveman_with_spring_layout(nc: int, ck:int):
+    """Generate a connected caveman graph"""
+    g = nx.connected_caveman_graph(nc, ck)
+    g.graph["topology"] = "caveman"
+    g.graph["n"] = nc * ck
+    g.graph["nc"] = nc
+    g.graph["ck"] = ck
+    return with_spring_layout(g)
+
+
+
 def erdos_renyi_with_retry(n: int, p: float, max_retries=1000):
 
     """Generate an Erdos-Renyi graph with retries on failure."""
@@ -72,7 +84,7 @@ def realistic_geometric_with_retry(n: int, side: int = 100, max_retries: int = 1
     _CC2538_TX_POWER = 7
     _ANT_GAIN = 3
     _FREQUENCY = 2.45e9
-    _WAVELENGTH = scipy.constants.c / _FREQUENCY # Wavelength in m, for frequency G=2.45GHz #
+    #_WAVELENGTH = scipy.constants.c / _FREQUENCY # Wavelength in m, for frequency G=2.45GHz #
     _THR_DISTANCE = 50
     scale_ratio = n/12
 
@@ -156,3 +168,26 @@ def load_list_graphs_from_json(file_path: str) -> List[nx.Graph]:
     logger.info(f"Loaded {len(graphs)} graph(s) from {file_path}")
     
     return graphs
+
+
+def read_graph_from_dict(graph_dict: Dict) -> nx.Graph:
+    """
+    Read a graph from a dictionary representation.
+    """
+    return nx.node_link_graph(graph_dict, edges="edges")
+
+
+def open_merged_graph_json(src_path: str):
+    """
+    Open a merged graph JSON file and return the list of graphs.
+    Parameters:
+    - src_path (str): Path to the source JSON file containing merged graphs.
+    Returns:
+    - List[dict]: List of merged graphs as dictionaries.
+    """
+    import json
+    if not os.path.exists(src_path):
+        raise IOError(f"Path does not exists: {src_path}")
+    with open(src_path, "r") as f:
+        merged_graphs = json.load(f)
+    return merged_graphs
