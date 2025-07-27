@@ -42,3 +42,15 @@ def eval_circuit(graph: nx.Graph, p: int, gamma, beta, reps: int = 500):
         maxcut_value += cut_value
     
     return maxcut_value / reps
+
+
+def estimate_random_average_energy(graph: nx.Graph, p: int, reps: int = 128, n_samples: int = 100) -> float:
+    avg_energy = 0.0
+
+    for _ in range(n_samples):
+        beta = np.random.uniform(-np.pi, np.pi, p)
+        gamma = np.random.uniform(-np.pi, np.pi, p)
+        
+        avg_energy += eval_circuit(graph, p, gamma, beta, reps)
+
+    return avg_energy / n_samples

@@ -33,7 +33,8 @@ def qaoa_gradient(params, graph, p, shift=np.pi/8):
 
 
 # ----------------- NLopt Optimization ----------------- #
-def optimize_qaoa_nlopt(graph: nx.Graph, p: int, method='COBYLA', in_xtol_rel: float = 1e-4, in_ftol_abs: float = 1e-3):
+def optimize_qaoa_nlopt(graph: nx.Graph, p: int, method='COBYLA', in_xtol_rel: float = 1e-4, in_ftol_abs: float = 1e-3,
+                        gamma_init = None, beta_init=None):
     logger = logging.getLogger(__name__)
     dim = 2 * p
     method = method.upper()
@@ -76,8 +77,14 @@ def optimize_qaoa_nlopt(graph: nx.Graph, p: int, method='COBYLA', in_xtol_rel: f
         opt.set_min_objective(obj_nograd)
 
     # First p values: gamma ∈ [0, 2π], next p values: beta ∈ [0, π]
-    initial_gamma = np.random.uniform(0, 2 * np.pi, p)
-    initial_beta = np.random.uniform(0, np.pi, p)
+    if gamma_init is None:
+        initial_gamma = np.random.uniform(0, 2 * np.pi, p)
+    else:
+        initial_gamma = gamma_init
+    if beta_init is None:
+        initial_beta = np.random.uniform(0, np.pi, p)
+    else:
+        initial_beta = beta_init
     initial_params = np.concatenate([initial_gamma, initial_beta])
     
     result = opt.optimize(initial_params)

@@ -1,0 +1,440 @@
+import os
+import gymnasium as gym
+import torch
+import numpy as np
+import torch.nn as nn
+import torch.optim as optim
+from torch.distributions import Normal
+import networkx as nx
+import cirq
+from typing import List, Dict, Optional, Tuple, Any
+from collections import deque
+import random
+import json
+from datetime import datetime
+
+import src.qaoa.qaoa_model as qaoa_model
+import src.utils.graphs as graph_utils
+import src.utils.config as config_utils
+import src.solvers.classic_nlopt as classic_nlopt
+
+# Device config
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+# [Previous QAOA circuit functions remain the same]
+
+class Actor(nn.Module):
+    def __init__(self, state_dim, action_dim):
+        super(Actor, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, 64),
+            nn.Tanh(),
+            nn.Linear(64, 64),
+            nn.Tanh(),
+            nn.Linear(64, action_dim),
+            nn.Tanh()
+        )
+        self.log_std = nn.Parameter(torch.ones(action_dim) * -6.0)
+
+    def forward(self, state):
+        mu = 0.1 * self.net(state)
+        std = torch.exp(self.log_std)
+        return mu, std
+
+
+class Critic(nn.Module):
+    def __init__(self, state_dim):
+        super(Critic, self).__init__()
+        self.net = nn.Sequential(
+            nn.Linear(state_dim, 64),
+            nn.Tanh(),
+            nn.Linear(64, 64),
+            nn.Tanh(),
+            nn.Linear(64, 1)
+        )
+
+    def forward(self, state):
+        return self.net(state)
+
+class QAOAEnv(gym.Env):
+    def __init__(self, graph: nx.Graph, p: int, reps: int = 128, history_len: int = 4):
+        self.graph = graph
+        self.p = p
+        self.reps = reps
+        self.L = history_len
+        self.qubits = cirq.LineQubit.range(len(graph.nodes))
+        self.param_dim = 2 * p
+        self.history = deque(maxlen=self.L)
+        self.normalization = qaoa_model.estimate_random_average_energy(graph, p, reps=reps, n_samples=500)
+        self.reset()
+
+    def step(self, action):
+        new_params = self.params + action
+        f_new = self.eval_qaoa(new_params)
+        reward = (f_new - self.f_val) / self.normalization 
+        self.update_state(new_params, f_new)
+        done = False
+        return self.state, reward, done, {'f_val': self.f_val}
+
+    def reset(self):
+        beta_params = np.random.uniform(0, np.pi, self.p)
+        gamma_params = np.random.uniform(0, 2*np.pi, self.p)
+        self.params = np.concatenate([gamma_params, beta_params])
+        
+        self.f_val = self.eval_qaoa(self.params)
+        self.history.clear()
+        self.state = self.build_state()
+        return self.state
+
+    def update_state(self, new_params, new_f_val):
+        delta_f = new_f_val - self.f_val
+        delta_params = new_params - self.params
+        self.f_val = new_f_val
+        self.params = new_params
+        self.history.append(np.concatenate(([delta_f], delta_params)))
+        self.state = self.build_state()
+
+    def build_state(self):
+        state = np.zeros((self.L, self.param_dim + 1))
+        for i, h in enumerate(self.history):
+            state[i] = h
+        return state.flatten()
+
+    def eval_qaoa(self, params):
+        gamma = params[:self.p]
+        beta = params[self.p:]
+        return qaoa_model.eval_circuit(self.graph, self.p, gamma, beta, self.reps)
+
+
+# Define the PPO agent
+class PPO:
+    def __init__(self, state_dim, action_dim, clip_epsilon=0.2, gamma=0.99, lr=3e-4):
+        self.actor = Actor(state_dim, action_dim).to(device)
+        self.critic = Critic(state_dim).to(device)
+        self.optimizer_actor = optim.Adam(self.actor.parameters(), lr=lr)
+        self.optimizer_critic = optim.Adam(self.critic.parameters(), lr=lr)
+        self.clip_epsilon = clip_epsilon
+        self.gamma = gamma
+        self.state_dim = state_dim
+        self.action_dim = action_dim
+
+    def select_action(self, state, deterministic=False):
+        state = torch.FloatTensor(state).to(device)
+        mu, std = self.actor(state)
+        if deterministic:
+            action = mu
+            log_prob = torch.zeros(1)
+        else:
+            dist = Normal(mu, std)
+            action = dist.sample()
+            log_prob = dist.log_prob(action).sum(dim=-1)
+        return action.detach().cpu().numpy(), log_prob.detach().cpu().item()
+
+    def evaluate(self, state, action):
+        # Accept both numpy/arrays and tensors; ensure float32 on the right device
+        if not torch.is_tensor(state):
+            state = torch.tensor(state, dtype=torch.float32, device=device)
+        else:
+            state = state.to(device).float()
+
+        if not torch.is_tensor(action):
+            action = torch.tensor(action, dtype=torch.float32, device=device)
+        else:
+            action = action.to(device).float()
+
+        mu, std = self.actor(state)
+        dist = Normal(mu, std)
+        log_prob = dist.log_prob(action).sum(dim=-1)
+        entropy = dist.entropy().sum(dim=-1)
+        value = self.critic(state).squeeze()
+        return log_prob, entropy, value
+
+    def update(self, memory):
+        states, actions, log_probs_old, rewards, dones = zip(*memory)
+        returns = []
+        discounted_sum = 0
+        for reward, done in zip(reversed(rewards), reversed(dones)):
+            if done:
+                discounted_sum = 0
+            discounted_sum = reward + self.gamma * discounted_sum
+            returns.insert(0, discounted_sum)
+        returns = torch.FloatTensor(returns).to(device)
+        states = torch.FloatTensor(np.array(states)).to(device)
+        actions = torch.FloatTensor(np.array(actions)).to(device)
+        log_probs_old = torch.FloatTensor(log_probs_old).to(device)
+
+        for _ in range(5):
+            log_probs, entropy, values = self.evaluate(states, actions)
+            advantages = returns - values.detach()
+            ratios = torch.exp(log_probs - log_probs_old)
+            surr1 = ratios * advantages
+            surr2 = torch.clamp(ratios, 1 - self.clip_epsilon, 1 + self.clip_epsilon) * advantages
+            loss_actor = -torch.min(surr1, surr2).mean()
+            loss_critic = (returns - values).pow(2).mean()
+            self.optimizer_actor.zero_grad()
+            loss_actor.backward()
+            self.optimizer_actor.step()
+            self.optimizer_critic.zero_grad()
+            loss_critic.backward()
+            self.optimizer_critic.step()
+
+    def save(self, path):
+        """Save model to disk"""
+        torch.save({
+            'actor_state_dict': self.actor.state_dict(),
+            'critic_state_dict': self.critic.state_dict(),
+            'optimizer_actor_state_dict': self.optimizer_actor.state_dict(),
+            'optimizer_critic_state_dict': self.optimizer_critic.state_dict(),
+            'state_dim': self.state_dim,
+            'action_dim': self.action_dim,
+            'clip_epsilon': self.clip_epsilon,
+            'gamma': self.gamma
+        }, path)
+
+    def load(self, path):
+        """Load model from disk"""
+        checkpoint = torch.load(path, map_location=device)
+        self.actor.load_state_dict(checkpoint['actor_state_dict'])
+        self.critic.load_state_dict(checkpoint['critic_state_dict'])
+        self.optimizer_actor.load_state_dict(checkpoint['optimizer_actor_state_dict'])
+        self.optimizer_critic.load_state_dict(checkpoint['optimizer_critic_state_dict'])
+
+def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int, 
+                         T: int = 64, reps: int = 128, L: int = 4) -> Dict[str, float]:
+    """Evaluate the agent on test set"""
+    all_rewards = []
+    all_final_values = []
+    
+    for elem in test_graphs:
+        graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
+        env = QAOAEnv(graph, p=p, reps=reps, history_len=L)
+        state = env.reset()
+        episode_reward = 0
+        
+        for t in range(T):
+            action, _ = agent.select_action(state, deterministic=True)
+            next_state, reward, done, info = env.step(action)
+            episode_reward += reward
+            state = next_state
+            if done:
+                break
+        
+        all_rewards.append(episode_reward)
+        all_final_values.append(info['f_val'])
+    
+    return {
+        'mean_reward': np.mean(all_rewards),
+        'std_reward': np.std(all_rewards),
+        'mean_final_value': np.mean(all_final_values),
+        'std_final_value': np.std(all_final_values)
+    }
+
+def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
+                  p: int, dst_dir_path: str, epochs: int = 750, 
+                  episodes_per_epoch: int = 128, T: int = 64, 
+                  reps: int = 128, L: int = 4) -> Dict:
+    """Train RL agent with round-robin on training graphs"""
+    
+    # Create destination directory
+    os.makedirs(dst_dir_path, exist_ok=True)
+    
+    # Initialize agent
+    state_dim = (2 * p + 1) * L
+    action_dim = 2 * p
+    agent = PPO(state_dim, action_dim)
+    
+    # Training metrics storage
+    metrics = {
+        'train_rewards': [],
+        'test_evaluations': [],
+        'best_test_reward': -float('inf'),
+        'best_epoch': 0
+    }
+    
+    # Training loop
+    for epoch in range(epochs):
+        epoch_rewards = []
+        batch_memory = []
+        
+        # Collect trajectories with round-robin
+        for ep in range(episodes_per_epoch):
+            # Round-robin graph selection
+            graph_idx = ep % len(GTrain)
+            print(f"[Epoch {epoch}] Training on graph {graph_idx} with hash {GTrain[graph_idx]['id']}")
+            graph = graph_utils.read_graph_from_dict(GTrain[graph_idx]["graph_dict"])
+            
+            env = QAOAEnv(graph, p=p, reps=reps, history_len=L)
+            memory = []
+            state = env.reset()
+            episode_reward = 0
+            
+            for t in range(T):
+                action, log_prob = agent.select_action(state)
+                next_state, reward, done, _ = env.step(action)
+                memory.append((state, action, log_prob, reward, done))
+                episode_reward += reward
+                state = next_state
+                if done:
+                    break
+            
+            batch_memory.extend(memory)
+            epoch_rewards.append(episode_reward)
+        
+        # Update agent with collected batch
+        agent.update(batch_memory)
+        
+        # Store training metrics
+        mean_train_reward = np.mean(epoch_rewards)
+        metrics['train_rewards'].append({
+            'epoch': epoch,
+            'mean_reward': mean_train_reward,
+            'std_reward': np.std(epoch_rewards)
+        })
+        
+        # Evaluate on test set every 2 epochs
+        if epoch % 2 == 0:
+            test_results = evaluate_on_test_set(agent, GTest, p, T, reps, L)
+            test_results['epoch'] = epoch
+            metrics['test_evaluations'].append(test_results)
+            
+            # Save best model
+            if test_results['mean_reward'] > metrics['best_test_reward']:
+                metrics['best_test_reward'] = test_results['mean_reward']
+                metrics['best_epoch'] = epoch
+                model_path = os.path.join(dst_dir_path, 'best_model.pth')
+                agent.save(model_path)
+                print(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+            
+            print(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
+                  f"Test reward: {test_results['mean_reward']:.4f} ± {test_results['std_reward']:.4f}")
+        else:
+            print(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
+    
+    # Save final model and metrics
+    final_model_path = os.path.join(dst_dir_path, 'final_model.pth')
+    agent.save(final_model_path)
+    
+    metrics_path = os.path.join(dst_dir_path, 'training_metrics.json')
+    with open(metrics_path, 'w') as f:
+        json.dump(metrics, f, indent=2)
+    
+    return metrics
+
+
+class QAOAOptimizer:
+    """Class for QAOA optimization using trained RL agent"""
+    
+    def __init__(self, model_path: str, p: int, L: int = 4):
+        self.p = p
+        self.L = L
+        self.state_dim = (2 * p + 1) * L
+        self.action_dim = 2 * p
+        
+        # Load trained agent
+        self.agent = PPO(self.state_dim, self.action_dim)
+        self.agent.load(model_path)
+        self.agent.actor.eval()
+        self.agent.critic.eval()
+    
+    def optimize_rl_only(self, graph: nx.Graph, T: int = 64, 
+                        reps: int = 128) -> Tuple[np.ndarray, float]:
+        """Optimize using only RL agent"""
+        env = QAOAEnv(graph, self.p, reps=reps, history_len=self.L)
+        state = env.reset()
+        
+        best_params = env.params.copy()
+        best_value = env.f_val
+        
+        for t in range(T):
+            action, _ = self.agent.select_action(state, deterministic=True)
+            next_state, reward, done, info = env.step(action)
+            
+            if info['f_val'] > best_value:
+                best_value = info['f_val']
+                best_params = env.params.copy()
+            
+            state = next_state
+            if done:
+                break
+        
+        return best_params, best_value
+    
+    def optimize_rl_then_nlopt(self, graph: nx.Graph, optimize_qaoa_nlopt, 
+                              T_rl: int = 32, reps: int = 128,
+                              method: str = 'Nelder-Mead', 
+                              in_xtol_rel: float = 1e-4, 
+                              in_ftol_abs: float = 1e-3) -> Tuple[np.ndarray, float]:
+        """Optimize using RL for T_rl steps, then continue with NLopt"""
+        
+        # First use RL to get to a good region
+        env = QAOAEnv(graph, self.p, reps=reps, history_len=self.L)
+        state = env.reset()
+        
+        for t in range(T_rl):
+            action, _ = self.agent.select_action(state, deterministic=True)
+            next_state, reward, done, _ = env.step(action)
+            state = next_state
+            if done:
+                break
+        
+        # Get current parameters from RL
+        rl_params = env.params
+        gamma_init = rl_params[:self.p]
+        beta_init = rl_params[self.p:]
+        
+        # Continue with NLopt optimization
+        final_params, final_opt_value, status_code  = classic_nlopt.optimize_qaoa_nlopt(
+            graph=graph,
+            p=self.p,
+            method=method,
+            in_xtol_rel=in_xtol_rel,
+            in_ftol_abs=in_ftol_abs,
+            gamma_init=gamma_init,
+            beta_init=beta_init
+        )
+        
+        return final_params, final_opt_value, status_code
+
+# Example usage:
+if __name__ == "__main__":
+    graphs_dir = "data/optimized_graphs_classic"
+
+    src_read_dir = os.path.join(config_utils.get_project_root(), graphs_dir)
+
+    limit = 10
+    GTrain = graph_utils.open_merged_graph_json(os.path.join(src_read_dir, "train_results.json"))
+    GTrain = GTrain[0:limit]
+    print(f"Training set has {len(GTrain)} instances")
+
+    GTest = graph_utils.open_merged_graph_json(os.path.join(src_read_dir, "test_results.json"))
+    GTest = GTest[0:limit]
+    print(f"Test set has {len(GTest)} instances")
+    
+    # Train the model
+    p = 1
+    dst_dir = "./outputs/debug_qaoa_rl_model"
+    n_epochs = 10
+    eps_per_epoch = 8
+    
+    print("Starting training...")
+    metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch) # Use 750 for real training
+    
+    # Load and use the trained model
+    print("\nLoading best model for inference...")
+    model_path = os.path.join(dst_dir, 'best_model.pth')
+    optimizer = QAOAOptimizer(model_path, p)
+    
+    # Example: optimize a new graph
+    test_graph = nx.erdos_renyi_graph(10, 0.5)
+    
+    # RL-only optimization
+    params_rl, value_rl = optimizer.optimize_rl_only(test_graph)
+    print(f"\nRL-only optimization: value = {value_rl:.4f}")
+    
+    # # RL + NLopt optimization (uncomment when you have optimize_qaoa_nlopt)
+    # params_hybrid, value_hybrid, status_hybrid = optimizer.optimize_rl_then_nlopt(
+    #     test_graph, 
+    #     optimize_qaoa_nlopt,
+    #     T_rl=32
+    # )
+    # print(f"RL+NLopt optimization: value = {value_hybrid:.4f}")
