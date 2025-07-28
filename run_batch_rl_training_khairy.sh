@@ -19,6 +19,10 @@ run_training() {
         --n_epochs 400 \
         --eps_per_epoch 128 \
         --hidden_dim 256 \
+        --graphs_per_episode 70 \
+        --T 128 \
+        --patience 50 \
+        --seed 42 \
         > logs/training_p${p}_${timestamp}.out 2>&1
     
     echo "Finished training for p=$p at $(date +"%Y-%m-%d_%H-%M-%S")"

@@ -124,6 +124,7 @@ class PPO:
         self.gamma = gamma
         self.state_dim = state_dim
         self.action_dim = action_dim
+        self.hidden_dim = hidden_dim
 
     def select_action(self, state, deterministic=False):
         state = torch.FloatTensor(state).to(self.device)
@@ -193,6 +194,7 @@ class PPO:
             'optimizer_actor_state_dict': self.optimizer_actor.state_dict(),
             'optimizer_critic_state_dict': self.optimizer_critic.state_dict(),
             'state_dim': self.state_dim,
+            'hidden_dim': self.hidden_dim,
             'action_dim': self.action_dim,
             'clip_epsilon': self.clip_epsilon,
             'gamma': self.gamma
