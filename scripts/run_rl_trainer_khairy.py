@@ -7,21 +7,23 @@ import torch.optim as optim
 from torch.distributions import Normal
 import networkx as nx
 import cirq
-from typing import List, Dict, Optional, Tuple, Any
+from typing import List, Dict, Tuple, Any
 from collections import deque
-import random
 import json
-from datetime import datetime
+import time
+import argparse
+import logging
+import random
 
 import src.qaoa.qaoa_model as qaoa_model
 import src.utils.graphs as graph_utils
 import src.utils.config as config_utils
 import src.solvers.classic_nlopt as classic_nlopt
+from src.utils.logger import setup_logger
 
 # Device config
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-# [Previous QAOA circuit functions remain the same]
 
 class Actor(nn.Module):
     def __init__(self, state_dim, action_dim):
@@ -232,9 +234,15 @@ def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int,
 def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
                   p: int, dst_dir_path: str, epochs: int = 750, 
                   episodes_per_epoch: int = 128, T: int = 64, 
-                  reps: int = 128, L: int = 4) -> Dict:
+                  reps: int = 128, L: int = 4, patience: int = 40, seed: int = 42) -> Dict:
     """Train RL agent with round-robin on training graphs"""
-    
+
+    logger = logging.getLogger(__name__)
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
     # Create destination directory
     os.makedirs(dst_dir_path, exist_ok=True)
     
@@ -250,18 +258,21 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
         'best_test_reward': -float('inf'),
         'best_epoch': 0
     }
+    patience_counter = 0
+    graphs_per_epoch = min(len(GTrain), 50)
     
     # Training loop
     for epoch in range(epochs):
         epoch_rewards = []
         batch_memory = []
-        
+        GTrain_subset = random.sample(GTrain, graphs_per_epoch)
+        t_start = time.time()
         # Collect trajectories with round-robin
         for ep in range(episodes_per_epoch):
             # Round-robin graph selection
-            graph_idx = ep % len(GTrain)
-            print(f"[Epoch {epoch}] Training on graph {graph_idx} with hash {GTrain[graph_idx]['id']}")
-            graph = graph_utils.read_graph_from_dict(GTrain[graph_idx]["graph_dict"])
+            graph_idx = ep % len(GTrain_subset)
+            logger.info(f"[Epoch {epoch}] Training on graph {graph_idx} with hash {GTrain_subset[graph_idx]['id']}")
+            graph = graph_utils.read_graph_from_dict(GTrain_subset[graph_idx]["graph_dict"])
             
             env = QAOAEnv(graph, p=p, reps=reps, history_len=L)
             memory = []
@@ -291,6 +302,8 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
             'std_reward': np.std(epoch_rewards)
         })
         
+        logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
+
         # Evaluate on test set every 2 epochs
         if epoch % 2 == 0:
             test_results = evaluate_on_test_set(agent, GTest, p, T, reps, L)
@@ -299,16 +312,24 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
             
             # Save best model
             if test_results['mean_reward'] > metrics['best_test_reward']:
+                patience_counter = 0
                 metrics['best_test_reward'] = test_results['mean_reward']
                 metrics['best_epoch'] = epoch
                 model_path = os.path.join(dst_dir_path, 'best_model.pth')
                 agent.save(model_path)
-                print(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+                logger.info(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+            else:
+                patience_counter += 2
             
-            print(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
+            logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
                   f"Test reward: {test_results['mean_reward']:.4f} ± {test_results['std_reward']:.4f}")
+            
+            if patience_counter >= patience:
+                logger.info(f"Early stopping at epoch {epoch}")
+                break
+
         else:
-            print(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
+            logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
     
     # Save final model and metrics
     final_model_path = os.path.join(dst_dir_path, 'final_model.pth')
@@ -395,41 +416,86 @@ class QAOAOptimizer:
         
         return final_params, final_opt_value, status_code
 
+
+
+def get_parser():
+
+    parser = argparse.ArgumentParser(description="Train QAOA RL agent")
+
+    parser.add_argument("--graphs_dir",type=str, default="data/optimized_graphs_classic",
+                        help="Directory with graph datasets (expects train_results.json / test_results.json).")
+    parser.add_argument("--p", type=int, default=1, 
+                        help="QAOA depth (number of (γ, β) layers).")
+    parser.add_argument("--dst_dir", type=str, default="./outputs/rl_model_khairy",
+                        help="Destination directory for checkpoints and metrics.",)
+    parser.add_argument("--n_epochs", type=int, default=300, 
+                        help="Number of training epochs.")
+    parser.add_argument("--eps_per_epoch", type=int, default=128, 
+                        help="Number of episodes per epoch.")
+    parser.add_argument("--T", type=int , default=64,
+                        help="Episode length (time steps per episode).")
+    parser.add_argument("--seed", type=int, default=42,
+                        help="Random seed for reproducibility.")
+    
+    # Logging parameters
+    parser.add_argument("--log_filename", type=str, default="qaoa_solver.log",
+                        help="Name of the log file")
+    parser.add_argument("--log_level", type=str, default="INFO", 
+                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+                        help="Logging level")
+    parser.add_argument("--log_format", type=str, default="", 
+                        help="Format for log messages.")
+    return parser
+
 # Example usage:
 if __name__ == "__main__":
-    graphs_dir = "data/optimized_graphs_classic"
+    parser = get_parser()
+    args = parser.parse_args()
 
-    src_read_dir = os.path.join(config_utils.get_project_root(), graphs_dir)
+    log_path = os.path.join(config_utils.get_project_root(), f"outputs/logs/{args.log_filename}")
 
-    limit = 10
+    # log level from arguments
+    log_level = getattr(logging, args.log_level, logging.INFO)
+
+    # Setup logging with arguments
+    setup_logger(log_file_path=log_path, log_format=args.log_format,
+                 console_level=log_level, 
+                 file_level=log_level)
+    
+    logger = logging.getLogger(__name__)
+
+    src_read_dir = os.path.join(config_utils.get_project_root(), args.graphs_dir)
+
     GTrain = graph_utils.open_merged_graph_json(os.path.join(src_read_dir, "train_results.json"))
-    GTrain = GTrain[0:limit]
-    print(f"Training set has {len(GTrain)} instances")
+    logger.info(f"Training set has {len(GTrain)} instances")
 
     GTest = graph_utils.open_merged_graph_json(os.path.join(src_read_dir, "test_results.json"))
-    GTest = GTest[0:limit]
-    print(f"Test set has {len(GTest)} instances")
+    logger.info(f"Test set has {len(GTest)} instances")
     
     # Train the model
-    p = 1
-    dst_dir = "./outputs/debug_qaoa_rl_model"
-    n_epochs = 10
-    eps_per_epoch = 8
+    p = args.p
+    dst_dir = args.dst_dir + f"_p{p}"
+    n_epochs = args.n_epochs
+    eps_per_epoch = args.eps_per_epoch
+    T = args.T
     
-    print("Starting training...")
-    metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch) # Use 750 for real training
+    logger.info(f"Initializing training with parameters p: {p}, n_epochs: {n_epochs} eps_per_epoch: {eps_per_epoch}, T: {T}")
+    logger.info(f"Destination directory: {dst_dir}")
+    
+    logger.info("Starting training...")
+    metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch, T=T, seed=args.seed) # Use 750 for real training
     
     # Load and use the trained model
-    print("\nLoading best model for inference...")
-    model_path = os.path.join(dst_dir, 'best_model.pth')
-    optimizer = QAOAOptimizer(model_path, p)
+    # logger.info("\nLoading best model for inference...")
+    # model_path = os.path.join(dst_dir, 'best_model.pth')
+    # optimizer = QAOAOptimizer(model_path, p)
     
-    # Example: optimize a new graph
-    test_graph = nx.erdos_renyi_graph(10, 0.5)
+    # # Example: optimize a new graph
+    # test_graph = nx.erdos_renyi_graph(10, 0.5)
     
-    # RL-only optimization
-    params_rl, value_rl = optimizer.optimize_rl_only(test_graph)
-    print(f"\nRL-only optimization: value = {value_rl:.4f}")
+    # # RL-only optimization
+    # params_rl, value_rl = optimizer.optimize_rl_only(test_graph)
+    # logger.info(f"\nRL-only optimization: value = {value_rl:.4f}")
     
     # # RL + NLopt optimization (uncomment when you have optimize_qaoa_nlopt)
     # params_hybrid, value_hybrid, status_hybrid = optimizer.optimize_rl_then_nlopt(
@@ -437,4 +503,4 @@ if __name__ == "__main__":
     #     optimize_qaoa_nlopt,
     #     T_rl=32
     # )
-    # print(f"RL+NLopt optimization: value = {value_hybrid:.4f}")
+    # logger.info(f"RL+NLopt optimization: value = {value_hybrid:.4f}")
