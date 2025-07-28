@@ -1561,3 +1561,86 @@ INFO	__main__ |:|	[Epoch 100] Training on graph 10 with hash 8d2f837e8e13665a
 INFO	__main__ |:|	[Epoch 100] Training on graph 20 with hash 5bb37b28fd29a3e5
 INFO	__main__ |:|	[Epoch 100] took 4.26 minutes.
 INFO	__main__ |:|	Evaluating on test set with 50 graphs...
+INFO	__main__ |:|	[Epoch 100] Test evaluation took 10.49 minutes.
+INFO	__main__ |:|	[Epoch 100] Train reward: 0.0149, Test reward: -0.0061 ± 0.0775
+INFO	__main__ |:|	[Epoch 101] Training on graph 0 with hash a8e32a6587a76c8b
+INFO	__main__ |:|	[Epoch 101] Training on graph 10 with hash 9e79b4ddf5e7806f
+INFO	__main__ |:|	[Epoch 101] Training on graph 20 with hash 88714db894004659
+INFO	__main__ |:|	[Epoch 101] Training on graph 30 with hash 3d910985de40d2ef
+INFO	__main__ |:|	[Epoch 101] Training on graph 40 with hash 0afcb0efb83d20d1
+INFO	__main__ |:|	[Epoch 101] Training on graph 0 with hash a8e32a6587a76c8b
+INFO	__main__ |:|	[Epoch 101] Training on graph 10 with hash 9e79b4ddf5e7806f
+INFO	__main__ |:|	[Epoch 101] Training on graph 20 with hash 88714db894004659
+INFO	__main__ |:|	[Epoch 101] Training on graph 30 with hash 3d910985de40d2ef
+INFO	__main__ |:|	[Epoch 101] Training on graph 40 with hash 0afcb0efb83d20d1
+INFO	__main__ |:|	[Epoch 101] Training on graph 0 with hash a8e32a6587a76c8b
+INFO	__main__ |:|	[Epoch 101] Training on graph 10 with hash 9e79b4ddf5e7806f
+INFO	__main__ |:|	[Epoch 101] Training on graph 20 with hash 88714db894004659
+INFO	__main__ |:|	[Epoch 101] took 4.38 minutes.
+INFO	__main__ |:|	[Epoch 101] Train reward: 0.0017
+INFO	__main__ |:|	[Epoch 102] Training on graph 0 with hash 9ba4297ae1b7cd45
+INFO	__main__ |:|	[Epoch 102] Training on graph 10 with hash 42b6b04f9f50a126
+INFO	__main__ |:|	[Epoch 102] Training on graph 20 with hash 4e660426c9cd4315
+INFO	__main__ |:|	[Epoch 102] Training on graph 30 with hash 2b71bd37515254bc
+INFO	__main__ |:|	[Epoch 102] Training on graph 40 with hash 9d8cb82ab0de9f2f
+INFO	__main__ |:|	[Epoch 102] Training on graph 0 with hash 9ba4297ae1b7cd45
+INFO	__main__ |:|	[Epoch 102] Training on graph 10 with hash 42b6b04f9f50a126
+INFO	__main__ |:|	[Epoch 102] Training on graph 20 with hash 4e660426c9cd4315
+INFO	__main__ |:|	[Epoch 102] Training on graph 30 with hash 2b71bd37515254bc
+INFO	__main__ |:|	[Epoch 102] Training on graph 40 with hash 9d8cb82ab0de9f2f
+INFO	__main__ |:|	[Epoch 102] Training on graph 0 with hash 9ba4297ae1b7cd45
+INFO	__main__ |:|	[Epoch 102] Training on graph 10 with hash 42b6b04f9f50a126
+INFO	__main__ |:|	[Epoch 102] Training on graph 20 with hash 4e660426c9cd4315
+INFO	__main__ |:|	[Epoch 102] took 4.36 minutes.
+INFO	__main__ |:|	[Epoch 102] Train reward: 0.0070
+INFO	__main__ |:|	[Epoch 103] Training on graph 0 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 103] Training on graph 10 with hash 0d7499b91c3cee8b
+INFO	__main__ |:|	[Epoch 103] Training on graph 20 with hash 074a17852c4c5ab0
+INFO	__main__ |:|	[Epoch 103] Training on graph 30 with hash 35cb56636a138d3d
+INFO	__main__ |:|	[Epoch 103] Training on graph 40 with hash 4b63627fdd1485cb
+INFO	__main__ |:|	[Epoch 103] Training on graph 0 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 103] Training on graph 10 with hash 0d7499b91c3cee8b
+INFO	__main__ |:|	[Epoch 103] Training on graph 20 with hash 074a17852c4c5ab0
+INFO	__main__ |:|	[Epoch 103] Training on graph 30 with hash 35cb56636a138d3d
+INFO	__main__ |:|	[Epoch 103] Training on graph 40 with hash 4b63627fdd1485cb
+INFO	__main__ |:|	[Epoch 103] Training on graph 0 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 103] Training on graph 10 with hash 0d7499b91c3cee8b
+INFO	__main__ |:|	[Epoch 103] Training on graph 20 with hash 074a17852c4c5ab0
+INFO	__main__ |:|	[Epoch 103] took 4.34 minutes.
+INFO	__main__ |:|	[Epoch 103] Train reward: 0.0113
+INFO	__main__ |:|	[Epoch 104] Training on graph 0 with hash bf0cfdbbd2b35725
+INFO	__main__ |:|	[Epoch 104] Training on graph 10 with hash 808e51aca920ac3d
+INFO	__main__ |:|	[Epoch 104] Training on graph 20 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 104] Training on graph 30 with hash 723b9968b232eef7
+INFO	__main__ |:|	[Epoch 104] Training on graph 40 with hash 739ff8682c14878d
+INFO	__main__ |:|	[Epoch 104] Training on graph 0 with hash bf0cfdbbd2b35725
+INFO	__main__ |:|	[Epoch 104] Training on graph 10 with hash 808e51aca920ac3d
+INFO	__main__ |:|	[Epoch 104] Training on graph 20 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 104] Training on graph 30 with hash 723b9968b232eef7
+INFO	__main__ |:|	[Epoch 104] Training on graph 40 with hash 739ff8682c14878d
+INFO	__main__ |:|	[Epoch 104] Training on graph 0 with hash bf0cfdbbd2b35725
+INFO	__main__ |:|	[Epoch 104] Training on graph 10 with hash 808e51aca920ac3d
+INFO	__main__ |:|	[Epoch 104] Training on graph 20 with hash f9eea946429ea851
+INFO	__main__ |:|	[Epoch 104] took 4.38 minutes.
+INFO	__main__ |:|	[Epoch 104] Train reward: 0.0207
+INFO	__main__ |:|	[Epoch 105] Training on graph 0 with hash 739ff8682c14878d
+INFO	__main__ |:|	[Epoch 105] Training on graph 10 with hash 42837855dbd3ba41
+INFO	__main__ |:|	[Epoch 105] Training on graph 20 with hash 879abd14440bcb68
+INFO	__main__ |:|	[Epoch 105] Training on graph 30 with hash 0520defa8f297993
+INFO	__main__ |:|	[Epoch 105] Training on graph 40 with hash 9655eb9c3b9033fc
+INFO	__main__ |:|	[Epoch 105] Training on graph 0 with hash 739ff8682c14878d
+INFO	__main__ |:|	[Epoch 105] Training on graph 10 with hash 42837855dbd3ba41
+INFO	__main__ |:|	[Epoch 105] Training on graph 20 with hash 879abd14440bcb68
+INFO	__main__ |:|	[Epoch 105] Training on graph 30 with hash 0520defa8f297993
+INFO	__main__ |:|	[Epoch 105] Training on graph 40 with hash 9655eb9c3b9033fc
+INFO	__main__ |:|	[Epoch 105] Training on graph 0 with hash 739ff8682c14878d
+INFO	__main__ |:|	[Epoch 105] Training on graph 10 with hash 42837855dbd3ba41
+INFO	__main__ |:|	[Epoch 105] Training on graph 20 with hash 879abd14440bcb68
+INFO	__main__ |:|	[Epoch 105] took 4.01 minutes.
+INFO	__main__ |:|	Evaluating on test set with 50 graphs...
+INFO	__main__ |:|	[Epoch 105] Test evaluation took 10.49 minutes.
+INFO	__main__ |:|	[Epoch 105] Train reward: 0.0056, Test reward: -0.0108 ± 0.1261
+INFO	__main__ |:|	Early stopping at epoch 105
+INFO	__main__ |:|	Final training plots created successfully
+Training progress plot saved to: outputs/2025-07-28_11-57_rl_model_khairy_p4/training_progress_p4.png
+Combined progress plot saved to: outputs/2025-07-28_11-57_rl_model_khairy_p4/combined_progress_p4.png

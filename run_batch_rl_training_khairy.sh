@@ -12,11 +12,13 @@ run_training() {
     
     python -m scripts.run_rl_trainer_khairy \
         --graphs_dir data/optimized_graphs_classic \
+        --device "cuda:0"
         --p $p \
         --dst_dir "outputs/${timestamp}_rl_model_khairy_p${p}" \
         --log_filename "${timestamp}_rl_trainer_khairy_p${p}.log" \
         --n_epochs 400 \
         --eps_per_epoch 128 \
+        --hidden_dim 256 \
         > logs/training_p${p}_${timestamp}.out 2>&1
     
     echo "Finished training for p=$p at $(date +"%Y-%m-%d_%H-%M-%S")"
