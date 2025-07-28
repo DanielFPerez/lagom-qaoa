@@ -20,6 +20,7 @@ import src.utils.graphs as graph_utils
 import src.utils.config as config_utils
 import src.solvers.classic_nlopt as classic_nlopt
 from src.utils.logger import setup_logger
+import src.utils.plot_train as plot_train
 
 # Device config
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -59,7 +60,7 @@ class Critic(nn.Module):
         return self.net(state)
 
 class QAOAEnv(gym.Env):
-    def __init__(self, graph: nx.Graph, p: int, reps: int = 128, history_len: int = 4):
+    def __init__(self, graph: nx.Graph, p: int, reps: int = 128, history_len: int = 4, n_samples_normalization: int = 100):
         self.graph = graph
         self.p = p
         self.reps = reps
@@ -67,7 +68,7 @@ class QAOAEnv(gym.Env):
         self.qubits = cirq.LineQubit.range(len(graph.nodes))
         self.param_dim = 2 * p
         self.history = deque(maxlen=self.L)
-        self.normalization = qaoa_model.estimate_random_average_energy(graph, p, reps=reps, n_samples=500)
+        self.normalization = qaoa_model.estimate_random_average_energy(graph, p, reps=reps, n_samples=n_samples_normalization)
         self.reset()
 
     def step(self, action):
@@ -201,22 +202,40 @@ class PPO:
         self.optimizer_actor.load_state_dict(checkpoint['optimizer_actor_state_dict'])
         self.optimizer_critic.load_state_dict(checkpoint['optimizer_critic_state_dict'])
 
+
+@torch.no_grad()
 def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int, 
-                         T: int = 64, reps: int = 128, L: int = 4) -> Dict[str, float]:
+                         T: int = 64, reps: int = 128, L: int = 4, early_stop_patience: int = 16, n_samples_normalization: int = 25) -> Dict[str, float]:
     """Evaluate the agent on test set"""
     all_rewards = []
     all_final_values = []
     
-    for elem in test_graphs:
+    for i, elem in enumerate(test_graphs):
+        logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
-        env = QAOAEnv(graph, p=p, reps=reps, history_len=L)
+        env = QAOAEnv(graph, p=p, reps=reps, history_len=L, n_samples_normalization=n_samples_normalization)
         state = env.reset()
         episode_reward = 0
+
+        # Track performance for early stopping
+        best_f_val = env.f_val
+        steps_without_improvement = 0
         
         for t in range(T):
             action, _ = agent.select_action(state, deterministic=True)
             next_state, reward, done, info = env.step(action)
             episode_reward += reward
+
+            if info['f_val'] > best_f_val:
+                best_f_val = info['f_val']
+                steps_without_improvement = 0
+            else:
+                steps_without_improvement += 1
+                
+            if steps_without_improvement >= early_stop_patience:
+                logger.debug(f"Early stopping after {t} steps due to {steps_without_improvement} steps without improvement.")
+                break
+
             state = next_state
             if done:
                 break
@@ -233,7 +252,7 @@ def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int,
 
 def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
                   p: int, dst_dir_path: str, epochs: int = 750, 
-                  episodes_per_epoch: int = 128, T: int = 64, 
+                  episodes_per_epoch: int = 128, T: int = 64, graphs_per_episode: int = 50,
                   reps: int = 128, L: int = 4, patience: int = 40, seed: int = 42) -> Dict:
     """Train RL agent with round-robin on training graphs"""
 
@@ -259,77 +278,98 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
         'best_epoch': 0
     }
     patience_counter = 0
-    graphs_per_epoch = min(len(GTrain), 50)
+    graphs_per_epoch = min(len(GTrain), graphs_per_episode)
+    epochs_per_test = 5
     
-    # Training loop
-    for epoch in range(epochs):
-        epoch_rewards = []
-        batch_memory = []
-        GTrain_subset = random.sample(GTrain, graphs_per_epoch)
-        t_start = time.time()
-        # Collect trajectories with round-robin
-        for ep in range(episodes_per_epoch):
-            # Round-robin graph selection
-            graph_idx = ep % len(GTrain_subset)
-            logger.info(f"[Epoch {epoch}] Training on graph {graph_idx} with hash {GTrain_subset[graph_idx]['id']}")
-            graph = graph_utils.read_graph_from_dict(GTrain_subset[graph_idx]["graph_dict"])
+    try:
+        # Training loop
+        for epoch in range(epochs):
+            epoch_rewards = []
+            batch_memory = []
+            GTrain_subset = random.sample(GTrain, graphs_per_epoch)
+            t_start = time.time()
+            # Collect trajectories with round-robin
+            for ep in range(episodes_per_epoch):
+                # Round-robin graph selection
+                graph_idx = ep % len(GTrain_subset)
+                if ep % 10 == 0:
+                    logger.info(f"[Epoch {epoch}] Training on graph {graph_idx} with hash {GTrain_subset[graph_idx]['id']}")
+                graph = graph_utils.read_graph_from_dict(GTrain_subset[graph_idx]["graph_dict"])
+                
+                env = QAOAEnv(graph, p=p, reps=reps, history_len=L, n_samples_normalization=100)
+                memory = []
+                state = env.reset()
+                episode_reward = 0
+                
+                for t in range(T):
+                    action, log_prob = agent.select_action(state)
+                    next_state, reward, done, _ = env.step(action)
+                    memory.append((state, action, log_prob, reward, done))
+                    episode_reward += reward
+                    state = next_state
+                    if done:
+                        break
+                
+                batch_memory.extend(memory)
+                epoch_rewards.append(episode_reward)
             
-            env = QAOAEnv(graph, p=p, reps=reps, history_len=L)
-            memory = []
-            state = env.reset()
-            episode_reward = 0
+            # Update agent with collected batch
+            agent.update(batch_memory)
             
-            for t in range(T):
-                action, log_prob = agent.select_action(state)
-                next_state, reward, done, _ = env.step(action)
-                memory.append((state, action, log_prob, reward, done))
-                episode_reward += reward
-                state = next_state
-                if done:
+            # Store training metrics
+            mean_train_reward = np.mean(epoch_rewards)
+            metrics['train_rewards'].append({
+                'epoch': epoch,
+                'mean_reward': mean_train_reward,
+                'std_reward': np.std(epoch_rewards)
+            })
+            
+            logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
+            
+            # Evaluate on test set every 2 epochs
+            if epoch % epochs_per_test == 0:
+                GTest = random.sample(GTest, min(len(GTest), graphs_per_episode))
+                logger.info(f"Evaluating on test set with {len(GTest)} graphs...")
+                t_start_test = time.time()
+                test_results = evaluate_on_test_set(agent, GTest, p=p, T=T, reps=reps, L=L)
+                logger.info(f"[Epoch {epoch}] Test evaluation took {(time.time() - t_start_test)/60:.2f} minutes.")
+                test_results['epoch'] = epoch
+                metrics['test_evaluations'].append(test_results)
+                
+                # Save best model
+                if test_results['mean_reward'] > metrics['best_test_reward']:
+                    patience_counter = 0
+                    metrics['best_test_reward'] = test_results['mean_reward']
+                    metrics['best_epoch'] = epoch
+                    model_path = os.path.join(dst_dir_path, 'best_model.pth')
+                    agent.save(model_path)
+                    logger.info(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+                else:
+                    patience_counter += epochs_per_test
+                
+                logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
+                    f"Test reward: {test_results['mean_reward']:.4f} ± {test_results['std_reward']:.4f}")
+                
+                if patience_counter >= patience and epoch > 100:
+                    logger.info(f"Early stopping at epoch {epoch}")
                     break
-            
-            batch_memory.extend(memory)
-            epoch_rewards.append(episode_reward)
-        
-        # Update agent with collected batch
-        agent.update(batch_memory)
-        
-        # Store training metrics
-        mean_train_reward = np.mean(epoch_rewards)
-        metrics['train_rewards'].append({
-            'epoch': epoch,
-            'mean_reward': mean_train_reward,
-            'std_reward': np.std(epoch_rewards)
-        })
-        
-        logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
 
-        # Evaluate on test set every 2 epochs
-        if epoch % 2 == 0:
-            test_results = evaluate_on_test_set(agent, GTest, p, T, reps, L)
-            test_results['epoch'] = epoch
-            metrics['test_evaluations'].append(test_results)
-            
-            # Save best model
-            if test_results['mean_reward'] > metrics['best_test_reward']:
-                patience_counter = 0
-                metrics['best_test_reward'] = test_results['mean_reward']
-                metrics['best_epoch'] = epoch
-                model_path = os.path.join(dst_dir_path, 'best_model.pth')
-                agent.save(model_path)
-                logger.info(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+                try:
+                    plot_train.plot_live_progress(metrics, dst_dir_path, p, epoch)
+                    # Also save metrics periodically
+                    metrics_path = os.path.join(dst_dir_path, 'training_metrics.json')
+                    with open(metrics_path, 'w') as f:
+                        json.dump(metrics, f, indent=2)
+                        
+                except Exception as e:
+                    logger.warning(f"Failed to create live plot at epoch {epoch}: {e}")
+
             else:
-                patience_counter += 2
-            
-            logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
-                  f"Test reward: {test_results['mean_reward']:.4f} ± {test_results['std_reward']:.4f}")
-            
-            if patience_counter >= patience:
-                logger.info(f"Early stopping at epoch {epoch}")
-                break
-
-        else:
-            logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
+                logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
+    
+    # catch keyboard interrupt to save final model
+    except KeyboardInterrupt:
+        logger.info("Training interrupted by user. Saving current model...")
     
     # Save final model and metrics
     final_model_path = os.path.join(dst_dir_path, 'final_model.pth')
@@ -339,6 +379,13 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     with open(metrics_path, 'w') as f:
         json.dump(metrics, f, indent=2)
     
+    try:
+        plot_train.plot_training_progress(metrics, dst_dir_path, p)
+        plot_train.plot_combined_progress(metrics, dst_dir_path, p)
+        logger.info("Final training plots created successfully")
+    except Exception as e:
+        logger.error(f"Failed to create final plots: {e}")
+
     return metrics
 
 
@@ -428,14 +475,18 @@ def get_parser():
                         help="QAOA depth (number of (γ, β) layers).")
     parser.add_argument("--dst_dir", type=str, default="./outputs/rl_model_khairy",
                         help="Destination directory for checkpoints and metrics.",)
-    parser.add_argument("--n_epochs", type=int, default=300, 
+    parser.add_argument("--n_epochs", type=int, default=600, 
                         help="Number of training epochs.")
     parser.add_argument("--eps_per_epoch", type=int, default=128, 
                         help="Number of episodes per epoch.")
+    parser.add_argument("--graphs_per_episode", type=int, default=50,
+                        help="Number of graphs to sample per episode (round-robin).")
     parser.add_argument("--T", type=int , default=64,
                         help="Episode length (time steps per episode).")
     parser.add_argument("--seed", type=int, default=42,
                         help="Random seed for reproducibility.")
+    parser.add_argument("--patience", type=int, default=40,
+                        help="Patience for early stopping (number of epochs without improvement).")
     
     # Logging parameters
     parser.add_argument("--log_filename", type=str, default="qaoa_solver.log",
@@ -474,7 +525,7 @@ if __name__ == "__main__":
     
     # Train the model
     p = args.p
-    dst_dir = args.dst_dir + f"_p{p}"
+    dst_dir = args.dst_dir
     n_epochs = args.n_epochs
     eps_per_epoch = args.eps_per_epoch
     T = args.T
@@ -483,7 +534,8 @@ if __name__ == "__main__":
     logger.info(f"Destination directory: {dst_dir}")
     
     logger.info("Starting training...")
-    metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch, T=T, seed=args.seed) # Use 750 for real training
+    metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch, T=T, 
+                            seed=args.seed, patience=args.patience, graphs_per_episode=args.graphs_per_episode) # Use 750 for real training
     
     # Load and use the trained model
     # logger.info("\nLoading best model for inference...")

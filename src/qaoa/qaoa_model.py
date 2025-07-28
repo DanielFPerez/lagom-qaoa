@@ -14,7 +14,7 @@ def mixing_operator(graph: nx.Graph, qubits, beta: float):
 def create_qaoa_circuit(graph: nx.Graph, p: int, gamma: List[float], beta: List[float]) -> cirq.Circuit:
     logger = logging.getLogger(__name__)
 
-    logger.debug(f"Creating QAOA circuit for p={p}, gamma={gamma}, beta={beta}")
+    # logger.debug(f"Creating QAOA circuit for p={p}, gamma={gamma}, beta={beta}")
     qubits = cirq.LineQubit.range(len(graph.nodes))
     circuit = cirq.Circuit()
     # Initialize in superposition
@@ -31,7 +31,7 @@ def eval_circuit(graph: nx.Graph, p: int, gamma, beta, reps: int = 500):
 
     circuit = create_qaoa_circuit(graph, p, gamma, beta)
     simulator = cirq.Simulator()
-    logger.debug(f"Running circuit for {reps} repetitions...")
+    # logger.debug(f"Running circuit for {reps} repetitions...")
     result = simulator.run(circuit, repetitions=reps)
     measurements = result.measurements['result']
 
