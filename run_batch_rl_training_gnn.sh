@@ -12,7 +12,7 @@ run_gnn_training() {
     
     echo "Starting GNN training for p=$p, GNN=$gnn_type on $device at $timestamp"
     
-    python -m scripts.run_gnn_rl_trainer \
+    python3 -m scripts.run_rl_trainer_gnnrl \
         --graphs_dir data/optimized_graphs_classic \
         --device "$device" \
         --p $p \
@@ -22,7 +22,7 @@ run_gnn_training() {
         --n_epochs 500 \
         --eps_per_epoch 128 \
         --hidden_dim 512 \
-        --gnn_hidden_dim 512 \
+        --gnn_hidden_dim 256 \
         --gnn_num_layers 3 \
         --graphs_per_episode 70 \
         --T 128 \
@@ -30,7 +30,14 @@ run_gnn_training() {
         --seed 42 \
         > logs/gnn_training_${gnn_type}_p${p}_${timestamp}.out 2>&1
     
-    echo "Finished GNN training for p=$p, GNN=$gnn_type at $(date +"%Y-%m-%d_%H-%M-%S")"
+    # Check exit status
+    local exit_code=$?
+    if [ $exit_code -ne 0 ]; then
+        echo "ERROR: GNN training for p=$p, GNN=$gnn_type failed with exit code $exit_code"
+    else
+        echo "Finished GNN training for p=$p, GNN=$gnn_type at $(date +"%Y-%m-%d_%H-%M-%S")"
+    fi
+    return $exit_code
 }
 
 # Array of GNN types
@@ -66,43 +73,89 @@ for key in "${!PIDS[@]}"; do
 done
 echo "=================================="
 
-# Function to check if process is still running
-check_processes() {
-    local all_done=true
+# Function to check if any process is still running
+check_any_running() {
+    for pid in "${PIDS[@]}"; do
+        if kill -0 $pid 2>/dev/null; then
+            return 0  # At least one process is still running
+        fi
+    done
+    return 1  # All processes have finished
+}
+
+# Function to display process status
+display_status() {
     echo ""
     echo "Process Status Check at $(date +"%Y-%m-%d_%H-%M-%S"):"
     echo "----------------------------------"
     for key in "${!PIDS[@]}"; do
         if kill -0 ${PIDS[$key]} 2>/dev/null; then
             echo "$key: RUNNING (PID ${PIDS[$key]})"
-            all_done=false
         else
-            echo "$key: COMPLETED (PID ${PIDS[$key]})"
+            # Check exit status
+            wait ${PIDS[$key]}
+            local exit_code=$?
+            if [ $exit_code -eq 0 ]; then
+                echo "$key: COMPLETED (PID ${PIDS[$key]})"
+            else
+                echo "$key: FAILED with exit code $exit_code (PID ${PIDS[$key]})"
+            fi
         fi
     done
     echo "----------------------------------"
-    return $([ "$all_done" = true ] && echo 0 || echo 1)
 }
 
-# Monitor processes every 5 minutes
-while true; do
+# Give processes a moment to start
+sleep 4
+
+# Check if any processes actually started
+if ! check_any_running; then
+    echo "ERROR: All processes failed to start!"
+    display_status
+    exit 1
+fi
+
+# Monitor processes every 5 minutes (300 seconds)
+while check_any_running; do
+    display_status
     sleep 300  # 5 minutes
-    if ! check_processes; then
-        break
+done
+
+# Final status display
+display_status
+
+# Wait for all processes to complete and collect exit codes
+echo ""
+echo "Collecting final exit codes..."
+declare -A EXIT_CODES
+for key in "${!PIDS[@]}"; do
+    wait ${PIDS[$key]}
+    EXIT_CODES[$key]=$?
+done
+
+# Check if any process failed
+any_failed=false
+for key in "${!EXIT_CODES[@]}"; do
+    if [ ${EXIT_CODES[$key]} -ne 0 ]; then
+        echo "ERROR: $key failed with exit code ${EXIT_CODES[$key]}"
+        any_failed=true
     fi
 done
 
-# Wait for all processes to complete
-echo ""
-echo "Waiting for all processes to complete..."
-for pid in "${PIDS[@]}"; do
-    wait $pid
-done
-
-echo ""
-echo "=================================="
-echo "All GNN training completed at $(date +"%Y-%m-%d_%H-%M-%S")!"
-echo "=================================="
+if [ "$any_failed" = true ]; then
+    echo ""
+    echo "=================================="
+    echo "Some GNN training processes FAILED!"
+    echo "Check the log files for details:"
+    echo "  - logs/gnn_training_*_p*_*.out"
+    echo "=================================="
+    exit 1
+else
+    echo ""
+    echo "=================================="
+    echo "All GNN training completed successfully at $(date +"%Y-%m-%d_%H-%M-%S")!"
+    echo "=================================="
+fi
 
 # Summary of output locations
 echo ""

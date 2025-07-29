@@ -627,6 +627,11 @@ def train_gnn_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     
     # Training metrics storage
     metrics = {
+        'train_expected_discounted_rewards': [],  # Changed metric name
+        'test_expected_discounted_rewards': [],   # Changed metric name
+        'train_mean_final_values': [],           # Track final QAOA values
+        'test_mean_final_values': [],            # Track final QAOA values
+        
         'train_rewards': [],
         'test_evaluations': [],
         'best_test_reward': -float('inf'),
@@ -908,7 +913,8 @@ if __name__ == "__main__":
     
     # Train the model
     p = args.p
-    dst_dir = os.path.join(args.dst_dir, args.gnn_type)
+    #dst_dir = os.path.join(args.dst_dir, args.gnn_type)
+    dst_dir = args.dst_dir
     n_epochs = args.n_epochs
     eps_per_epoch = args.eps_per_epoch
     T = args.T
