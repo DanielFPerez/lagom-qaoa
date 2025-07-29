@@ -1,0 +1,1653 @@
+INFO	src.utils.logger |:|	logger initialized with file: /home/lagom-qaoa/outputs/logs/2025-07-29_03-48-08_gnn_rl_trainer_GIN_p4.log
+INFO	__main__ |:|	Training set has 202 instances
+INFO	__main__ |:|	Test set has 258 instances
+INFO	__main__ |:|	Initializing GNN-based training with:
+INFO	__main__ |:|	  GNN type: GIN
+INFO	__main__ |:|	  GNN hidden dim: 256
+INFO	__main__ |:|	  GNN layers: 3
+INFO	__main__ |:|	  p: 4, n_epochs: 500, eps_per_epoch: 128, T: 128
+INFO	__main__ |:|	  Destination directory: outputs/2025-07-29_03-48-08_gnn_rl_model_GIN_p4
+INFO	__main__ |:|	Starting GNN-based training...
+INFO	__main__ |:|	Training GNN-based agent with GIN architecture
+INFO	__main__ |:|	Placing computation in DEVICE: cuda:2
+INFO	__main__ |:|	Creating GNN-PPO agent with state_dim: 36, action_dim: 8
+INFO	__main__ |:|	[Epoch 0] Training on graph 0
+INFO	__main__ |:|	[Epoch 0] Training on graph 10
+INFO	__main__ |:|	[Epoch 0] Training on graph 20
+INFO	__main__ |:|	[Epoch 0] Training on graph 30
+INFO	__main__ |:|	[Epoch 0] Training on graph 40
+INFO	__main__ |:|	[Epoch 0] Training on graph 50
+INFO	__main__ |:|	[Epoch 0] Training on graph 60
+INFO	__main__ |:|	[Epoch 0] Training on graph 0
+INFO	__main__ |:|	[Epoch 0] Training on graph 10
+INFO	__main__ |:|	[Epoch 0] Training on graph 20
+INFO	__main__ |:|	[Epoch 0] Training on graph 30
+INFO	__main__ |:|	[Epoch 0] Training on graph 40
+INFO	__main__ |:|	[Epoch 0] Training on graph 50
+INFO	__main__ |:|	[Epoch 0] took 4.07 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 0] Test evaluation took 7.99 minutes.
+INFO	__main__ |:|	[Epoch 0] New best model saved!
+INFO	__main__ |:|	[Epoch 0] Train reward: 0.0265, Test reward: 0.0045 ± 0.0644
+INFO	__main__ |:|	[Epoch 1] Training on graph 0
+INFO	__main__ |:|	[Epoch 1] Training on graph 10
+INFO	__main__ |:|	[Epoch 1] Training on graph 20
+INFO	__main__ |:|	[Epoch 1] Training on graph 30
+INFO	__main__ |:|	[Epoch 1] Training on graph 40
+INFO	__main__ |:|	[Epoch 1] Training on graph 50
+INFO	__main__ |:|	[Epoch 1] Training on graph 60
+INFO	__main__ |:|	[Epoch 1] Training on graph 0
+INFO	__main__ |:|	[Epoch 1] Training on graph 10
+INFO	__main__ |:|	[Epoch 1] Training on graph 20
+INFO	__main__ |:|	[Epoch 1] Training on graph 30
+INFO	__main__ |:|	[Epoch 1] Training on graph 40
+INFO	__main__ |:|	[Epoch 1] Training on graph 50
+INFO	__main__ |:|	[Epoch 1] took 4.08 minutes.
+INFO	__main__ |:|	[Epoch 1] Train reward: 0.0211
+INFO	__main__ |:|	[Epoch 2] Training on graph 0
+INFO	__main__ |:|	[Epoch 2] Training on graph 10
+INFO	__main__ |:|	[Epoch 2] Training on graph 20
+INFO	__main__ |:|	[Epoch 2] Training on graph 30
+INFO	__main__ |:|	[Epoch 2] Training on graph 40
+INFO	__main__ |:|	[Epoch 2] Training on graph 50
+INFO	__main__ |:|	[Epoch 2] Training on graph 60
+INFO	__main__ |:|	[Epoch 2] Training on graph 0
+INFO	__main__ |:|	[Epoch 2] Training on graph 10
+INFO	__main__ |:|	[Epoch 2] Training on graph 20
+INFO	__main__ |:|	[Epoch 2] Training on graph 30
+INFO	__main__ |:|	[Epoch 2] Training on graph 40
+INFO	__main__ |:|	[Epoch 2] Training on graph 50
+INFO	__main__ |:|	[Epoch 2] took 4.10 minutes.
+INFO	__main__ |:|	[Epoch 2] Train reward: -0.0000
+INFO	__main__ |:|	[Epoch 3] Training on graph 0
+INFO	__main__ |:|	[Epoch 3] Training on graph 10
+INFO	__main__ |:|	[Epoch 3] Training on graph 20
+INFO	__main__ |:|	[Epoch 3] Training on graph 30
+INFO	__main__ |:|	[Epoch 3] Training on graph 40
+INFO	__main__ |:|	[Epoch 3] Training on graph 50
+INFO	__main__ |:|	[Epoch 3] Training on graph 60
+INFO	__main__ |:|	[Epoch 3] Training on graph 0
+INFO	__main__ |:|	[Epoch 3] Training on graph 10
+INFO	__main__ |:|	[Epoch 3] Training on graph 20
+INFO	__main__ |:|	[Epoch 3] Training on graph 30
+INFO	__main__ |:|	[Epoch 3] Training on graph 40
+INFO	__main__ |:|	[Epoch 3] Training on graph 50
+INFO	__main__ |:|	[Epoch 3] took 4.19 minutes.
+INFO	__main__ |:|	[Epoch 3] Train reward: 0.0194
+INFO	__main__ |:|	[Epoch 4] Training on graph 0
+INFO	__main__ |:|	[Epoch 4] Training on graph 10
+INFO	__main__ |:|	[Epoch 4] Training on graph 20
+INFO	__main__ |:|	[Epoch 4] Training on graph 30
+INFO	__main__ |:|	[Epoch 4] Training on graph 40
+INFO	__main__ |:|	[Epoch 4] Training on graph 50
+INFO	__main__ |:|	[Epoch 4] Training on graph 60
+INFO	__main__ |:|	[Epoch 4] Training on graph 0
+INFO	__main__ |:|	[Epoch 4] Training on graph 10
+INFO	__main__ |:|	[Epoch 4] Training on graph 20
+INFO	__main__ |:|	[Epoch 4] Training on graph 30
+INFO	__main__ |:|	[Epoch 4] Training on graph 40
+INFO	__main__ |:|	[Epoch 4] Training on graph 50
+INFO	__main__ |:|	[Epoch 4] took 4.08 minutes.
+INFO	__main__ |:|	[Epoch 4] Train reward: 0.0109
+INFO	__main__ |:|	[Epoch 5] Training on graph 0
+INFO	__main__ |:|	[Epoch 5] Training on graph 10
+INFO	__main__ |:|	[Epoch 5] Training on graph 20
+INFO	__main__ |:|	[Epoch 5] Training on graph 30
+INFO	__main__ |:|	[Epoch 5] Training on graph 40
+INFO	__main__ |:|	[Epoch 5] Training on graph 50
+INFO	__main__ |:|	[Epoch 5] Training on graph 60
+INFO	__main__ |:|	[Epoch 5] Training on graph 0
+INFO	__main__ |:|	[Epoch 5] Training on graph 10
+INFO	__main__ |:|	[Epoch 5] Training on graph 20
+INFO	__main__ |:|	[Epoch 5] Training on graph 30
+INFO	__main__ |:|	[Epoch 5] Training on graph 40
+INFO	__main__ |:|	[Epoch 5] Training on graph 50
+INFO	__main__ |:|	[Epoch 5] took 4.12 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 5] Test evaluation took 6.78 minutes.
+INFO	__main__ |:|	[Epoch 5] Train reward: 0.0170, Test reward: -0.0082 ± 0.1125
+INFO	__main__ |:|	[Epoch 6] Training on graph 0
+INFO	__main__ |:|	[Epoch 6] Training on graph 10
+INFO	__main__ |:|	[Epoch 6] Training on graph 20
+INFO	__main__ |:|	[Epoch 6] Training on graph 30
+INFO	__main__ |:|	[Epoch 6] Training on graph 40
+INFO	__main__ |:|	[Epoch 6] Training on graph 50
+INFO	__main__ |:|	[Epoch 6] Training on graph 60
+INFO	__main__ |:|	[Epoch 6] Training on graph 0
+INFO	__main__ |:|	[Epoch 6] Training on graph 10
+INFO	__main__ |:|	[Epoch 6] Training on graph 20
+INFO	__main__ |:|	[Epoch 6] Training on graph 30
+INFO	__main__ |:|	[Epoch 6] Training on graph 40
+INFO	__main__ |:|	[Epoch 6] Training on graph 50
+INFO	__main__ |:|	[Epoch 6] took 3.93 minutes.
+INFO	__main__ |:|	[Epoch 6] Train reward: 0.0033
+INFO	__main__ |:|	[Epoch 7] Training on graph 0
+INFO	__main__ |:|	[Epoch 7] Training on graph 10
+INFO	__main__ |:|	[Epoch 7] Training on graph 20
+INFO	__main__ |:|	[Epoch 7] Training on graph 30
+INFO	__main__ |:|	[Epoch 7] Training on graph 40
+INFO	__main__ |:|	[Epoch 7] Training on graph 50
+INFO	__main__ |:|	[Epoch 7] Training on graph 60
+INFO	__main__ |:|	[Epoch 7] Training on graph 0
+INFO	__main__ |:|	[Epoch 7] Training on graph 10
+INFO	__main__ |:|	[Epoch 7] Training on graph 20
+INFO	__main__ |:|	[Epoch 7] Training on graph 30
+INFO	__main__ |:|	[Epoch 7] Training on graph 40
+INFO	__main__ |:|	[Epoch 7] Training on graph 50
+INFO	__main__ |:|	[Epoch 7] took 4.06 minutes.
+INFO	__main__ |:|	[Epoch 7] Train reward: -0.0202
+INFO	__main__ |:|	[Epoch 8] Training on graph 0
+INFO	__main__ |:|	[Epoch 8] Training on graph 10
+INFO	__main__ |:|	[Epoch 8] Training on graph 20
+INFO	__main__ |:|	[Epoch 8] Training on graph 30
+INFO	__main__ |:|	[Epoch 8] Training on graph 40
+INFO	__main__ |:|	[Epoch 8] Training on graph 50
+INFO	__main__ |:|	[Epoch 8] Training on graph 60
+INFO	__main__ |:|	[Epoch 8] Training on graph 0
+INFO	__main__ |:|	[Epoch 8] Training on graph 10
+INFO	__main__ |:|	[Epoch 8] Training on graph 20
+INFO	__main__ |:|	[Epoch 8] Training on graph 30
+INFO	__main__ |:|	[Epoch 8] Training on graph 40
+INFO	__main__ |:|	[Epoch 8] Training on graph 50
+INFO	__main__ |:|	[Epoch 8] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 8] Train reward: 0.0327
+INFO	__main__ |:|	[Epoch 9] Training on graph 0
+INFO	__main__ |:|	[Epoch 9] Training on graph 10
+INFO	__main__ |:|	[Epoch 9] Training on graph 20
+INFO	__main__ |:|	[Epoch 9] Training on graph 30
+INFO	__main__ |:|	[Epoch 9] Training on graph 40
+INFO	__main__ |:|	[Epoch 9] Training on graph 50
+INFO	__main__ |:|	[Epoch 9] Training on graph 60
+INFO	__main__ |:|	[Epoch 9] Training on graph 0
+INFO	__main__ |:|	[Epoch 9] Training on graph 10
+INFO	__main__ |:|	[Epoch 9] Training on graph 20
+INFO	__main__ |:|	[Epoch 9] Training on graph 30
+INFO	__main__ |:|	[Epoch 9] Training on graph 40
+INFO	__main__ |:|	[Epoch 9] Training on graph 50
+INFO	__main__ |:|	[Epoch 9] took 4.19 minutes.
+INFO	__main__ |:|	[Epoch 9] Train reward: -0.0133
+INFO	__main__ |:|	[Epoch 10] Training on graph 0
+INFO	__main__ |:|	[Epoch 10] Training on graph 10
+INFO	__main__ |:|	[Epoch 10] Training on graph 20
+INFO	__main__ |:|	[Epoch 10] Training on graph 30
+INFO	__main__ |:|	[Epoch 10] Training on graph 40
+INFO	__main__ |:|	[Epoch 10] Training on graph 50
+INFO	__main__ |:|	[Epoch 10] Training on graph 60
+INFO	__main__ |:|	[Epoch 10] Training on graph 0
+INFO	__main__ |:|	[Epoch 10] Training on graph 10
+INFO	__main__ |:|	[Epoch 10] Training on graph 20
+INFO	__main__ |:|	[Epoch 10] Training on graph 30
+INFO	__main__ |:|	[Epoch 10] Training on graph 40
+INFO	__main__ |:|	[Epoch 10] Training on graph 50
+INFO	__main__ |:|	[Epoch 10] took 4.26 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 10] Test evaluation took 5.89 minutes.
+INFO	__main__ |:|	[Epoch 10] Train reward: 0.0170, Test reward: -0.0081 ± 0.1028
+INFO	__main__ |:|	[Epoch 11] Training on graph 0
+INFO	__main__ |:|	[Epoch 11] Training on graph 10
+INFO	__main__ |:|	[Epoch 11] Training on graph 20
+INFO	__main__ |:|	[Epoch 11] Training on graph 30
+INFO	__main__ |:|	[Epoch 11] Training on graph 40
+INFO	__main__ |:|	[Epoch 11] Training on graph 50
+INFO	__main__ |:|	[Epoch 11] Training on graph 60
+INFO	__main__ |:|	[Epoch 11] Training on graph 0
+INFO	__main__ |:|	[Epoch 11] Training on graph 10
+INFO	__main__ |:|	[Epoch 11] Training on graph 20
+INFO	__main__ |:|	[Epoch 11] Training on graph 30
+INFO	__main__ |:|	[Epoch 11] Training on graph 40
+INFO	__main__ |:|	[Epoch 11] Training on graph 50
+INFO	__main__ |:|	[Epoch 11] took 3.80 minutes.
+INFO	__main__ |:|	[Epoch 11] Train reward: 0.0188
+INFO	__main__ |:|	[Epoch 12] Training on graph 0
+INFO	__main__ |:|	[Epoch 12] Training on graph 10
+INFO	__main__ |:|	[Epoch 12] Training on graph 20
+INFO	__main__ |:|	[Epoch 12] Training on graph 30
+INFO	__main__ |:|	[Epoch 12] Training on graph 40
+INFO	__main__ |:|	[Epoch 12] Training on graph 50
+INFO	__main__ |:|	[Epoch 12] Training on graph 60
+INFO	__main__ |:|	[Epoch 12] Training on graph 0
+INFO	__main__ |:|	[Epoch 12] Training on graph 10
+INFO	__main__ |:|	[Epoch 12] Training on graph 20
+INFO	__main__ |:|	[Epoch 12] Training on graph 30
+INFO	__main__ |:|	[Epoch 12] Training on graph 40
+INFO	__main__ |:|	[Epoch 12] Training on graph 50
+INFO	__main__ |:|	[Epoch 12] took 4.14 minutes.
+INFO	__main__ |:|	[Epoch 12] Train reward: -0.0266
+INFO	__main__ |:|	[Epoch 13] Training on graph 0
+INFO	__main__ |:|	[Epoch 13] Training on graph 10
+INFO	__main__ |:|	[Epoch 13] Training on graph 20
+INFO	__main__ |:|	[Epoch 13] Training on graph 30
+INFO	__main__ |:|	[Epoch 13] Training on graph 40
+INFO	__main__ |:|	[Epoch 13] Training on graph 50
+INFO	__main__ |:|	[Epoch 13] Training on graph 60
+INFO	__main__ |:|	[Epoch 13] Training on graph 0
+INFO	__main__ |:|	[Epoch 13] Training on graph 10
+INFO	__main__ |:|	[Epoch 13] Training on graph 20
+INFO	__main__ |:|	[Epoch 13] Training on graph 30
+INFO	__main__ |:|	[Epoch 13] Training on graph 40
+INFO	__main__ |:|	[Epoch 13] Training on graph 50
+INFO	__main__ |:|	[Epoch 13] took 4.18 minutes.
+INFO	__main__ |:|	[Epoch 13] Train reward: 0.0197
+INFO	__main__ |:|	[Epoch 14] Training on graph 0
+INFO	__main__ |:|	[Epoch 14] Training on graph 10
+INFO	__main__ |:|	[Epoch 14] Training on graph 20
+INFO	__main__ |:|	[Epoch 14] Training on graph 30
+INFO	__main__ |:|	[Epoch 14] Training on graph 40
+INFO	__main__ |:|	[Epoch 14] Training on graph 50
+INFO	__main__ |:|	[Epoch 14] Training on graph 60
+INFO	__main__ |:|	[Epoch 14] Training on graph 0
+INFO	__main__ |:|	[Epoch 14] Training on graph 10
+INFO	__main__ |:|	[Epoch 14] Training on graph 20
+INFO	__main__ |:|	[Epoch 14] Training on graph 30
+INFO	__main__ |:|	[Epoch 14] Training on graph 40
+INFO	__main__ |:|	[Epoch 14] Training on graph 50
+INFO	__main__ |:|	[Epoch 14] took 4.24 minutes.
+INFO	__main__ |:|	[Epoch 14] Train reward: -0.0028
+INFO	__main__ |:|	[Epoch 15] Training on graph 0
+INFO	__main__ |:|	[Epoch 15] Training on graph 10
+INFO	__main__ |:|	[Epoch 15] Training on graph 20
+INFO	__main__ |:|	[Epoch 15] Training on graph 30
+INFO	__main__ |:|	[Epoch 15] Training on graph 40
+INFO	__main__ |:|	[Epoch 15] Training on graph 50
+INFO	__main__ |:|	[Epoch 15] Training on graph 60
+INFO	__main__ |:|	[Epoch 15] Training on graph 0
+INFO	__main__ |:|	[Epoch 15] Training on graph 10
+INFO	__main__ |:|	[Epoch 15] Training on graph 20
+INFO	__main__ |:|	[Epoch 15] Training on graph 30
+INFO	__main__ |:|	[Epoch 15] Training on graph 40
+INFO	__main__ |:|	[Epoch 15] Training on graph 50
+INFO	__main__ |:|	[Epoch 15] took 4.14 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 15] Test evaluation took 10.19 minutes.
+INFO	__main__ |:|	[Epoch 15] Train reward: -0.0084, Test reward: -0.0111 ± 0.1245
+INFO	__main__ |:|	[Epoch 16] Training on graph 0
+INFO	__main__ |:|	[Epoch 16] Training on graph 10
+INFO	__main__ |:|	[Epoch 16] Training on graph 20
+INFO	__main__ |:|	[Epoch 16] Training on graph 30
+INFO	__main__ |:|	[Epoch 16] Training on graph 40
+INFO	__main__ |:|	[Epoch 16] Training on graph 50
+INFO	__main__ |:|	[Epoch 16] Training on graph 60
+INFO	__main__ |:|	[Epoch 16] Training on graph 0
+INFO	__main__ |:|	[Epoch 16] Training on graph 10
+INFO	__main__ |:|	[Epoch 16] Training on graph 20
+INFO	__main__ |:|	[Epoch 16] Training on graph 30
+INFO	__main__ |:|	[Epoch 16] Training on graph 40
+INFO	__main__ |:|	[Epoch 16] Training on graph 50
+INFO	__main__ |:|	[Epoch 16] took 3.78 minutes.
+INFO	__main__ |:|	[Epoch 16] Train reward: 0.0116
+INFO	__main__ |:|	[Epoch 17] Training on graph 0
+INFO	__main__ |:|	[Epoch 17] Training on graph 10
+INFO	__main__ |:|	[Epoch 17] Training on graph 20
+INFO	__main__ |:|	[Epoch 17] Training on graph 30
+INFO	__main__ |:|	[Epoch 17] Training on graph 40
+INFO	__main__ |:|	[Epoch 17] Training on graph 50
+INFO	__main__ |:|	[Epoch 17] Training on graph 60
+INFO	__main__ |:|	[Epoch 17] Training on graph 0
+INFO	__main__ |:|	[Epoch 17] Training on graph 10
+INFO	__main__ |:|	[Epoch 17] Training on graph 20
+INFO	__main__ |:|	[Epoch 17] Training on graph 30
+INFO	__main__ |:|	[Epoch 17] Training on graph 40
+INFO	__main__ |:|	[Epoch 17] Training on graph 50
+INFO	__main__ |:|	[Epoch 17] took 4.07 minutes.
+INFO	__main__ |:|	[Epoch 17] Train reward: 0.0141
+INFO	__main__ |:|	[Epoch 18] Training on graph 0
+INFO	__main__ |:|	[Epoch 18] Training on graph 10
+INFO	__main__ |:|	[Epoch 18] Training on graph 20
+INFO	__main__ |:|	[Epoch 18] Training on graph 30
+INFO	__main__ |:|	[Epoch 18] Training on graph 40
+INFO	__main__ |:|	[Epoch 18] Training on graph 50
+INFO	__main__ |:|	[Epoch 18] Training on graph 60
+INFO	__main__ |:|	[Epoch 18] Training on graph 0
+INFO	__main__ |:|	[Epoch 18] Training on graph 10
+INFO	__main__ |:|	[Epoch 18] Training on graph 20
+INFO	__main__ |:|	[Epoch 18] Training on graph 30
+INFO	__main__ |:|	[Epoch 18] Training on graph 40
+INFO	__main__ |:|	[Epoch 18] Training on graph 50
+INFO	__main__ |:|	[Epoch 18] took 4.11 minutes.
+INFO	__main__ |:|	[Epoch 18] Train reward: -0.0026
+INFO	__main__ |:|	[Epoch 19] Training on graph 0
+INFO	__main__ |:|	[Epoch 19] Training on graph 10
+INFO	__main__ |:|	[Epoch 19] Training on graph 20
+INFO	__main__ |:|	[Epoch 19] Training on graph 30
+INFO	__main__ |:|	[Epoch 19] Training on graph 40
+INFO	__main__ |:|	[Epoch 19] Training on graph 50
+INFO	__main__ |:|	[Epoch 19] Training on graph 60
+INFO	__main__ |:|	[Epoch 19] Training on graph 0
+INFO	__main__ |:|	[Epoch 19] Training on graph 10
+INFO	__main__ |:|	[Epoch 19] Training on graph 20
+INFO	__main__ |:|	[Epoch 19] Training on graph 30
+INFO	__main__ |:|	[Epoch 19] Training on graph 40
+INFO	__main__ |:|	[Epoch 19] Training on graph 50
+INFO	__main__ |:|	[Epoch 19] took 4.18 minutes.
+INFO	__main__ |:|	[Epoch 19] Train reward: 0.0163
+INFO	__main__ |:|	[Epoch 20] Training on graph 0
+INFO	__main__ |:|	[Epoch 20] Training on graph 10
+INFO	__main__ |:|	[Epoch 20] Training on graph 20
+INFO	__main__ |:|	[Epoch 20] Training on graph 30
+INFO	__main__ |:|	[Epoch 20] Training on graph 40
+INFO	__main__ |:|	[Epoch 20] Training on graph 50
+INFO	__main__ |:|	[Epoch 20] Training on graph 60
+INFO	__main__ |:|	[Epoch 20] Training on graph 0
+INFO	__main__ |:|	[Epoch 20] Training on graph 10
+INFO	__main__ |:|	[Epoch 20] Training on graph 20
+INFO	__main__ |:|	[Epoch 20] Training on graph 30
+INFO	__main__ |:|	[Epoch 20] Training on graph 40
+INFO	__main__ |:|	[Epoch 20] Training on graph 50
+INFO	__main__ |:|	[Epoch 20] took 4.18 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 20] Test evaluation took 9.67 minutes.
+INFO	__main__ |:|	[Epoch 20] New best model saved!
+INFO	__main__ |:|	[Epoch 20] Train reward: -0.0144, Test reward: 0.0227 ± 0.0910
+INFO	__main__ |:|	[Epoch 21] Training on graph 0
+INFO	__main__ |:|	[Epoch 21] Training on graph 10
+INFO	__main__ |:|	[Epoch 21] Training on graph 20
+INFO	__main__ |:|	[Epoch 21] Training on graph 30
+INFO	__main__ |:|	[Epoch 21] Training on graph 40
+INFO	__main__ |:|	[Epoch 21] Training on graph 50
+INFO	__main__ |:|	[Epoch 21] Training on graph 60
+INFO	__main__ |:|	[Epoch 21] Training on graph 0
+INFO	__main__ |:|	[Epoch 21] Training on graph 10
+INFO	__main__ |:|	[Epoch 21] Training on graph 20
+INFO	__main__ |:|	[Epoch 21] Training on graph 30
+INFO	__main__ |:|	[Epoch 21] Training on graph 40
+INFO	__main__ |:|	[Epoch 21] Training on graph 50
+INFO	__main__ |:|	[Epoch 21] took 3.72 minutes.
+INFO	__main__ |:|	[Epoch 21] Train reward: 0.0200
+INFO	__main__ |:|	[Epoch 22] Training on graph 0
+INFO	__main__ |:|	[Epoch 22] Training on graph 10
+INFO	__main__ |:|	[Epoch 22] Training on graph 20
+INFO	__main__ |:|	[Epoch 22] Training on graph 30
+INFO	__main__ |:|	[Epoch 22] Training on graph 40
+INFO	__main__ |:|	[Epoch 22] Training on graph 50
+INFO	__main__ |:|	[Epoch 22] Training on graph 60
+INFO	__main__ |:|	[Epoch 22] Training on graph 0
+INFO	__main__ |:|	[Epoch 22] Training on graph 10
+INFO	__main__ |:|	[Epoch 22] Training on graph 20
+INFO	__main__ |:|	[Epoch 22] Training on graph 30
+INFO	__main__ |:|	[Epoch 22] Training on graph 40
+INFO	__main__ |:|	[Epoch 22] Training on graph 50
+INFO	__main__ |:|	[Epoch 22] took 3.98 minutes.
+INFO	__main__ |:|	[Epoch 22] Train reward: -0.0089
+INFO	__main__ |:|	[Epoch 23] Training on graph 0
+INFO	__main__ |:|	[Epoch 23] Training on graph 10
+INFO	__main__ |:|	[Epoch 23] Training on graph 20
+INFO	__main__ |:|	[Epoch 23] Training on graph 30
+INFO	__main__ |:|	[Epoch 23] Training on graph 40
+INFO	__main__ |:|	[Epoch 23] Training on graph 50
+INFO	__main__ |:|	[Epoch 23] Training on graph 60
+INFO	__main__ |:|	[Epoch 23] Training on graph 0
+INFO	__main__ |:|	[Epoch 23] Training on graph 10
+INFO	__main__ |:|	[Epoch 23] Training on graph 20
+INFO	__main__ |:|	[Epoch 23] Training on graph 30
+INFO	__main__ |:|	[Epoch 23] Training on graph 40
+INFO	__main__ |:|	[Epoch 23] Training on graph 50
+INFO	__main__ |:|	[Epoch 23] took 4.05 minutes.
+INFO	__main__ |:|	[Epoch 23] Train reward: -0.0443
+INFO	__main__ |:|	[Epoch 24] Training on graph 0
+INFO	__main__ |:|	[Epoch 24] Training on graph 10
+INFO	__main__ |:|	[Epoch 24] Training on graph 20
+INFO	__main__ |:|	[Epoch 24] Training on graph 30
+INFO	__main__ |:|	[Epoch 24] Training on graph 40
+INFO	__main__ |:|	[Epoch 24] Training on graph 50
+INFO	__main__ |:|	[Epoch 24] Training on graph 60
+INFO	__main__ |:|	[Epoch 24] Training on graph 0
+INFO	__main__ |:|	[Epoch 24] Training on graph 10
+INFO	__main__ |:|	[Epoch 24] Training on graph 20
+INFO	__main__ |:|	[Epoch 24] Training on graph 30
+INFO	__main__ |:|	[Epoch 24] Training on graph 40
+INFO	__main__ |:|	[Epoch 24] Training on graph 50
+INFO	__main__ |:|	[Epoch 24] took 4.10 minutes.
+INFO	__main__ |:|	[Epoch 24] Train reward: 0.0124
+INFO	__main__ |:|	[Epoch 25] Training on graph 0
+INFO	__main__ |:|	[Epoch 25] Training on graph 10
+INFO	__main__ |:|	[Epoch 25] Training on graph 20
+INFO	__main__ |:|	[Epoch 25] Training on graph 30
+INFO	__main__ |:|	[Epoch 25] Training on graph 40
+INFO	__main__ |:|	[Epoch 25] Training on graph 50
+INFO	__main__ |:|	[Epoch 25] Training on graph 60
+INFO	__main__ |:|	[Epoch 25] Training on graph 0
+INFO	__main__ |:|	[Epoch 25] Training on graph 10
+INFO	__main__ |:|	[Epoch 25] Training on graph 20
+INFO	__main__ |:|	[Epoch 25] Training on graph 30
+INFO	__main__ |:|	[Epoch 25] Training on graph 40
+INFO	__main__ |:|	[Epoch 25] Training on graph 50
+INFO	__main__ |:|	[Epoch 25] took 4.29 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 25] Test evaluation took 8.27 minutes.
+INFO	__main__ |:|	[Epoch 25] Train reward: 0.0202, Test reward: 0.0088 ± 0.1185
+INFO	__main__ |:|	[Epoch 26] Training on graph 0
+INFO	__main__ |:|	[Epoch 26] Training on graph 10
+INFO	__main__ |:|	[Epoch 26] Training on graph 20
+INFO	__main__ |:|	[Epoch 26] Training on graph 30
+INFO	__main__ |:|	[Epoch 26] Training on graph 40
+INFO	__main__ |:|	[Epoch 26] Training on graph 50
+INFO	__main__ |:|	[Epoch 26] Training on graph 60
+INFO	__main__ |:|	[Epoch 26] Training on graph 0
+INFO	__main__ |:|	[Epoch 26] Training on graph 10
+INFO	__main__ |:|	[Epoch 26] Training on graph 20
+INFO	__main__ |:|	[Epoch 26] Training on graph 30
+INFO	__main__ |:|	[Epoch 26] Training on graph 40
+INFO	__main__ |:|	[Epoch 26] Training on graph 50
+INFO	__main__ |:|	[Epoch 26] took 3.70 minutes.
+INFO	__main__ |:|	[Epoch 26] Train reward: -0.0166
+INFO	__main__ |:|	[Epoch 27] Training on graph 0
+INFO	__main__ |:|	[Epoch 27] Training on graph 10
+INFO	__main__ |:|	[Epoch 27] Training on graph 20
+INFO	__main__ |:|	[Epoch 27] Training on graph 30
+INFO	__main__ |:|	[Epoch 27] Training on graph 40
+INFO	__main__ |:|	[Epoch 27] Training on graph 50
+INFO	__main__ |:|	[Epoch 27] Training on graph 60
+INFO	__main__ |:|	[Epoch 27] Training on graph 0
+INFO	__main__ |:|	[Epoch 27] Training on graph 10
+INFO	__main__ |:|	[Epoch 27] Training on graph 20
+INFO	__main__ |:|	[Epoch 27] Training on graph 30
+INFO	__main__ |:|	[Epoch 27] Training on graph 40
+INFO	__main__ |:|	[Epoch 27] Training on graph 50
+INFO	__main__ |:|	[Epoch 27] took 3.88 minutes.
+INFO	__main__ |:|	[Epoch 27] Train reward: -0.0029
+INFO	__main__ |:|	[Epoch 28] Training on graph 0
+INFO	__main__ |:|	[Epoch 28] Training on graph 10
+INFO	__main__ |:|	[Epoch 28] Training on graph 20
+INFO	__main__ |:|	[Epoch 28] Training on graph 30
+INFO	__main__ |:|	[Epoch 28] Training on graph 40
+INFO	__main__ |:|	[Epoch 28] Training on graph 50
+INFO	__main__ |:|	[Epoch 28] Training on graph 60
+INFO	__main__ |:|	[Epoch 28] Training on graph 0
+INFO	__main__ |:|	[Epoch 28] Training on graph 10
+INFO	__main__ |:|	[Epoch 28] Training on graph 20
+INFO	__main__ |:|	[Epoch 28] Training on graph 30
+INFO	__main__ |:|	[Epoch 28] Training on graph 40
+INFO	__main__ |:|	[Epoch 28] Training on graph 50
+INFO	__main__ |:|	[Epoch 28] took 4.00 minutes.
+INFO	__main__ |:|	[Epoch 28] Train reward: 0.0050
+INFO	__main__ |:|	[Epoch 29] Training on graph 0
+INFO	__main__ |:|	[Epoch 29] Training on graph 10
+INFO	__main__ |:|	[Epoch 29] Training on graph 20
+INFO	__main__ |:|	[Epoch 29] Training on graph 30
+INFO	__main__ |:|	[Epoch 29] Training on graph 40
+INFO	__main__ |:|	[Epoch 29] Training on graph 50
+INFO	__main__ |:|	[Epoch 29] Training on graph 60
+INFO	__main__ |:|	[Epoch 29] Training on graph 0
+INFO	__main__ |:|	[Epoch 29] Training on graph 10
+INFO	__main__ |:|	[Epoch 29] Training on graph 20
+INFO	__main__ |:|	[Epoch 29] Training on graph 30
+INFO	__main__ |:|	[Epoch 29] Training on graph 40
+INFO	__main__ |:|	[Epoch 29] Training on graph 50
+INFO	__main__ |:|	[Epoch 29] took 4.12 minutes.
+INFO	__main__ |:|	[Epoch 29] Train reward: 0.0041
+INFO	__main__ |:|	[Epoch 30] Training on graph 0
+INFO	__main__ |:|	[Epoch 30] Training on graph 10
+INFO	__main__ |:|	[Epoch 30] Training on graph 20
+INFO	__main__ |:|	[Epoch 30] Training on graph 30
+INFO	__main__ |:|	[Epoch 30] Training on graph 40
+INFO	__main__ |:|	[Epoch 30] Training on graph 50
+INFO	__main__ |:|	[Epoch 30] Training on graph 60
+INFO	__main__ |:|	[Epoch 30] Training on graph 0
+INFO	__main__ |:|	[Epoch 30] Training on graph 10
+INFO	__main__ |:|	[Epoch 30] Training on graph 20
+INFO	__main__ |:|	[Epoch 30] Training on graph 30
+INFO	__main__ |:|	[Epoch 30] Training on graph 40
+INFO	__main__ |:|	[Epoch 30] Training on graph 50
+INFO	__main__ |:|	[Epoch 30] took 4.08 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 30] Test evaluation took 10.84 minutes.
+INFO	__main__ |:|	[Epoch 30] Train reward: -0.0026, Test reward: -0.0138 ± 0.1093
+INFO	__main__ |:|	[Epoch 31] Training on graph 0
+INFO	__main__ |:|	[Epoch 31] Training on graph 10
+INFO	__main__ |:|	[Epoch 31] Training on graph 20
+INFO	__main__ |:|	[Epoch 31] Training on graph 30
+INFO	__main__ |:|	[Epoch 31] Training on graph 40
+INFO	__main__ |:|	[Epoch 31] Training on graph 50
+INFO	__main__ |:|	[Epoch 31] Training on graph 60
+INFO	__main__ |:|	[Epoch 31] Training on graph 0
+INFO	__main__ |:|	[Epoch 31] Training on graph 10
+INFO	__main__ |:|	[Epoch 31] Training on graph 20
+INFO	__main__ |:|	[Epoch 31] Training on graph 30
+INFO	__main__ |:|	[Epoch 31] Training on graph 40
+INFO	__main__ |:|	[Epoch 31] Training on graph 50
+INFO	__main__ |:|	[Epoch 31] took 3.95 minutes.
+INFO	__main__ |:|	[Epoch 31] Train reward: 0.0167
+INFO	__main__ |:|	[Epoch 32] Training on graph 0
+INFO	__main__ |:|	[Epoch 32] Training on graph 10
+INFO	__main__ |:|	[Epoch 32] Training on graph 20
+INFO	__main__ |:|	[Epoch 32] Training on graph 30
+INFO	__main__ |:|	[Epoch 32] Training on graph 40
+INFO	__main__ |:|	[Epoch 32] Training on graph 50
+INFO	__main__ |:|	[Epoch 32] Training on graph 60
+INFO	__main__ |:|	[Epoch 32] Training on graph 0
+INFO	__main__ |:|	[Epoch 32] Training on graph 10
+INFO	__main__ |:|	[Epoch 32] Training on graph 20
+INFO	__main__ |:|	[Epoch 32] Training on graph 30
+INFO	__main__ |:|	[Epoch 32] Training on graph 40
+INFO	__main__ |:|	[Epoch 32] Training on graph 50
+INFO	__main__ |:|	[Epoch 32] took 3.77 minutes.
+INFO	__main__ |:|	[Epoch 32] Train reward: 0.0227
+INFO	__main__ |:|	[Epoch 33] Training on graph 0
+INFO	__main__ |:|	[Epoch 33] Training on graph 10
+INFO	__main__ |:|	[Epoch 33] Training on graph 20
+INFO	__main__ |:|	[Epoch 33] Training on graph 30
+INFO	__main__ |:|	[Epoch 33] Training on graph 40
+INFO	__main__ |:|	[Epoch 33] Training on graph 50
+INFO	__main__ |:|	[Epoch 33] Training on graph 60
+INFO	__main__ |:|	[Epoch 33] Training on graph 0
+INFO	__main__ |:|	[Epoch 33] Training on graph 10
+INFO	__main__ |:|	[Epoch 33] Training on graph 20
+INFO	__main__ |:|	[Epoch 33] Training on graph 30
+INFO	__main__ |:|	[Epoch 33] Training on graph 40
+INFO	__main__ |:|	[Epoch 33] Training on graph 50
+INFO	__main__ |:|	[Epoch 33] took 3.86 minutes.
+INFO	__main__ |:|	[Epoch 33] Train reward: -0.0117
+INFO	__main__ |:|	[Epoch 34] Training on graph 0
+INFO	__main__ |:|	[Epoch 34] Training on graph 10
+INFO	__main__ |:|	[Epoch 34] Training on graph 20
+INFO	__main__ |:|	[Epoch 34] Training on graph 30
+INFO	__main__ |:|	[Epoch 34] Training on graph 40
+INFO	__main__ |:|	[Epoch 34] Training on graph 50
+INFO	__main__ |:|	[Epoch 34] Training on graph 60
+INFO	__main__ |:|	[Epoch 34] Training on graph 0
+INFO	__main__ |:|	[Epoch 34] Training on graph 10
+INFO	__main__ |:|	[Epoch 34] Training on graph 20
+INFO	__main__ |:|	[Epoch 34] Training on graph 30
+INFO	__main__ |:|	[Epoch 34] Training on graph 40
+INFO	__main__ |:|	[Epoch 34] Training on graph 50
+INFO	__main__ |:|	[Epoch 34] took 4.06 minutes.
+INFO	__main__ |:|	[Epoch 34] Train reward: -0.0235
+INFO	__main__ |:|	[Epoch 35] Training on graph 0
+INFO	__main__ |:|	[Epoch 35] Training on graph 10
+INFO	__main__ |:|	[Epoch 35] Training on graph 20
+INFO	__main__ |:|	[Epoch 35] Training on graph 30
+INFO	__main__ |:|	[Epoch 35] Training on graph 40
+INFO	__main__ |:|	[Epoch 35] Training on graph 50
+INFO	__main__ |:|	[Epoch 35] Training on graph 60
+INFO	__main__ |:|	[Epoch 35] Training on graph 0
+INFO	__main__ |:|	[Epoch 35] Training on graph 10
+INFO	__main__ |:|	[Epoch 35] Training on graph 20
+INFO	__main__ |:|	[Epoch 35] Training on graph 30
+INFO	__main__ |:|	[Epoch 35] Training on graph 40
+INFO	__main__ |:|	[Epoch 35] Training on graph 50
+INFO	__main__ |:|	[Epoch 35] took 4.22 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 35] Test evaluation took 7.41 minutes.
+INFO	__main__ |:|	[Epoch 35] Train reward: -0.0357, Test reward: 0.0028 ± 0.1232
+INFO	__main__ |:|	[Epoch 36] Training on graph 0
+INFO	__main__ |:|	[Epoch 36] Training on graph 10
+INFO	__main__ |:|	[Epoch 36] Training on graph 20
+INFO	__main__ |:|	[Epoch 36] Training on graph 30
+INFO	__main__ |:|	[Epoch 36] Training on graph 40
+INFO	__main__ |:|	[Epoch 36] Training on graph 50
+INFO	__main__ |:|	[Epoch 36] Training on graph 60
+INFO	__main__ |:|	[Epoch 36] Training on graph 0
+INFO	__main__ |:|	[Epoch 36] Training on graph 10
+INFO	__main__ |:|	[Epoch 36] Training on graph 20
+INFO	__main__ |:|	[Epoch 36] Training on graph 30
+INFO	__main__ |:|	[Epoch 36] Training on graph 40
+INFO	__main__ |:|	[Epoch 36] Training on graph 50
+INFO	__main__ |:|	[Epoch 36] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 36] Train reward: 0.0137
+INFO	__main__ |:|	[Epoch 37] Training on graph 0
+INFO	__main__ |:|	[Epoch 37] Training on graph 10
+INFO	__main__ |:|	[Epoch 37] Training on graph 20
+INFO	__main__ |:|	[Epoch 37] Training on graph 30
+INFO	__main__ |:|	[Epoch 37] Training on graph 40
+INFO	__main__ |:|	[Epoch 37] Training on graph 50
+INFO	__main__ |:|	[Epoch 37] Training on graph 60
+INFO	__main__ |:|	[Epoch 37] Training on graph 0
+INFO	__main__ |:|	[Epoch 37] Training on graph 10
+INFO	__main__ |:|	[Epoch 37] Training on graph 20
+INFO	__main__ |:|	[Epoch 37] Training on graph 30
+INFO	__main__ |:|	[Epoch 37] Training on graph 40
+INFO	__main__ |:|	[Epoch 37] Training on graph 50
+INFO	__main__ |:|	[Epoch 37] took 3.78 minutes.
+INFO	__main__ |:|	[Epoch 37] Train reward: 0.0022
+INFO	__main__ |:|	[Epoch 38] Training on graph 0
+INFO	__main__ |:|	[Epoch 38] Training on graph 10
+INFO	__main__ |:|	[Epoch 38] Training on graph 20
+INFO	__main__ |:|	[Epoch 38] Training on graph 30
+INFO	__main__ |:|	[Epoch 38] Training on graph 40
+INFO	__main__ |:|	[Epoch 38] Training on graph 50
+INFO	__main__ |:|	[Epoch 38] Training on graph 60
+INFO	__main__ |:|	[Epoch 38] Training on graph 0
+INFO	__main__ |:|	[Epoch 38] Training on graph 10
+INFO	__main__ |:|	[Epoch 38] Training on graph 20
+INFO	__main__ |:|	[Epoch 38] Training on graph 30
+INFO	__main__ |:|	[Epoch 38] Training on graph 40
+INFO	__main__ |:|	[Epoch 38] Training on graph 50
+INFO	__main__ |:|	[Epoch 38] took 4.09 minutes.
+INFO	__main__ |:|	[Epoch 38] Train reward: -0.0154
+INFO	__main__ |:|	[Epoch 39] Training on graph 0
+INFO	__main__ |:|	[Epoch 39] Training on graph 10
+INFO	__main__ |:|	[Epoch 39] Training on graph 20
+INFO	__main__ |:|	[Epoch 39] Training on graph 30
+INFO	__main__ |:|	[Epoch 39] Training on graph 40
+INFO	__main__ |:|	[Epoch 39] Training on graph 50
+INFO	__main__ |:|	[Epoch 39] Training on graph 60
+INFO	__main__ |:|	[Epoch 39] Training on graph 0
+INFO	__main__ |:|	[Epoch 39] Training on graph 10
+INFO	__main__ |:|	[Epoch 39] Training on graph 20
+INFO	__main__ |:|	[Epoch 39] Training on graph 30
+INFO	__main__ |:|	[Epoch 39] Training on graph 40
+INFO	__main__ |:|	[Epoch 39] Training on graph 50
+INFO	__main__ |:|	[Epoch 39] took 4.13 minutes.
+INFO	__main__ |:|	[Epoch 39] Train reward: -0.0192
+INFO	__main__ |:|	[Epoch 40] Training on graph 0
+INFO	__main__ |:|	[Epoch 40] Training on graph 10
+INFO	__main__ |:|	[Epoch 40] Training on graph 20
+INFO	__main__ |:|	[Epoch 40] Training on graph 30
+INFO	__main__ |:|	[Epoch 40] Training on graph 40
+INFO	__main__ |:|	[Epoch 40] Training on graph 50
+INFO	__main__ |:|	[Epoch 40] Training on graph 60
+INFO	__main__ |:|	[Epoch 40] Training on graph 0
+INFO	__main__ |:|	[Epoch 40] Training on graph 10
+INFO	__main__ |:|	[Epoch 40] Training on graph 20
+INFO	__main__ |:|	[Epoch 40] Training on graph 30
+INFO	__main__ |:|	[Epoch 40] Training on graph 40
+INFO	__main__ |:|	[Epoch 40] Training on graph 50
+INFO	__main__ |:|	[Epoch 40] took 4.14 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 40] Test evaluation took 9.74 minutes.
+INFO	__main__ |:|	[Epoch 40] Train reward: -0.0022, Test reward: 0.0126 ± 0.1218
+INFO	__main__ |:|	[Epoch 41] Training on graph 0
+INFO	__main__ |:|	[Epoch 41] Training on graph 10
+INFO	__main__ |:|	[Epoch 41] Training on graph 20
+INFO	__main__ |:|	[Epoch 41] Training on graph 30
+INFO	__main__ |:|	[Epoch 41] Training on graph 40
+INFO	__main__ |:|	[Epoch 41] Training on graph 50
+INFO	__main__ |:|	[Epoch 41] Training on graph 60
+INFO	__main__ |:|	[Epoch 41] Training on graph 0
+INFO	__main__ |:|	[Epoch 41] Training on graph 10
+INFO	__main__ |:|	[Epoch 41] Training on graph 20
+INFO	__main__ |:|	[Epoch 41] Training on graph 30
+INFO	__main__ |:|	[Epoch 41] Training on graph 40
+INFO	__main__ |:|	[Epoch 41] Training on graph 50
+INFO	__main__ |:|	[Epoch 41] took 4.02 minutes.
+INFO	__main__ |:|	[Epoch 41] Train reward: 0.0158
+INFO	__main__ |:|	[Epoch 42] Training on graph 0
+INFO	__main__ |:|	[Epoch 42] Training on graph 10
+INFO	__main__ |:|	[Epoch 42] Training on graph 20
+INFO	__main__ |:|	[Epoch 42] Training on graph 30
+INFO	__main__ |:|	[Epoch 42] Training on graph 40
+INFO	__main__ |:|	[Epoch 42] Training on graph 50
+INFO	__main__ |:|	[Epoch 42] Training on graph 60
+INFO	__main__ |:|	[Epoch 42] Training on graph 0
+INFO	__main__ |:|	[Epoch 42] Training on graph 10
+INFO	__main__ |:|	[Epoch 42] Training on graph 20
+INFO	__main__ |:|	[Epoch 42] Training on graph 30
+INFO	__main__ |:|	[Epoch 42] Training on graph 40
+INFO	__main__ |:|	[Epoch 42] Training on graph 50
+INFO	__main__ |:|	[Epoch 42] took 3.81 minutes.
+INFO	__main__ |:|	[Epoch 42] Train reward: -0.0061
+INFO	__main__ |:|	[Epoch 43] Training on graph 0
+INFO	__main__ |:|	[Epoch 43] Training on graph 10
+INFO	__main__ |:|	[Epoch 43] Training on graph 20
+INFO	__main__ |:|	[Epoch 43] Training on graph 30
+INFO	__main__ |:|	[Epoch 43] Training on graph 40
+INFO	__main__ |:|	[Epoch 43] Training on graph 50
+INFO	__main__ |:|	[Epoch 43] Training on graph 60
+INFO	__main__ |:|	[Epoch 43] Training on graph 0
+INFO	__main__ |:|	[Epoch 43] Training on graph 10
+INFO	__main__ |:|	[Epoch 43] Training on graph 20
+INFO	__main__ |:|	[Epoch 43] Training on graph 30
+INFO	__main__ |:|	[Epoch 43] Training on graph 40
+INFO	__main__ |:|	[Epoch 43] Training on graph 50
+INFO	__main__ |:|	[Epoch 43] took 3.66 minutes.
+INFO	__main__ |:|	[Epoch 43] Train reward: -0.0068
+INFO	__main__ |:|	[Epoch 44] Training on graph 0
+INFO	__main__ |:|	[Epoch 44] Training on graph 10
+INFO	__main__ |:|	[Epoch 44] Training on graph 20
+INFO	__main__ |:|	[Epoch 44] Training on graph 30
+INFO	__main__ |:|	[Epoch 44] Training on graph 40
+INFO	__main__ |:|	[Epoch 44] Training on graph 50
+INFO	__main__ |:|	[Epoch 44] Training on graph 60
+INFO	__main__ |:|	[Epoch 44] Training on graph 0
+INFO	__main__ |:|	[Epoch 44] Training on graph 10
+INFO	__main__ |:|	[Epoch 44] Training on graph 20
+INFO	__main__ |:|	[Epoch 44] Training on graph 30
+INFO	__main__ |:|	[Epoch 44] Training on graph 40
+INFO	__main__ |:|	[Epoch 44] Training on graph 50
+INFO	__main__ |:|	[Epoch 44] took 4.14 minutes.
+INFO	__main__ |:|	[Epoch 44] Train reward: 0.0189
+INFO	__main__ |:|	[Epoch 45] Training on graph 0
+INFO	__main__ |:|	[Epoch 45] Training on graph 10
+INFO	__main__ |:|	[Epoch 45] Training on graph 20
+INFO	__main__ |:|	[Epoch 45] Training on graph 30
+INFO	__main__ |:|	[Epoch 45] Training on graph 40
+INFO	__main__ |:|	[Epoch 45] Training on graph 50
+INFO	__main__ |:|	[Epoch 45] Training on graph 60
+INFO	__main__ |:|	[Epoch 45] Training on graph 0
+INFO	__main__ |:|	[Epoch 45] Training on graph 10
+INFO	__main__ |:|	[Epoch 45] Training on graph 20
+INFO	__main__ |:|	[Epoch 45] Training on graph 30
+INFO	__main__ |:|	[Epoch 45] Training on graph 40
+INFO	__main__ |:|	[Epoch 45] Training on graph 50
+INFO	__main__ |:|	[Epoch 45] took 4.01 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 45] Test evaluation took 8.40 minutes.
+INFO	__main__ |:|	[Epoch 45] Train reward: 0.0136, Test reward: 0.0154 ± 0.1225
+INFO	__main__ |:|	[Epoch 46] Training on graph 0
+INFO	__main__ |:|	[Epoch 46] Training on graph 10
+INFO	__main__ |:|	[Epoch 46] Training on graph 20
+INFO	__main__ |:|	[Epoch 46] Training on graph 30
+INFO	__main__ |:|	[Epoch 46] Training on graph 40
+INFO	__main__ |:|	[Epoch 46] Training on graph 50
+INFO	__main__ |:|	[Epoch 46] Training on graph 60
+INFO	__main__ |:|	[Epoch 46] Training on graph 0
+INFO	__main__ |:|	[Epoch 46] Training on graph 10
+INFO	__main__ |:|	[Epoch 46] Training on graph 20
+INFO	__main__ |:|	[Epoch 46] Training on graph 30
+INFO	__main__ |:|	[Epoch 46] Training on graph 40
+INFO	__main__ |:|	[Epoch 46] Training on graph 50
+INFO	__main__ |:|	[Epoch 46] took 4.10 minutes.
+INFO	__main__ |:|	[Epoch 46] Train reward: 0.0050
+INFO	__main__ |:|	[Epoch 47] Training on graph 0
+INFO	__main__ |:|	[Epoch 47] Training on graph 10
+INFO	__main__ |:|	[Epoch 47] Training on graph 20
+INFO	__main__ |:|	[Epoch 47] Training on graph 30
+INFO	__main__ |:|	[Epoch 47] Training on graph 40
+INFO	__main__ |:|	[Epoch 47] Training on graph 50
+INFO	__main__ |:|	[Epoch 47] Training on graph 60
+INFO	__main__ |:|	[Epoch 47] Training on graph 0
+INFO	__main__ |:|	[Epoch 47] Training on graph 10
+INFO	__main__ |:|	[Epoch 47] Training on graph 20
+INFO	__main__ |:|	[Epoch 47] Training on graph 30
+INFO	__main__ |:|	[Epoch 47] Training on graph 40
+INFO	__main__ |:|	[Epoch 47] Training on graph 50
+INFO	__main__ |:|	[Epoch 47] took 3.98 minutes.
+INFO	__main__ |:|	[Epoch 47] Train reward: -0.0112
+INFO	__main__ |:|	[Epoch 48] Training on graph 0
+INFO	__main__ |:|	[Epoch 48] Training on graph 10
+INFO	__main__ |:|	[Epoch 48] Training on graph 20
+INFO	__main__ |:|	[Epoch 48] Training on graph 30
+INFO	__main__ |:|	[Epoch 48] Training on graph 40
+INFO	__main__ |:|	[Epoch 48] Training on graph 50
+INFO	__main__ |:|	[Epoch 48] Training on graph 60
+INFO	__main__ |:|	[Epoch 48] Training on graph 0
+INFO	__main__ |:|	[Epoch 48] Training on graph 10
+INFO	__main__ |:|	[Epoch 48] Training on graph 20
+INFO	__main__ |:|	[Epoch 48] Training on graph 30
+INFO	__main__ |:|	[Epoch 48] Training on graph 40
+INFO	__main__ |:|	[Epoch 48] Training on graph 50
+INFO	__main__ |:|	[Epoch 48] took 3.85 minutes.
+INFO	__main__ |:|	[Epoch 48] Train reward: 0.0179
+INFO	__main__ |:|	[Epoch 49] Training on graph 0
+INFO	__main__ |:|	[Epoch 49] Training on graph 10
+INFO	__main__ |:|	[Epoch 49] Training on graph 20
+INFO	__main__ |:|	[Epoch 49] Training on graph 30
+INFO	__main__ |:|	[Epoch 49] Training on graph 40
+INFO	__main__ |:|	[Epoch 49] Training on graph 50
+INFO	__main__ |:|	[Epoch 49] Training on graph 60
+INFO	__main__ |:|	[Epoch 49] Training on graph 0
+INFO	__main__ |:|	[Epoch 49] Training on graph 10
+INFO	__main__ |:|	[Epoch 49] Training on graph 20
+INFO	__main__ |:|	[Epoch 49] Training on graph 30
+INFO	__main__ |:|	[Epoch 49] Training on graph 40
+INFO	__main__ |:|	[Epoch 49] Training on graph 50
+INFO	__main__ |:|	[Epoch 49] took 3.91 minutes.
+INFO	__main__ |:|	[Epoch 49] Train reward: -0.0010
+INFO	__main__ |:|	[Epoch 50] Training on graph 0
+INFO	__main__ |:|	[Epoch 50] Training on graph 10
+INFO	__main__ |:|	[Epoch 50] Training on graph 20
+INFO	__main__ |:|	[Epoch 50] Training on graph 30
+INFO	__main__ |:|	[Epoch 50] Training on graph 40
+INFO	__main__ |:|	[Epoch 50] Training on graph 50
+INFO	__main__ |:|	[Epoch 50] Training on graph 60
+INFO	__main__ |:|	[Epoch 50] Training on graph 0
+INFO	__main__ |:|	[Epoch 50] Training on graph 10
+INFO	__main__ |:|	[Epoch 50] Training on graph 20
+INFO	__main__ |:|	[Epoch 50] Training on graph 30
+INFO	__main__ |:|	[Epoch 50] Training on graph 40
+INFO	__main__ |:|	[Epoch 50] Training on graph 50
+INFO	__main__ |:|	[Epoch 50] took 4.17 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 50] Test evaluation took 10.84 minutes.
+INFO	__main__ |:|	[Epoch 50] Train reward: -0.0088, Test reward: 0.0038 ± 0.0948
+INFO	__main__ |:|	[Epoch 51] Training on graph 0
+INFO	__main__ |:|	[Epoch 51] Training on graph 10
+INFO	__main__ |:|	[Epoch 51] Training on graph 20
+INFO	__main__ |:|	[Epoch 51] Training on graph 30
+INFO	__main__ |:|	[Epoch 51] Training on graph 40
+INFO	__main__ |:|	[Epoch 51] Training on graph 50
+INFO	__main__ |:|	[Epoch 51] Training on graph 60
+INFO	__main__ |:|	[Epoch 51] Training on graph 0
+INFO	__main__ |:|	[Epoch 51] Training on graph 10
+INFO	__main__ |:|	[Epoch 51] Training on graph 20
+INFO	__main__ |:|	[Epoch 51] Training on graph 30
+INFO	__main__ |:|	[Epoch 51] Training on graph 40
+INFO	__main__ |:|	[Epoch 51] Training on graph 50
+INFO	__main__ |:|	[Epoch 51] took 4.34 minutes.
+INFO	__main__ |:|	[Epoch 51] Train reward: -0.0016
+INFO	__main__ |:|	[Epoch 52] Training on graph 0
+INFO	__main__ |:|	[Epoch 52] Training on graph 10
+INFO	__main__ |:|	[Epoch 52] Training on graph 20
+INFO	__main__ |:|	[Epoch 52] Training on graph 30
+INFO	__main__ |:|	[Epoch 52] Training on graph 40
+INFO	__main__ |:|	[Epoch 52] Training on graph 50
+INFO	__main__ |:|	[Epoch 52] Training on graph 60
+INFO	__main__ |:|	[Epoch 52] Training on graph 0
+INFO	__main__ |:|	[Epoch 52] Training on graph 10
+INFO	__main__ |:|	[Epoch 52] Training on graph 20
+INFO	__main__ |:|	[Epoch 52] Training on graph 30
+INFO	__main__ |:|	[Epoch 52] Training on graph 40
+INFO	__main__ |:|	[Epoch 52] Training on graph 50
+INFO	__main__ |:|	[Epoch 52] took 3.99 minutes.
+INFO	__main__ |:|	[Epoch 52] Train reward: -0.0103
+INFO	__main__ |:|	[Epoch 53] Training on graph 0
+INFO	__main__ |:|	[Epoch 53] Training on graph 10
+INFO	__main__ |:|	[Epoch 53] Training on graph 20
+INFO	__main__ |:|	[Epoch 53] Training on graph 30
+INFO	__main__ |:|	[Epoch 53] Training on graph 40
+INFO	__main__ |:|	[Epoch 53] Training on graph 50
+INFO	__main__ |:|	[Epoch 53] Training on graph 60
+INFO	__main__ |:|	[Epoch 53] Training on graph 0
+INFO	__main__ |:|	[Epoch 53] Training on graph 10
+INFO	__main__ |:|	[Epoch 53] Training on graph 20
+INFO	__main__ |:|	[Epoch 53] Training on graph 30
+INFO	__main__ |:|	[Epoch 53] Training on graph 40
+INFO	__main__ |:|	[Epoch 53] Training on graph 50
+INFO	__main__ |:|	[Epoch 53] took 3.74 minutes.
+INFO	__main__ |:|	[Epoch 53] Train reward: 0.0012
+INFO	__main__ |:|	[Epoch 54] Training on graph 0
+INFO	__main__ |:|	[Epoch 54] Training on graph 10
+INFO	__main__ |:|	[Epoch 54] Training on graph 20
+INFO	__main__ |:|	[Epoch 54] Training on graph 30
+INFO	__main__ |:|	[Epoch 54] Training on graph 40
+INFO	__main__ |:|	[Epoch 54] Training on graph 50
+INFO	__main__ |:|	[Epoch 54] Training on graph 60
+INFO	__main__ |:|	[Epoch 54] Training on graph 0
+INFO	__main__ |:|	[Epoch 54] Training on graph 10
+INFO	__main__ |:|	[Epoch 54] Training on graph 20
+INFO	__main__ |:|	[Epoch 54] Training on graph 30
+INFO	__main__ |:|	[Epoch 54] Training on graph 40
+INFO	__main__ |:|	[Epoch 54] Training on graph 50
+INFO	__main__ |:|	[Epoch 54] took 3.74 minutes.
+INFO	__main__ |:|	[Epoch 54] Train reward: 0.0226
+INFO	__main__ |:|	[Epoch 55] Training on graph 0
+INFO	__main__ |:|	[Epoch 55] Training on graph 10
+INFO	__main__ |:|	[Epoch 55] Training on graph 20
+INFO	__main__ |:|	[Epoch 55] Training on graph 30
+INFO	__main__ |:|	[Epoch 55] Training on graph 40
+INFO	__main__ |:|	[Epoch 55] Training on graph 50
+INFO	__main__ |:|	[Epoch 55] Training on graph 60
+INFO	__main__ |:|	[Epoch 55] Training on graph 0
+INFO	__main__ |:|	[Epoch 55] Training on graph 10
+INFO	__main__ |:|	[Epoch 55] Training on graph 20
+INFO	__main__ |:|	[Epoch 55] Training on graph 30
+INFO	__main__ |:|	[Epoch 55] Training on graph 40
+INFO	__main__ |:|	[Epoch 55] Training on graph 50
+INFO	__main__ |:|	[Epoch 55] took 3.95 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 55] Test evaluation took 5.81 minutes.
+INFO	__main__ |:|	[Epoch 55] Train reward: -0.0228, Test reward: -0.0117 ± 0.1347
+INFO	__main__ |:|	[Epoch 56] Training on graph 0
+INFO	__main__ |:|	[Epoch 56] Training on graph 10
+INFO	__main__ |:|	[Epoch 56] Training on graph 20
+INFO	__main__ |:|	[Epoch 56] Training on graph 30
+INFO	__main__ |:|	[Epoch 56] Training on graph 40
+INFO	__main__ |:|	[Epoch 56] Training on graph 50
+INFO	__main__ |:|	[Epoch 56] Training on graph 60
+INFO	__main__ |:|	[Epoch 56] Training on graph 0
+INFO	__main__ |:|	[Epoch 56] Training on graph 10
+INFO	__main__ |:|	[Epoch 56] Training on graph 20
+INFO	__main__ |:|	[Epoch 56] Training on graph 30
+INFO	__main__ |:|	[Epoch 56] Training on graph 40
+INFO	__main__ |:|	[Epoch 56] Training on graph 50
+INFO	__main__ |:|	[Epoch 56] took 4.20 minutes.
+INFO	__main__ |:|	[Epoch 56] Train reward: 0.0219
+INFO	__main__ |:|	[Epoch 57] Training on graph 0
+INFO	__main__ |:|	[Epoch 57] Training on graph 10
+INFO	__main__ |:|	[Epoch 57] Training on graph 20
+INFO	__main__ |:|	[Epoch 57] Training on graph 30
+INFO	__main__ |:|	[Epoch 57] Training on graph 40
+INFO	__main__ |:|	[Epoch 57] Training on graph 50
+INFO	__main__ |:|	[Epoch 57] Training on graph 60
+INFO	__main__ |:|	[Epoch 57] Training on graph 0
+INFO	__main__ |:|	[Epoch 57] Training on graph 10
+INFO	__main__ |:|	[Epoch 57] Training on graph 20
+INFO	__main__ |:|	[Epoch 57] Training on graph 30
+INFO	__main__ |:|	[Epoch 57] Training on graph 40
+INFO	__main__ |:|	[Epoch 57] Training on graph 50
+INFO	__main__ |:|	[Epoch 57] took 4.22 minutes.
+INFO	__main__ |:|	[Epoch 57] Train reward: 0.0248
+INFO	__main__ |:|	[Epoch 58] Training on graph 0
+INFO	__main__ |:|	[Epoch 58] Training on graph 10
+INFO	__main__ |:|	[Epoch 58] Training on graph 20
+INFO	__main__ |:|	[Epoch 58] Training on graph 30
+INFO	__main__ |:|	[Epoch 58] Training on graph 40
+INFO	__main__ |:|	[Epoch 58] Training on graph 50
+INFO	__main__ |:|	[Epoch 58] Training on graph 60
+INFO	__main__ |:|	[Epoch 58] Training on graph 0
+INFO	__main__ |:|	[Epoch 58] Training on graph 10
+INFO	__main__ |:|	[Epoch 58] Training on graph 20
+INFO	__main__ |:|	[Epoch 58] Training on graph 30
+INFO	__main__ |:|	[Epoch 58] Training on graph 40
+INFO	__main__ |:|	[Epoch 58] Training on graph 50
+INFO	__main__ |:|	[Epoch 58] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 58] Train reward: 0.0077
+INFO	__main__ |:|	[Epoch 59] Training on graph 0
+INFO	__main__ |:|	[Epoch 59] Training on graph 10
+INFO	__main__ |:|	[Epoch 59] Training on graph 20
+INFO	__main__ |:|	[Epoch 59] Training on graph 30
+INFO	__main__ |:|	[Epoch 59] Training on graph 40
+INFO	__main__ |:|	[Epoch 59] Training on graph 50
+INFO	__main__ |:|	[Epoch 59] Training on graph 60
+INFO	__main__ |:|	[Epoch 59] Training on graph 0
+INFO	__main__ |:|	[Epoch 59] Training on graph 10
+INFO	__main__ |:|	[Epoch 59] Training on graph 20
+INFO	__main__ |:|	[Epoch 59] Training on graph 30
+INFO	__main__ |:|	[Epoch 59] Training on graph 40
+INFO	__main__ |:|	[Epoch 59] Training on graph 50
+INFO	__main__ |:|	[Epoch 59] took 3.90 minutes.
+INFO	__main__ |:|	[Epoch 59] Train reward: 0.0267
+INFO	__main__ |:|	[Epoch 60] Training on graph 0
+INFO	__main__ |:|	[Epoch 60] Training on graph 10
+INFO	__main__ |:|	[Epoch 60] Training on graph 20
+INFO	__main__ |:|	[Epoch 60] Training on graph 30
+INFO	__main__ |:|	[Epoch 60] Training on graph 40
+INFO	__main__ |:|	[Epoch 60] Training on graph 50
+INFO	__main__ |:|	[Epoch 60] Training on graph 60
+INFO	__main__ |:|	[Epoch 60] Training on graph 0
+INFO	__main__ |:|	[Epoch 60] Training on graph 10
+INFO	__main__ |:|	[Epoch 60] Training on graph 20
+INFO	__main__ |:|	[Epoch 60] Training on graph 30
+INFO	__main__ |:|	[Epoch 60] Training on graph 40
+INFO	__main__ |:|	[Epoch 60] Training on graph 50
+INFO	__main__ |:|	[Epoch 60] took 3.94 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 60] Test evaluation took 7.39 minutes.
+INFO	__main__ |:|	[Epoch 60] Train reward: -0.0261, Test reward: 0.0091 ± 0.1160
+INFO	__main__ |:|	[Epoch 61] Training on graph 0
+INFO	__main__ |:|	[Epoch 61] Training on graph 10
+INFO	__main__ |:|	[Epoch 61] Training on graph 20
+INFO	__main__ |:|	[Epoch 61] Training on graph 30
+INFO	__main__ |:|	[Epoch 61] Training on graph 40
+INFO	__main__ |:|	[Epoch 61] Training on graph 50
+INFO	__main__ |:|	[Epoch 61] Training on graph 60
+INFO	__main__ |:|	[Epoch 61] Training on graph 0
+INFO	__main__ |:|	[Epoch 61] Training on graph 10
+INFO	__main__ |:|	[Epoch 61] Training on graph 20
+INFO	__main__ |:|	[Epoch 61] Training on graph 30
+INFO	__main__ |:|	[Epoch 61] Training on graph 40
+INFO	__main__ |:|	[Epoch 61] Training on graph 50
+INFO	__main__ |:|	[Epoch 61] took 4.17 minutes.
+INFO	__main__ |:|	[Epoch 61] Train reward: -0.0000
+INFO	__main__ |:|	[Epoch 62] Training on graph 0
+INFO	__main__ |:|	[Epoch 62] Training on graph 10
+INFO	__main__ |:|	[Epoch 62] Training on graph 20
+INFO	__main__ |:|	[Epoch 62] Training on graph 30
+INFO	__main__ |:|	[Epoch 62] Training on graph 40
+INFO	__main__ |:|	[Epoch 62] Training on graph 50
+INFO	__main__ |:|	[Epoch 62] Training on graph 60
+INFO	__main__ |:|	[Epoch 62] Training on graph 0
+INFO	__main__ |:|	[Epoch 62] Training on graph 10
+INFO	__main__ |:|	[Epoch 62] Training on graph 20
+INFO	__main__ |:|	[Epoch 62] Training on graph 30
+INFO	__main__ |:|	[Epoch 62] Training on graph 40
+INFO	__main__ |:|	[Epoch 62] Training on graph 50
+INFO	__main__ |:|	[Epoch 62] took 4.14 minutes.
+INFO	__main__ |:|	[Epoch 62] Train reward: 0.0281
+INFO	__main__ |:|	[Epoch 63] Training on graph 0
+INFO	__main__ |:|	[Epoch 63] Training on graph 10
+INFO	__main__ |:|	[Epoch 63] Training on graph 20
+INFO	__main__ |:|	[Epoch 63] Training on graph 30
+INFO	__main__ |:|	[Epoch 63] Training on graph 40
+INFO	__main__ |:|	[Epoch 63] Training on graph 50
+INFO	__main__ |:|	[Epoch 63] Training on graph 60
+INFO	__main__ |:|	[Epoch 63] Training on graph 0
+INFO	__main__ |:|	[Epoch 63] Training on graph 10
+INFO	__main__ |:|	[Epoch 63] Training on graph 20
+INFO	__main__ |:|	[Epoch 63] Training on graph 30
+INFO	__main__ |:|	[Epoch 63] Training on graph 40
+INFO	__main__ |:|	[Epoch 63] Training on graph 50
+INFO	__main__ |:|	[Epoch 63] took 4.15 minutes.
+INFO	__main__ |:|	[Epoch 63] Train reward: -0.0025
+INFO	__main__ |:|	[Epoch 64] Training on graph 0
+INFO	__main__ |:|	[Epoch 64] Training on graph 10
+INFO	__main__ |:|	[Epoch 64] Training on graph 20
+INFO	__main__ |:|	[Epoch 64] Training on graph 30
+INFO	__main__ |:|	[Epoch 64] Training on graph 40
+INFO	__main__ |:|	[Epoch 64] Training on graph 50
+INFO	__main__ |:|	[Epoch 64] Training on graph 60
+INFO	__main__ |:|	[Epoch 64] Training on graph 0
+INFO	__main__ |:|	[Epoch 64] Training on graph 10
+INFO	__main__ |:|	[Epoch 64] Training on graph 20
+INFO	__main__ |:|	[Epoch 64] Training on graph 30
+INFO	__main__ |:|	[Epoch 64] Training on graph 40
+INFO	__main__ |:|	[Epoch 64] Training on graph 50
+INFO	__main__ |:|	[Epoch 64] took 3.88 minutes.
+INFO	__main__ |:|	[Epoch 64] Train reward: 0.0155
+INFO	__main__ |:|	[Epoch 65] Training on graph 0
+INFO	__main__ |:|	[Epoch 65] Training on graph 10
+INFO	__main__ |:|	[Epoch 65] Training on graph 20
+INFO	__main__ |:|	[Epoch 65] Training on graph 30
+INFO	__main__ |:|	[Epoch 65] Training on graph 40
+INFO	__main__ |:|	[Epoch 65] Training on graph 50
+INFO	__main__ |:|	[Epoch 65] Training on graph 60
+INFO	__main__ |:|	[Epoch 65] Training on graph 0
+INFO	__main__ |:|	[Epoch 65] Training on graph 10
+INFO	__main__ |:|	[Epoch 65] Training on graph 20
+INFO	__main__ |:|	[Epoch 65] Training on graph 30
+INFO	__main__ |:|	[Epoch 65] Training on graph 40
+INFO	__main__ |:|	[Epoch 65] Training on graph 50
+INFO	__main__ |:|	[Epoch 65] took 3.79 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 65] Test evaluation took 7.69 minutes.
+INFO	__main__ |:|	[Epoch 65] Train reward: 0.0121, Test reward: -0.0055 ± 0.1058
+INFO	__main__ |:|	[Epoch 66] Training on graph 0
+INFO	__main__ |:|	[Epoch 66] Training on graph 10
+INFO	__main__ |:|	[Epoch 66] Training on graph 20
+INFO	__main__ |:|	[Epoch 66] Training on graph 30
+INFO	__main__ |:|	[Epoch 66] Training on graph 40
+INFO	__main__ |:|	[Epoch 66] Training on graph 50
+INFO	__main__ |:|	[Epoch 66] Training on graph 60
+INFO	__main__ |:|	[Epoch 66] Training on graph 0
+INFO	__main__ |:|	[Epoch 66] Training on graph 10
+INFO	__main__ |:|	[Epoch 66] Training on graph 20
+INFO	__main__ |:|	[Epoch 66] Training on graph 30
+INFO	__main__ |:|	[Epoch 66] Training on graph 40
+INFO	__main__ |:|	[Epoch 66] Training on graph 50
+INFO	__main__ |:|	[Epoch 66] took 4.15 minutes.
+INFO	__main__ |:|	[Epoch 66] Train reward: -0.0206
+INFO	__main__ |:|	[Epoch 67] Training on graph 0
+INFO	__main__ |:|	[Epoch 67] Training on graph 10
+INFO	__main__ |:|	[Epoch 67] Training on graph 20
+INFO	__main__ |:|	[Epoch 67] Training on graph 30
+INFO	__main__ |:|	[Epoch 67] Training on graph 40
+INFO	__main__ |:|	[Epoch 67] Training on graph 50
+INFO	__main__ |:|	[Epoch 67] Training on graph 60
+INFO	__main__ |:|	[Epoch 67] Training on graph 0
+INFO	__main__ |:|	[Epoch 67] Training on graph 10
+INFO	__main__ |:|	[Epoch 67] Training on graph 20
+INFO	__main__ |:|	[Epoch 67] Training on graph 30
+INFO	__main__ |:|	[Epoch 67] Training on graph 40
+INFO	__main__ |:|	[Epoch 67] Training on graph 50
+INFO	__main__ |:|	[Epoch 67] took 4.10 minutes.
+INFO	__main__ |:|	[Epoch 67] Train reward: 0.0266
+INFO	__main__ |:|	[Epoch 68] Training on graph 0
+INFO	__main__ |:|	[Epoch 68] Training on graph 10
+INFO	__main__ |:|	[Epoch 68] Training on graph 20
+INFO	__main__ |:|	[Epoch 68] Training on graph 30
+INFO	__main__ |:|	[Epoch 68] Training on graph 40
+INFO	__main__ |:|	[Epoch 68] Training on graph 50
+INFO	__main__ |:|	[Epoch 68] Training on graph 60
+INFO	__main__ |:|	[Epoch 68] Training on graph 0
+INFO	__main__ |:|	[Epoch 68] Training on graph 10
+INFO	__main__ |:|	[Epoch 68] Training on graph 20
+INFO	__main__ |:|	[Epoch 68] Training on graph 30
+INFO	__main__ |:|	[Epoch 68] Training on graph 40
+INFO	__main__ |:|	[Epoch 68] Training on graph 50
+INFO	__main__ |:|	[Epoch 68] took 4.20 minutes.
+INFO	__main__ |:|	[Epoch 68] Train reward: 0.0311
+INFO	__main__ |:|	[Epoch 69] Training on graph 0
+INFO	__main__ |:|	[Epoch 69] Training on graph 10
+INFO	__main__ |:|	[Epoch 69] Training on graph 20
+INFO	__main__ |:|	[Epoch 69] Training on graph 30
+INFO	__main__ |:|	[Epoch 69] Training on graph 40
+INFO	__main__ |:|	[Epoch 69] Training on graph 50
+INFO	__main__ |:|	[Epoch 69] Training on graph 60
+INFO	__main__ |:|	[Epoch 69] Training on graph 0
+INFO	__main__ |:|	[Epoch 69] Training on graph 10
+INFO	__main__ |:|	[Epoch 69] Training on graph 20
+INFO	__main__ |:|	[Epoch 69] Training on graph 30
+INFO	__main__ |:|	[Epoch 69] Training on graph 40
+INFO	__main__ |:|	[Epoch 69] Training on graph 50
+INFO	__main__ |:|	[Epoch 69] took 4.05 minutes.
+INFO	__main__ |:|	[Epoch 69] Train reward: 0.0147
+INFO	__main__ |:|	[Epoch 70] Training on graph 0
+INFO	__main__ |:|	[Epoch 70] Training on graph 10
+INFO	__main__ |:|	[Epoch 70] Training on graph 20
+INFO	__main__ |:|	[Epoch 70] Training on graph 30
+INFO	__main__ |:|	[Epoch 70] Training on graph 40
+INFO	__main__ |:|	[Epoch 70] Training on graph 50
+INFO	__main__ |:|	[Epoch 70] Training on graph 60
+INFO	__main__ |:|	[Epoch 70] Training on graph 0
+INFO	__main__ |:|	[Epoch 70] Training on graph 10
+INFO	__main__ |:|	[Epoch 70] Training on graph 20
+INFO	__main__ |:|	[Epoch 70] Training on graph 30
+INFO	__main__ |:|	[Epoch 70] Training on graph 40
+INFO	__main__ |:|	[Epoch 70] Training on graph 50
+INFO	__main__ |:|	[Epoch 70] took 3.62 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 70] Test evaluation took 7.62 minutes.
+INFO	__main__ |:|	[Epoch 70] Train reward: -0.0108, Test reward: -0.0123 ± 0.1060
+INFO	__main__ |:|	[Epoch 71] Training on graph 0
+INFO	__main__ |:|	[Epoch 71] Training on graph 10
+INFO	__main__ |:|	[Epoch 71] Training on graph 20
+INFO	__main__ |:|	[Epoch 71] Training on graph 30
+INFO	__main__ |:|	[Epoch 71] Training on graph 40
+INFO	__main__ |:|	[Epoch 71] Training on graph 50
+INFO	__main__ |:|	[Epoch 71] Training on graph 60
+INFO	__main__ |:|	[Epoch 71] Training on graph 0
+INFO	__main__ |:|	[Epoch 71] Training on graph 10
+INFO	__main__ |:|	[Epoch 71] Training on graph 20
+INFO	__main__ |:|	[Epoch 71] Training on graph 30
+INFO	__main__ |:|	[Epoch 71] Training on graph 40
+INFO	__main__ |:|	[Epoch 71] Training on graph 50
+INFO	__main__ |:|	[Epoch 71] took 4.05 minutes.
+INFO	__main__ |:|	[Epoch 71] Train reward: 0.0124
+INFO	__main__ |:|	[Epoch 72] Training on graph 0
+INFO	__main__ |:|	[Epoch 72] Training on graph 10
+INFO	__main__ |:|	[Epoch 72] Training on graph 20
+INFO	__main__ |:|	[Epoch 72] Training on graph 30
+INFO	__main__ |:|	[Epoch 72] Training on graph 40
+INFO	__main__ |:|	[Epoch 72] Training on graph 50
+INFO	__main__ |:|	[Epoch 72] Training on graph 60
+INFO	__main__ |:|	[Epoch 72] Training on graph 0
+INFO	__main__ |:|	[Epoch 72] Training on graph 10
+INFO	__main__ |:|	[Epoch 72] Training on graph 20
+INFO	__main__ |:|	[Epoch 72] Training on graph 30
+INFO	__main__ |:|	[Epoch 72] Training on graph 40
+INFO	__main__ |:|	[Epoch 72] Training on graph 50
+INFO	__main__ |:|	[Epoch 72] took 4.22 minutes.
+INFO	__main__ |:|	[Epoch 72] Train reward: -0.0166
+INFO	__main__ |:|	[Epoch 73] Training on graph 0
+INFO	__main__ |:|	[Epoch 73] Training on graph 10
+INFO	__main__ |:|	[Epoch 73] Training on graph 20
+INFO	__main__ |:|	[Epoch 73] Training on graph 30
+INFO	__main__ |:|	[Epoch 73] Training on graph 40
+INFO	__main__ |:|	[Epoch 73] Training on graph 50
+INFO	__main__ |:|	[Epoch 73] Training on graph 60
+INFO	__main__ |:|	[Epoch 73] Training on graph 0
+INFO	__main__ |:|	[Epoch 73] Training on graph 10
+INFO	__main__ |:|	[Epoch 73] Training on graph 20
+INFO	__main__ |:|	[Epoch 73] Training on graph 30
+INFO	__main__ |:|	[Epoch 73] Training on graph 40
+INFO	__main__ |:|	[Epoch 73] Training on graph 50
+INFO	__main__ |:|	[Epoch 73] took 4.04 minutes.
+INFO	__main__ |:|	[Epoch 73] Train reward: 0.0293
+INFO	__main__ |:|	[Epoch 74] Training on graph 0
+INFO	__main__ |:|	[Epoch 74] Training on graph 10
+INFO	__main__ |:|	[Epoch 74] Training on graph 20
+INFO	__main__ |:|	[Epoch 74] Training on graph 30
+INFO	__main__ |:|	[Epoch 74] Training on graph 40
+INFO	__main__ |:|	[Epoch 74] Training on graph 50
+INFO	__main__ |:|	[Epoch 74] Training on graph 60
+INFO	__main__ |:|	[Epoch 74] Training on graph 0
+INFO	__main__ |:|	[Epoch 74] Training on graph 10
+INFO	__main__ |:|	[Epoch 74] Training on graph 20
+INFO	__main__ |:|	[Epoch 74] Training on graph 30
+INFO	__main__ |:|	[Epoch 74] Training on graph 40
+INFO	__main__ |:|	[Epoch 74] Training on graph 50
+INFO	__main__ |:|	[Epoch 74] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 74] Train reward: 0.0151
+INFO	__main__ |:|	[Epoch 75] Training on graph 0
+INFO	__main__ |:|	[Epoch 75] Training on graph 10
+INFO	__main__ |:|	[Epoch 75] Training on graph 20
+INFO	__main__ |:|	[Epoch 75] Training on graph 30
+INFO	__main__ |:|	[Epoch 75] Training on graph 40
+INFO	__main__ |:|	[Epoch 75] Training on graph 50
+INFO	__main__ |:|	[Epoch 75] Training on graph 60
+INFO	__main__ |:|	[Epoch 75] Training on graph 0
+INFO	__main__ |:|	[Epoch 75] Training on graph 10
+INFO	__main__ |:|	[Epoch 75] Training on graph 20
+INFO	__main__ |:|	[Epoch 75] Training on graph 30
+INFO	__main__ |:|	[Epoch 75] Training on graph 40
+INFO	__main__ |:|	[Epoch 75] Training on graph 50
+INFO	__main__ |:|	[Epoch 75] took 3.77 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 75] Test evaluation took 11.10 minutes.
+INFO	__main__ |:|	[Epoch 75] Train reward: -0.0030, Test reward: -0.0229 ± 0.1119
+INFO	__main__ |:|	[Epoch 76] Training on graph 0
+INFO	__main__ |:|	[Epoch 76] Training on graph 10
+INFO	__main__ |:|	[Epoch 76] Training on graph 20
+INFO	__main__ |:|	[Epoch 76] Training on graph 30
+INFO	__main__ |:|	[Epoch 76] Training on graph 40
+INFO	__main__ |:|	[Epoch 76] Training on graph 50
+INFO	__main__ |:|	[Epoch 76] Training on graph 60
+INFO	__main__ |:|	[Epoch 76] Training on graph 0
+INFO	__main__ |:|	[Epoch 76] Training on graph 10
+INFO	__main__ |:|	[Epoch 76] Training on graph 20
+INFO	__main__ |:|	[Epoch 76] Training on graph 30
+INFO	__main__ |:|	[Epoch 76] Training on graph 40
+INFO	__main__ |:|	[Epoch 76] Training on graph 50
+INFO	__main__ |:|	[Epoch 76] took 4.09 minutes.
+INFO	__main__ |:|	[Epoch 76] Train reward: 0.0232
+INFO	__main__ |:|	[Epoch 77] Training on graph 0
+INFO	__main__ |:|	[Epoch 77] Training on graph 10
+INFO	__main__ |:|	[Epoch 77] Training on graph 20
+INFO	__main__ |:|	[Epoch 77] Training on graph 30
+INFO	__main__ |:|	[Epoch 77] Training on graph 40
+INFO	__main__ |:|	[Epoch 77] Training on graph 50
+INFO	__main__ |:|	[Epoch 77] Training on graph 60
+INFO	__main__ |:|	[Epoch 77] Training on graph 0
+INFO	__main__ |:|	[Epoch 77] Training on graph 10
+INFO	__main__ |:|	[Epoch 77] Training on graph 20
+INFO	__main__ |:|	[Epoch 77] Training on graph 30
+INFO	__main__ |:|	[Epoch 77] Training on graph 40
+INFO	__main__ |:|	[Epoch 77] Training on graph 50
+INFO	__main__ |:|	[Epoch 77] took 4.19 minutes.
+INFO	__main__ |:|	[Epoch 77] Train reward: 0.0062
+INFO	__main__ |:|	[Epoch 78] Training on graph 0
+INFO	__main__ |:|	[Epoch 78] Training on graph 10
+INFO	__main__ |:|	[Epoch 78] Training on graph 20
+INFO	__main__ |:|	[Epoch 78] Training on graph 30
+INFO	__main__ |:|	[Epoch 78] Training on graph 40
+INFO	__main__ |:|	[Epoch 78] Training on graph 50
+INFO	__main__ |:|	[Epoch 78] Training on graph 60
+INFO	__main__ |:|	[Epoch 78] Training on graph 0
+INFO	__main__ |:|	[Epoch 78] Training on graph 10
+INFO	__main__ |:|	[Epoch 78] Training on graph 20
+INFO	__main__ |:|	[Epoch 78] Training on graph 30
+INFO	__main__ |:|	[Epoch 78] Training on graph 40
+INFO	__main__ |:|	[Epoch 78] Training on graph 50
+INFO	__main__ |:|	[Epoch 78] took 4.19 minutes.
+INFO	__main__ |:|	[Epoch 78] Train reward: -0.0313
+INFO	__main__ |:|	[Epoch 79] Training on graph 0
+INFO	__main__ |:|	[Epoch 79] Training on graph 10
+INFO	__main__ |:|	[Epoch 79] Training on graph 20
+INFO	__main__ |:|	[Epoch 79] Training on graph 30
+INFO	__main__ |:|	[Epoch 79] Training on graph 40
+INFO	__main__ |:|	[Epoch 79] Training on graph 50
+INFO	__main__ |:|	[Epoch 79] Training on graph 60
+INFO	__main__ |:|	[Epoch 79] Training on graph 0
+INFO	__main__ |:|	[Epoch 79] Training on graph 10
+INFO	__main__ |:|	[Epoch 79] Training on graph 20
+INFO	__main__ |:|	[Epoch 79] Training on graph 30
+INFO	__main__ |:|	[Epoch 79] Training on graph 40
+INFO	__main__ |:|	[Epoch 79] Training on graph 50
+INFO	__main__ |:|	[Epoch 79] took 3.98 minutes.
+INFO	__main__ |:|	[Epoch 79] Train reward: -0.0252
+INFO	__main__ |:|	[Epoch 80] Training on graph 0
+INFO	__main__ |:|	[Epoch 80] Training on graph 10
+INFO	__main__ |:|	[Epoch 80] Training on graph 20
+INFO	__main__ |:|	[Epoch 80] Training on graph 30
+INFO	__main__ |:|	[Epoch 80] Training on graph 40
+INFO	__main__ |:|	[Epoch 80] Training on graph 50
+INFO	__main__ |:|	[Epoch 80] Training on graph 60
+INFO	__main__ |:|	[Epoch 80] Training on graph 0
+INFO	__main__ |:|	[Epoch 80] Training on graph 10
+INFO	__main__ |:|	[Epoch 80] Training on graph 20
+INFO	__main__ |:|	[Epoch 80] Training on graph 30
+INFO	__main__ |:|	[Epoch 80] Training on graph 40
+INFO	__main__ |:|	[Epoch 80] Training on graph 50
+INFO	__main__ |:|	[Epoch 80] took 3.77 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 80] Test evaluation took 8.72 minutes.
+INFO	__main__ |:|	[Epoch 80] Train reward: -0.0084, Test reward: -0.0086 ± 0.1080
+INFO	__main__ |:|	[Epoch 81] Training on graph 0
+INFO	__main__ |:|	[Epoch 81] Training on graph 10
+INFO	__main__ |:|	[Epoch 81] Training on graph 20
+INFO	__main__ |:|	[Epoch 81] Training on graph 30
+INFO	__main__ |:|	[Epoch 81] Training on graph 40
+INFO	__main__ |:|	[Epoch 81] Training on graph 50
+INFO	__main__ |:|	[Epoch 81] Training on graph 60
+INFO	__main__ |:|	[Epoch 81] Training on graph 0
+INFO	__main__ |:|	[Epoch 81] Training on graph 10
+INFO	__main__ |:|	[Epoch 81] Training on graph 20
+INFO	__main__ |:|	[Epoch 81] Training on graph 30
+INFO	__main__ |:|	[Epoch 81] Training on graph 40
+INFO	__main__ |:|	[Epoch 81] Training on graph 50
+INFO	__main__ |:|	[Epoch 81] took 4.17 minutes.
+INFO	__main__ |:|	[Epoch 81] Train reward: 0.0079
+INFO	__main__ |:|	[Epoch 82] Training on graph 0
+INFO	__main__ |:|	[Epoch 82] Training on graph 10
+INFO	__main__ |:|	[Epoch 82] Training on graph 20
+INFO	__main__ |:|	[Epoch 82] Training on graph 30
+INFO	__main__ |:|	[Epoch 82] Training on graph 40
+INFO	__main__ |:|	[Epoch 82] Training on graph 50
+INFO	__main__ |:|	[Epoch 82] Training on graph 60
+INFO	__main__ |:|	[Epoch 82] Training on graph 0
+INFO	__main__ |:|	[Epoch 82] Training on graph 10
+INFO	__main__ |:|	[Epoch 82] Training on graph 20
+INFO	__main__ |:|	[Epoch 82] Training on graph 30
+INFO	__main__ |:|	[Epoch 82] Training on graph 40
+INFO	__main__ |:|	[Epoch 82] Training on graph 50
+INFO	__main__ |:|	[Epoch 82] took 4.19 minutes.
+INFO	__main__ |:|	[Epoch 82] Train reward: -0.0214
+INFO	__main__ |:|	[Epoch 83] Training on graph 0
+INFO	__main__ |:|	[Epoch 83] Training on graph 10
+INFO	__main__ |:|	[Epoch 83] Training on graph 20
+INFO	__main__ |:|	[Epoch 83] Training on graph 30
+INFO	__main__ |:|	[Epoch 83] Training on graph 40
+INFO	__main__ |:|	[Epoch 83] Training on graph 50
+INFO	__main__ |:|	[Epoch 83] Training on graph 60
+INFO	__main__ |:|	[Epoch 83] Training on graph 0
+INFO	__main__ |:|	[Epoch 83] Training on graph 10
+INFO	__main__ |:|	[Epoch 83] Training on graph 20
+INFO	__main__ |:|	[Epoch 83] Training on graph 30
+INFO	__main__ |:|	[Epoch 83] Training on graph 40
+INFO	__main__ |:|	[Epoch 83] Training on graph 50
+INFO	__main__ |:|	[Epoch 83] took 4.22 minutes.
+INFO	__main__ |:|	[Epoch 83] Train reward: 0.0173
+INFO	__main__ |:|	[Epoch 84] Training on graph 0
+INFO	__main__ |:|	[Epoch 84] Training on graph 10
+INFO	__main__ |:|	[Epoch 84] Training on graph 20
+INFO	__main__ |:|	[Epoch 84] Training on graph 30
+INFO	__main__ |:|	[Epoch 84] Training on graph 40
+INFO	__main__ |:|	[Epoch 84] Training on graph 50
+INFO	__main__ |:|	[Epoch 84] Training on graph 60
+INFO	__main__ |:|	[Epoch 84] Training on graph 0
+INFO	__main__ |:|	[Epoch 84] Training on graph 10
+INFO	__main__ |:|	[Epoch 84] Training on graph 20
+INFO	__main__ |:|	[Epoch 84] Training on graph 30
+INFO	__main__ |:|	[Epoch 84] Training on graph 40
+INFO	__main__ |:|	[Epoch 84] Training on graph 50
+INFO	__main__ |:|	[Epoch 84] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 84] Train reward: 0.0188
+INFO	__main__ |:|	[Epoch 85] Training on graph 0
+INFO	__main__ |:|	[Epoch 85] Training on graph 10
+INFO	__main__ |:|	[Epoch 85] Training on graph 20
+INFO	__main__ |:|	[Epoch 85] Training on graph 30
+INFO	__main__ |:|	[Epoch 85] Training on graph 40
+INFO	__main__ |:|	[Epoch 85] Training on graph 50
+INFO	__main__ |:|	[Epoch 85] Training on graph 60
+INFO	__main__ |:|	[Epoch 85] Training on graph 0
+INFO	__main__ |:|	[Epoch 85] Training on graph 10
+INFO	__main__ |:|	[Epoch 85] Training on graph 20
+INFO	__main__ |:|	[Epoch 85] Training on graph 30
+INFO	__main__ |:|	[Epoch 85] Training on graph 40
+INFO	__main__ |:|	[Epoch 85] Training on graph 50
+INFO	__main__ |:|	[Epoch 85] took 4.04 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 85] Test evaluation took 5.95 minutes.
+INFO	__main__ |:|	[Epoch 85] Train reward: 0.0150, Test reward: 0.0020 ± 0.0991
+INFO	__main__ |:|	[Epoch 86] Training on graph 0
+INFO	__main__ |:|	[Epoch 86] Training on graph 10
+INFO	__main__ |:|	[Epoch 86] Training on graph 20
+INFO	__main__ |:|	[Epoch 86] Training on graph 30
+INFO	__main__ |:|	[Epoch 86] Training on graph 40
+INFO	__main__ |:|	[Epoch 86] Training on graph 50
+INFO	__main__ |:|	[Epoch 86] Training on graph 60
+INFO	__main__ |:|	[Epoch 86] Training on graph 0
+INFO	__main__ |:|	[Epoch 86] Training on graph 10
+INFO	__main__ |:|	[Epoch 86] Training on graph 20
+INFO	__main__ |:|	[Epoch 86] Training on graph 30
+INFO	__main__ |:|	[Epoch 86] Training on graph 40
+INFO	__main__ |:|	[Epoch 86] Training on graph 50
+INFO	__main__ |:|	[Epoch 86] took 4.09 minutes.
+INFO	__main__ |:|	[Epoch 86] Train reward: -0.0027
+INFO	__main__ |:|	[Epoch 87] Training on graph 0
+INFO	__main__ |:|	[Epoch 87] Training on graph 10
+INFO	__main__ |:|	[Epoch 87] Training on graph 20
+INFO	__main__ |:|	[Epoch 87] Training on graph 30
+INFO	__main__ |:|	[Epoch 87] Training on graph 40
+INFO	__main__ |:|	[Epoch 87] Training on graph 50
+INFO	__main__ |:|	[Epoch 87] Training on graph 60
+INFO	__main__ |:|	[Epoch 87] Training on graph 0
+INFO	__main__ |:|	[Epoch 87] Training on graph 10
+INFO	__main__ |:|	[Epoch 87] Training on graph 20
+INFO	__main__ |:|	[Epoch 87] Training on graph 30
+INFO	__main__ |:|	[Epoch 87] Training on graph 40
+INFO	__main__ |:|	[Epoch 87] Training on graph 50
+INFO	__main__ |:|	[Epoch 87] took 4.09 minutes.
+INFO	__main__ |:|	[Epoch 87] Train reward: 0.0071
+INFO	__main__ |:|	[Epoch 88] Training on graph 0
+INFO	__main__ |:|	[Epoch 88] Training on graph 10
+INFO	__main__ |:|	[Epoch 88] Training on graph 20
+INFO	__main__ |:|	[Epoch 88] Training on graph 30
+INFO	__main__ |:|	[Epoch 88] Training on graph 40
+INFO	__main__ |:|	[Epoch 88] Training on graph 50
+INFO	__main__ |:|	[Epoch 88] Training on graph 60
+INFO	__main__ |:|	[Epoch 88] Training on graph 0
+INFO	__main__ |:|	[Epoch 88] Training on graph 10
+INFO	__main__ |:|	[Epoch 88] Training on graph 20
+INFO	__main__ |:|	[Epoch 88] Training on graph 30
+INFO	__main__ |:|	[Epoch 88] Training on graph 40
+INFO	__main__ |:|	[Epoch 88] Training on graph 50
+INFO	__main__ |:|	[Epoch 88] took 4.20 minutes.
+INFO	__main__ |:|	[Epoch 88] Train reward: 0.0323
+INFO	__main__ |:|	[Epoch 89] Training on graph 0
+INFO	__main__ |:|	[Epoch 89] Training on graph 10
+INFO	__main__ |:|	[Epoch 89] Training on graph 20
+INFO	__main__ |:|	[Epoch 89] Training on graph 30
+INFO	__main__ |:|	[Epoch 89] Training on graph 40
+INFO	__main__ |:|	[Epoch 89] Training on graph 50
+INFO	__main__ |:|	[Epoch 89] Training on graph 60
+INFO	__main__ |:|	[Epoch 89] Training on graph 0
+INFO	__main__ |:|	[Epoch 89] Training on graph 10
+INFO	__main__ |:|	[Epoch 89] Training on graph 20
+INFO	__main__ |:|	[Epoch 89] Training on graph 30
+INFO	__main__ |:|	[Epoch 89] Training on graph 40
+INFO	__main__ |:|	[Epoch 89] Training on graph 50
+INFO	__main__ |:|	[Epoch 89] took 4.26 minutes.
+INFO	__main__ |:|	[Epoch 89] Train reward: 0.0174
+INFO	__main__ |:|	[Epoch 90] Training on graph 0
+INFO	__main__ |:|	[Epoch 90] Training on graph 10
+INFO	__main__ |:|	[Epoch 90] Training on graph 20
+INFO	__main__ |:|	[Epoch 90] Training on graph 30
+INFO	__main__ |:|	[Epoch 90] Training on graph 40
+INFO	__main__ |:|	[Epoch 90] Training on graph 50
+INFO	__main__ |:|	[Epoch 90] Training on graph 60
+INFO	__main__ |:|	[Epoch 90] Training on graph 0
+INFO	__main__ |:|	[Epoch 90] Training on graph 10
+INFO	__main__ |:|	[Epoch 90] Training on graph 20
+INFO	__main__ |:|	[Epoch 90] Training on graph 30
+INFO	__main__ |:|	[Epoch 90] Training on graph 40
+INFO	__main__ |:|	[Epoch 90] Training on graph 50
+INFO	__main__ |:|	[Epoch 90] took 4.11 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 90] Test evaluation took 6.62 minutes.
+INFO	__main__ |:|	[Epoch 90] Train reward: 0.0058, Test reward: 0.0003 ± 0.1113
+INFO	__main__ |:|	[Epoch 91] Training on graph 0
+INFO	__main__ |:|	[Epoch 91] Training on graph 10
+INFO	__main__ |:|	[Epoch 91] Training on graph 20
+INFO	__main__ |:|	[Epoch 91] Training on graph 30
+INFO	__main__ |:|	[Epoch 91] Training on graph 40
+INFO	__main__ |:|	[Epoch 91] Training on graph 50
+INFO	__main__ |:|	[Epoch 91] Training on graph 60
+INFO	__main__ |:|	[Epoch 91] Training on graph 0
+INFO	__main__ |:|	[Epoch 91] Training on graph 10
+INFO	__main__ |:|	[Epoch 91] Training on graph 20
+INFO	__main__ |:|	[Epoch 91] Training on graph 30
+INFO	__main__ |:|	[Epoch 91] Training on graph 40
+INFO	__main__ |:|	[Epoch 91] Training on graph 50
+INFO	__main__ |:|	[Epoch 91] took 4.07 minutes.
+INFO	__main__ |:|	[Epoch 91] Train reward: -0.0109
+INFO	__main__ |:|	[Epoch 92] Training on graph 0
+INFO	__main__ |:|	[Epoch 92] Training on graph 10
+INFO	__main__ |:|	[Epoch 92] Training on graph 20
+INFO	__main__ |:|	[Epoch 92] Training on graph 30
+INFO	__main__ |:|	[Epoch 92] Training on graph 40
+INFO	__main__ |:|	[Epoch 92] Training on graph 50
+INFO	__main__ |:|	[Epoch 92] Training on graph 60
+INFO	__main__ |:|	[Epoch 92] Training on graph 0
+INFO	__main__ |:|	[Epoch 92] Training on graph 10
+INFO	__main__ |:|	[Epoch 92] Training on graph 20
+INFO	__main__ |:|	[Epoch 92] Training on graph 30
+INFO	__main__ |:|	[Epoch 92] Training on graph 40
+INFO	__main__ |:|	[Epoch 92] Training on graph 50
+INFO	__main__ |:|	[Epoch 92] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 92] Train reward: 0.0056
+INFO	__main__ |:|	[Epoch 93] Training on graph 0
+INFO	__main__ |:|	[Epoch 93] Training on graph 10
+INFO	__main__ |:|	[Epoch 93] Training on graph 20
+INFO	__main__ |:|	[Epoch 93] Training on graph 30
+INFO	__main__ |:|	[Epoch 93] Training on graph 40
+INFO	__main__ |:|	[Epoch 93] Training on graph 50
+INFO	__main__ |:|	[Epoch 93] Training on graph 60
+INFO	__main__ |:|	[Epoch 93] Training on graph 0
+INFO	__main__ |:|	[Epoch 93] Training on graph 10
+INFO	__main__ |:|	[Epoch 93] Training on graph 20
+INFO	__main__ |:|	[Epoch 93] Training on graph 30
+INFO	__main__ |:|	[Epoch 93] Training on graph 40
+INFO	__main__ |:|	[Epoch 93] Training on graph 50
+INFO	__main__ |:|	[Epoch 93] took 4.21 minutes.
+INFO	__main__ |:|	[Epoch 93] Train reward: -0.0051
+INFO	__main__ |:|	[Epoch 94] Training on graph 0
+INFO	__main__ |:|	[Epoch 94] Training on graph 10
+INFO	__main__ |:|	[Epoch 94] Training on graph 20
+INFO	__main__ |:|	[Epoch 94] Training on graph 30
+INFO	__main__ |:|	[Epoch 94] Training on graph 40
+INFO	__main__ |:|	[Epoch 94] Training on graph 50
+INFO	__main__ |:|	[Epoch 94] Training on graph 60
+INFO	__main__ |:|	[Epoch 94] Training on graph 0
+INFO	__main__ |:|	[Epoch 94] Training on graph 10
+INFO	__main__ |:|	[Epoch 94] Training on graph 20
+INFO	__main__ |:|	[Epoch 94] Training on graph 30
+INFO	__main__ |:|	[Epoch 94] Training on graph 40
+INFO	__main__ |:|	[Epoch 94] Training on graph 50
+INFO	__main__ |:|	[Epoch 94] took 4.09 minutes.
+INFO	__main__ |:|	[Epoch 94] Train reward: -0.0057
+INFO	__main__ |:|	[Epoch 95] Training on graph 0
+INFO	__main__ |:|	[Epoch 95] Training on graph 10
+INFO	__main__ |:|	[Epoch 95] Training on graph 20
+INFO	__main__ |:|	[Epoch 95] Training on graph 30
+INFO	__main__ |:|	[Epoch 95] Training on graph 40
+INFO	__main__ |:|	[Epoch 95] Training on graph 50
+INFO	__main__ |:|	[Epoch 95] Training on graph 60
+INFO	__main__ |:|	[Epoch 95] Training on graph 0
+INFO	__main__ |:|	[Epoch 95] Training on graph 10
+INFO	__main__ |:|	[Epoch 95] Training on graph 20
+INFO	__main__ |:|	[Epoch 95] Training on graph 30
+INFO	__main__ |:|	[Epoch 95] Training on graph 40
+INFO	__main__ |:|	[Epoch 95] Training on graph 50
+INFO	__main__ |:|	[Epoch 95] took 4.16 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 95] Test evaluation took 7.81 minutes.
+INFO	__main__ |:|	[Epoch 95] Train reward: -0.0221, Test reward: -0.0238 ± 0.1127
+INFO	__main__ |:|	[Epoch 96] Training on graph 0
+INFO	__main__ |:|	[Epoch 96] Training on graph 10
+INFO	__main__ |:|	[Epoch 96] Training on graph 20
+INFO	__main__ |:|	[Epoch 96] Training on graph 30
+INFO	__main__ |:|	[Epoch 96] Training on graph 40
+INFO	__main__ |:|	[Epoch 96] Training on graph 50
+INFO	__main__ |:|	[Epoch 96] Training on graph 60
+INFO	__main__ |:|	[Epoch 96] Training on graph 0
+INFO	__main__ |:|	[Epoch 96] Training on graph 10
+INFO	__main__ |:|	[Epoch 96] Training on graph 20
+INFO	__main__ |:|	[Epoch 96] Training on graph 30
+INFO	__main__ |:|	[Epoch 96] Training on graph 40
+INFO	__main__ |:|	[Epoch 96] Training on graph 50
+INFO	__main__ |:|	[Epoch 96] took 3.85 minutes.
+INFO	__main__ |:|	[Epoch 96] Train reward: -0.0089
+INFO	__main__ |:|	[Epoch 97] Training on graph 0
+INFO	__main__ |:|	[Epoch 97] Training on graph 10
+INFO	__main__ |:|	[Epoch 97] Training on graph 20
+INFO	__main__ |:|	[Epoch 97] Training on graph 30
+INFO	__main__ |:|	[Epoch 97] Training on graph 40
+INFO	__main__ |:|	[Epoch 97] Training on graph 50
+INFO	__main__ |:|	[Epoch 97] Training on graph 60
+INFO	__main__ |:|	[Epoch 97] Training on graph 0
+INFO	__main__ |:|	[Epoch 97] Training on graph 10
+INFO	__main__ |:|	[Epoch 97] Training on graph 20
+INFO	__main__ |:|	[Epoch 97] Training on graph 30
+INFO	__main__ |:|	[Epoch 97] Training on graph 40
+INFO	__main__ |:|	[Epoch 97] Training on graph 50
+INFO	__main__ |:|	[Epoch 97] took 4.22 minutes.
+INFO	__main__ |:|	[Epoch 97] Train reward: -0.0044
+INFO	__main__ |:|	[Epoch 98] Training on graph 0
+INFO	__main__ |:|	[Epoch 98] Training on graph 10
+INFO	__main__ |:|	[Epoch 98] Training on graph 20
+INFO	__main__ |:|	[Epoch 98] Training on graph 30
+INFO	__main__ |:|	[Epoch 98] Training on graph 40
+INFO	__main__ |:|	[Epoch 98] Training on graph 50
+INFO	__main__ |:|	[Epoch 98] Training on graph 60
+INFO	__main__ |:|	[Epoch 98] Training on graph 0
+INFO	__main__ |:|	[Epoch 98] Training on graph 10
+INFO	__main__ |:|	[Epoch 98] Training on graph 20
+INFO	__main__ |:|	[Epoch 98] Training on graph 30
+INFO	__main__ |:|	[Epoch 98] Training on graph 40
+INFO	__main__ |:|	[Epoch 98] Training on graph 50
+INFO	__main__ |:|	[Epoch 98] took 4.16 minutes.
+INFO	__main__ |:|	[Epoch 98] Train reward: -0.0038
+INFO	__main__ |:|	[Epoch 99] Training on graph 0
+INFO	__main__ |:|	[Epoch 99] Training on graph 10
+INFO	__main__ |:|	[Epoch 99] Training on graph 20
+INFO	__main__ |:|	[Epoch 99] Training on graph 30
+INFO	__main__ |:|	[Epoch 99] Training on graph 40
+INFO	__main__ |:|	[Epoch 99] Training on graph 50
+INFO	__main__ |:|	[Epoch 99] Training on graph 60
+INFO	__main__ |:|	[Epoch 99] Training on graph 0
+INFO	__main__ |:|	[Epoch 99] Training on graph 10
+INFO	__main__ |:|	[Epoch 99] Training on graph 20
+INFO	__main__ |:|	[Epoch 99] Training on graph 30
+INFO	__main__ |:|	[Epoch 99] Training on graph 40
+INFO	__main__ |:|	[Epoch 99] Training on graph 50
+INFO	__main__ |:|	[Epoch 99] took 4.13 minutes.
+INFO	__main__ |:|	[Epoch 99] Train reward: 0.0318
+INFO	__main__ |:|	[Epoch 100] Training on graph 0
+INFO	__main__ |:|	[Epoch 100] Training on graph 10
+INFO	__main__ |:|	[Epoch 100] Training on graph 20
+INFO	__main__ |:|	[Epoch 100] Training on graph 30
+INFO	__main__ |:|	[Epoch 100] Training on graph 40
+INFO	__main__ |:|	[Epoch 100] Training on graph 50
+INFO	__main__ |:|	[Epoch 100] Training on graph 60
+INFO	__main__ |:|	[Epoch 100] Training on graph 0
+INFO	__main__ |:|	[Epoch 100] Training on graph 10
+INFO	__main__ |:|	[Epoch 100] Training on graph 20
+INFO	__main__ |:|	[Epoch 100] Training on graph 30
+INFO	__main__ |:|	[Epoch 100] Training on graph 40
+INFO	__main__ |:|	[Epoch 100] Training on graph 50
+INFO	__main__ |:|	[Epoch 100] took 4.28 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 100] Test evaluation took 8.21 minutes.
+INFO	__main__ |:|	[Epoch 100] Train reward: -0.0075, Test reward: -0.0113 ± 0.1049
+INFO	__main__ |:|	[Epoch 101] Training on graph 0
+INFO	__main__ |:|	[Epoch 101] Training on graph 10
+INFO	__main__ |:|	[Epoch 101] Training on graph 20
+INFO	__main__ |:|	[Epoch 101] Training on graph 30
+INFO	__main__ |:|	[Epoch 101] Training on graph 40
+INFO	__main__ |:|	[Epoch 101] Training on graph 50
+INFO	__main__ |:|	[Epoch 101] Training on graph 60
+INFO	__main__ |:|	[Epoch 101] Training on graph 0
+INFO	__main__ |:|	[Epoch 101] Training on graph 10
+INFO	__main__ |:|	[Epoch 101] Training on graph 20
+INFO	__main__ |:|	[Epoch 101] Training on graph 30
+INFO	__main__ |:|	[Epoch 101] Training on graph 40
+INFO	__main__ |:|	[Epoch 101] Training on graph 50
+INFO	__main__ |:|	[Epoch 101] took 3.99 minutes.
+INFO	__main__ |:|	[Epoch 101] Train reward: 0.0050
+INFO	__main__ |:|	[Epoch 102] Training on graph 0
+INFO	__main__ |:|	[Epoch 102] Training on graph 10
+INFO	__main__ |:|	[Epoch 102] Training on graph 20
+INFO	__main__ |:|	[Epoch 102] Training on graph 30
+INFO	__main__ |:|	[Epoch 102] Training on graph 40
+INFO	__main__ |:|	[Epoch 102] Training on graph 50
+INFO	__main__ |:|	[Epoch 102] Training on graph 60
+INFO	__main__ |:|	[Epoch 102] Training on graph 0
+INFO	__main__ |:|	[Epoch 102] Training on graph 10
+INFO	__main__ |:|	[Epoch 102] Training on graph 20
+INFO	__main__ |:|	[Epoch 102] Training on graph 30
+INFO	__main__ |:|	[Epoch 102] Training on graph 40
+INFO	__main__ |:|	[Epoch 102] Training on graph 50
+INFO	__main__ |:|	[Epoch 102] took 4.04 minutes.
+INFO	__main__ |:|	[Epoch 102] Train reward: -0.0004
+INFO	__main__ |:|	[Epoch 103] Training on graph 0
+INFO	__main__ |:|	[Epoch 103] Training on graph 10
+INFO	__main__ |:|	[Epoch 103] Training on graph 20
+INFO	__main__ |:|	[Epoch 103] Training on graph 30
+INFO	__main__ |:|	[Epoch 103] Training on graph 40
+INFO	__main__ |:|	[Epoch 103] Training on graph 50
+INFO	__main__ |:|	[Epoch 103] Training on graph 60
+INFO	__main__ |:|	[Epoch 103] Training on graph 0
+INFO	__main__ |:|	[Epoch 103] Training on graph 10
+INFO	__main__ |:|	[Epoch 103] Training on graph 20
+INFO	__main__ |:|	[Epoch 103] Training on graph 30
+INFO	__main__ |:|	[Epoch 103] Training on graph 40
+INFO	__main__ |:|	[Epoch 103] Training on graph 50
+INFO	__main__ |:|	[Epoch 103] took 4.38 minutes.
+INFO	__main__ |:|	[Epoch 103] Train reward: 0.0006
+INFO	__main__ |:|	[Epoch 104] Training on graph 0
+INFO	__main__ |:|	[Epoch 104] Training on graph 10
+INFO	__main__ |:|	[Epoch 104] Training on graph 20
+INFO	__main__ |:|	[Epoch 104] Training on graph 30
+INFO	__main__ |:|	[Epoch 104] Training on graph 40
+INFO	__main__ |:|	[Epoch 104] Training on graph 50
+INFO	__main__ |:|	[Epoch 104] Training on graph 60
+INFO	__main__ |:|	[Epoch 104] Training on graph 0
+INFO	__main__ |:|	[Epoch 104] Training on graph 10
+INFO	__main__ |:|	[Epoch 104] Training on graph 20
+INFO	__main__ |:|	[Epoch 104] Training on graph 30
+INFO	__main__ |:|	[Epoch 104] Training on graph 40
+INFO	__main__ |:|	[Epoch 104] Training on graph 50
+INFO	__main__ |:|	[Epoch 104] took 4.13 minutes.
+INFO	__main__ |:|	[Epoch 104] Train reward: -0.0186
+INFO	__main__ |:|	[Epoch 105] Training on graph 0
+INFO	__main__ |:|	[Epoch 105] Training on graph 10
+INFO	__main__ |:|	[Epoch 105] Training on graph 20
+INFO	__main__ |:|	[Epoch 105] Training on graph 30
+INFO	__main__ |:|	[Epoch 105] Training on graph 40
+INFO	__main__ |:|	[Epoch 105] Training on graph 50
+INFO	__main__ |:|	[Epoch 105] Training on graph 60
+INFO	__main__ |:|	[Epoch 105] Training on graph 0
+INFO	__main__ |:|	[Epoch 105] Training on graph 10
+INFO	__main__ |:|	[Epoch 105] Training on graph 20
+INFO	__main__ |:|	[Epoch 105] Training on graph 30
+INFO	__main__ |:|	[Epoch 105] Training on graph 40
+INFO	__main__ |:|	[Epoch 105] Training on graph 50
+INFO	__main__ |:|	[Epoch 105] took 4.11 minutes.
+INFO	__main__ |:|	Evaluating on test set with 70 graphs...
+INFO	__main__ |:|	[Epoch 105] Test evaluation took 8.33 minutes.
+INFO	__main__ |:|	[Epoch 105] Train reward: 0.0077, Test reward: -0.0019 ± 0.0886
+INFO	__main__ |:|	Early stopping at epoch 105
+INFO	__main__ |:|	Final training plots created successfully
+Training progress plot saved to: outputs/2025-07-29_03-48-08_gnn_rl_model_GIN_p4/training_progress_p4.png
+Combined progress plot saved to: outputs/2025-07-29_03-48-08_gnn_rl_model_GIN_p4/combined_progress_p4.png
