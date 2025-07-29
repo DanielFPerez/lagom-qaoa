@@ -19,14 +19,14 @@ run_gnn_training() {
         --gnn_type $gnn_type \
         --dst_dir "outputs/${timestamp}_gnn_rl_model_${gnn_type}_p${p}" \
         --log_filename "${timestamp}_gnn_rl_trainer_${gnn_type}_p${p}.log" \
-        --n_epochs 600 \
+        --n_epochs 500 \
         --eps_per_epoch 128 \
-        --hidden_dim 256 \
-        --gnn_hidden_dim 256 \
+        --hidden_dim 512 \
+        --gnn_hidden_dim 512 \
         --gnn_num_layers 3 \
         --graphs_per_episode 70 \
         --T 128 \
-        --patience 40 \
+        --patience 50 \
         --seed 42 \
         > logs/gnn_training_${gnn_type}_p${p}_${timestamp}.out 2>&1
     

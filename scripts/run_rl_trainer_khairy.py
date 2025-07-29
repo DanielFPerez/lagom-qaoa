@@ -25,14 +25,14 @@ import src.utils.plot_train as plot_train
 
 
 class Actor(nn.Module):
-    def __init__(self, state_dim, action_dim, hdiden_dim=64):
+    def __init__(self, state_dim, action_dim, hidden_dim=64):
         super(Actor, self).__init__()
         self.net = nn.Sequential(
-            nn.Linear(state_dim, hdiden_dim),
+            nn.Linear(state_dim, hidden_dim),
             nn.Tanh(),
-            nn.Linear(hdiden_dim, hdiden_dim),
+            nn.Linear(hidden_dim, hidden_dim),
             nn.Tanh(),
-            nn.Linear(hdiden_dim, action_dim),
+            nn.Linear(hidden_dim, action_dim),
             nn.Tanh()
         )
         self.log_std = nn.Parameter(torch.ones(action_dim) * -6.0)
@@ -278,7 +278,7 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     action_dim = 2 * p
     
     logger.info(f"Creating the PPO agent with state_dim: {state_dim}, action_dim: {action_dim}, hidden_dim: {hidden_dim}")
-    agent = PPO(state_dim, action_dim, hidden_dim=hidden_dim)
+    agent = PPO(state_dim, action_dim, hidden_dim=hidden_dim, device=device)
     
     # Training metrics storage
     metrics = {
@@ -549,7 +549,7 @@ if __name__ == "__main__":
     
     logger.info("Starting training...")
     metrics = train_rl_qaoa(GTrain, GTest, p, dst_dir, epochs=n_epochs, episodes_per_epoch=eps_per_epoch, T=T, 
-                            seed=args.seed, patience=args.patience, graphs_per_episode=args.graphs_per_episod,
+                            seed=args.seed, patience=args.patience, graphs_per_episode=args.graphs_per_episode,
                             hidden_dim=args.hidden_dim,
                             device=args.device) 
     
