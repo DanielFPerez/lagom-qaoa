@@ -276,5 +276,5 @@ def plot_expected_discounted_rewards(metrics, dst_dir, p, epoch):
     ax2.grid(True, alpha=0.3)
     
     plt.tight_layout()
-    plt.savefig(os.path.join(dst_dir, f'training_progress_p{p}_epoch{epoch}.png'))
+    plt.savefig(os.path.join(dst_dir, f'live_progress_p{p}.png'))
     plt.close()

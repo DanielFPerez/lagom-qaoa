@@ -19,14 +19,14 @@ run_gnn_training() {
         --gnn_type $gnn_type \
         --dst_dir "outputs/${timestamp}_gnn_rl_model_${gnn_type}_p${p}" \
         --log_filename "${timestamp}_gnn_rl_trainer_${gnn_type}_p${p}.log" \
-        --n_epochs 500 \
-        --eps_per_epoch 128 \
-        --hidden_dim 512 \
-        --gnn_hidden_dim 256 \
+        --n_epochs 20 \
+        --eps_per_epoch 32 \
+        --hidden_dim 32 \
+        --gnn_hidden_dim 32 \
         --gnn_num_layers 3 \
-        --graphs_per_episode 70 \
-        --T 128 \
-        --patience 50 \
+        --graphs_per_episode 10 \
+        --T 16 \
+        --patience 2 \
         --seed 42 \
         > logs/gnn_training_${gnn_type}_p${p}_${timestamp}.out 2>&1
     
@@ -41,7 +41,7 @@ run_gnn_training() {
 }
 
 # Array of GNN types
-GNN_TYPES=("GIN" "GCN" "TransformerConv")
+GNN_TYPES=("GIN" "GCN" "TCN")
 
 # Start all processes
 declare -A PIDS
@@ -60,8 +60,8 @@ done
 
 # For p=4, use cuda:2
 for gnn_type in "${GNN_TYPES[@]}"; do
-    run_gnn_training 4 $gnn_type "cuda:2" &
-    PIDS["p4_${gnn_type}"]=$!
+    run_gnn_training 3 $gnn_type "cuda:2" &
+    PIDS["p3_${gnn_type}"]=$!
 done
 
 # Display started processes

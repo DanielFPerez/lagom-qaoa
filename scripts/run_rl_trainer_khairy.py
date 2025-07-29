@@ -194,10 +194,10 @@ class PPO:
             'optimizer_actor_state_dict': self.optimizer_actor.state_dict(),
             'optimizer_critic_state_dict': self.optimizer_critic.state_dict(),
             'state_dim': self.state_dim,
-            'hidden_dim': self.hidden_dim,
             'action_dim': self.action_dim,
             'clip_epsilon': self.clip_epsilon,
-            'gamma': self.gamma
+            'gamma': self.gamma,
+            'hidden_dim': self.hidden_dim,
         }, path)
 
     def load(self, path):
@@ -210,27 +210,31 @@ class PPO:
 
 
 @torch.no_grad()
-def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int, 
-                         T: int = 64, reps: int = 128, L: int = 4, early_stop_patience: int = 16, n_samples_normalization: int = 25) -> Dict[str, float]:
-    """Evaluate the agent on test set"""
-    all_rewards = []
+def evaluate_expected_discounted_rewards(agent: PPO, test_graphs: List[Dict[str, Any]], 
+                                       p: int, T: int = 64, reps: int = 128, 
+                                       L: int = 4, n_samples_normalization: int = 25) -> Dict[str, float]:
+    """Evaluate agent using expected discounted rewards"""
+    logger = logging.getLogger(__name__)
+    all_discounted_rewards = []
     all_final_values = []
+    early_stop_patience = T//2  # Early stopping patience for no improvement
     
     for i, elem in enumerate(test_graphs):
         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
-        env = QAOAEnv(graph, p=p, reps=reps, history_len=L, n_samples_normalization=n_samples_normalization)
+        env = QAOAEnv(graph, p=p, reps=reps, history_len=L,
+                      n_samples_normalization=n_samples_normalization)
         state = env.reset()
-        episode_reward = 0
-
-        # Track performance for early stopping
-        best_f_val = env.f_val
+        
+        # Track rewards for this episode
+        episode_rewards = []
+        best_f_val = -float('inf')
         steps_without_improvement = 0
         
         for t in range(T):
             action, _ = agent.select_action(state, deterministic=True)
             next_state, reward, done, info = env.step(action)
-            episode_reward += reward
+            episode_rewards.append(reward)
 
             if info['f_val'] > best_f_val:
                 best_f_val = info['f_val']
@@ -239,22 +243,30 @@ def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int,
                 steps_without_improvement += 1
                 
             if steps_without_improvement >= early_stop_patience:
-                logger.debug(f"Early stopping after {t} steps due to {steps_without_improvement} steps without improvement.")
+                logger.debug(f"Early stopping after {t} steps")
                 break
 
             state = next_state
             if done:
                 break
         
-        all_rewards.append(episode_reward)
-        all_final_values.append(info['f_val'])
+        # Compute expected discounted reward
+        discounted_reward = 0
+        discount_factor = agent.gamma
+        for i, r in enumerate(episode_rewards):
+            discounted_reward += (discount_factor ** i) * r
+            
+        all_discounted_rewards.append(discounted_reward)
+        all_final_values.append(info['f_val']/env.normalization)
     
     return {
-        'mean_reward': np.mean(all_rewards),
-        'std_reward': np.std(all_rewards),
+        'mean_discounted_reward': np.mean(all_discounted_rewards),
+        'std_discounted_reward': np.std(all_discounted_rewards),
         'mean_final_value': np.mean(all_final_values),
         'std_final_value': np.std(all_final_values)
     }
+
+
 
 def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
                   p: int, dst_dir_path: str, epochs: int = 750, 
@@ -269,6 +281,7 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     np.random.seed(seed)
     torch.manual_seed(seed)
 
+    logger.info(f"Training Khairy-based agent with parameters: p={p}, epochs={epochs} ")
     logger.info(f"Placing computation in DEVICE: {device}")
     # Create destination directory
     os.makedirs(dst_dir_path, exist_ok=True)
@@ -281,12 +294,16 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     agent = PPO(state_dim, action_dim, hidden_dim=hidden_dim, device=device)
     
     # Training metrics storage
+    # Training metrics storage
     metrics = {
-        'train_rewards': [],
-        'test_evaluations': [],
+        'train_expected_discounted_rewards': [],  # Changed metric name
+        'test_expected_discounted_rewards': [],   # Changed metric name
+        'train_mean_final_values': [],           # Track final QAOA values
+        'test_mean_final_values': [],            # Track final QAOA values
         'best_test_reward': -float('inf'),
-        'best_epoch': 0
+        'best_epoch': 0,
     }
+
     patience_counter = 0
     graphs_per_epoch = min(len(GTrain), graphs_per_episode)
     epochs_per_test = 5
@@ -294,7 +311,8 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
     try:
         # Training loop
         for epoch in range(epochs):
-            epoch_rewards = []
+            epoch_discounted_rewards = []  # Store discounted rewards
+            epoch_final_values = []         # Store final QAOA values
             batch_memory = []
             GTrain_subset = random.sample(GTrain, graphs_per_epoch)
             t_start = time.time()
@@ -309,73 +327,96 @@ def train_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
                 env = QAOAEnv(graph, p=p, reps=reps, history_len=L, n_samples_normalization=100)
                 memory = []
                 state = env.reset()
-                episode_reward = 0
+                episode_rewards = []
                 
                 for t in range(T):
                     action, log_prob = agent.select_action(state)
-                    next_state, reward, done, _ = env.step(action)
+                    next_state, reward, done, info = env.step(action)
                     memory.append((state, action, log_prob, reward, done))
-                    episode_reward += reward
+                    episode_rewards.append(reward)
                     state = next_state
                     if done:
                         break
                 
+                # Compute expected discounted reward for this episode
+                discounted_reward = 0
+                discount_factor = agent.gamma
+                for i, r in enumerate(episode_rewards):
+                    discounted_reward += (discount_factor ** i) * r
+                
+                epoch_discounted_rewards.append(discounted_reward)
+                epoch_final_values.append(info['f_val']/env.normalization)
                 batch_memory.extend(memory)
-                epoch_rewards.append(episode_reward)
             
             # Update agent with collected batch
             agent.update(batch_memory)
             
-            # Store training metrics
-            mean_train_reward = np.mean(epoch_rewards)
-            metrics['train_rewards'].append({
+            # Store training metrics (expected discounted rewards)
+            mean_discounted_reward = np.mean(epoch_discounted_rewards)
+            mean_final_value = np.mean(epoch_final_values)
+
+            metrics['train_expected_discounted_rewards'].append({
                 'epoch': epoch,
-                'mean_reward': mean_train_reward,
-                'std_reward': np.std(epoch_rewards)
+                'mean_reward': mean_discounted_reward,
+                'std_reward': np.std(epoch_discounted_rewards)
+            })
+            metrics['train_mean_final_values'].append({
+                'epoch': epoch,
+                'mean_value': mean_final_value,
+                'std_value': np.std(epoch_final_values)
             })
             
             logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
             
-            # Evaluate on test set every 2 epochs
+            # Evaluate on test set 
             if epoch % epochs_per_test == 0:
-                GTest = random.sample(GTest, min(len(GTest), graphs_per_episode))
-                logger.info(f"Evaluating on test set with {len(GTest)} graphs...")
+                GTest_sample = random.sample(GTest, min(len(GTest), graphs_per_episode))
+                logger.info(f"Evaluating on test set with {len(GTest_sample)} graphs...")
+
                 t_start_test = time.time()
-                test_results = evaluate_on_test_set(agent, GTest, p=p, T=T, reps=reps, L=L)
+                test_results = evaluate_expected_discounted_rewards(agent, GTest_sample, p=p, T=T, reps=reps, L=L)
+                
                 logger.info(f"[Epoch {epoch}] Test evaluation took {(time.time() - t_start_test)/60:.2f} minutes.")
+                
                 test_results['epoch'] = epoch
-                metrics['test_evaluations'].append(test_results)
+                metrics['test_expected_discounted_rewards'].append(test_results)
+                metrics['test_mean_final_values'].append({
+                    'epoch': epoch,
+                    'mean_value': test_results['mean_final_value'],
+                    'std_value': test_results['std_final_value']
+                })
                 
                 # Save best model
-                if test_results['mean_reward'] > metrics['best_test_reward']:
+                if test_results['mean_discounted_reward'] > metrics['best_test_reward']:
                     patience_counter = 0
-                    metrics['best_test_reward'] = test_results['mean_reward']
+                    metrics['best_test_reward'] = test_results['mean_discounted_reward']
                     metrics['best_epoch'] = epoch
-                    model_path = os.path.join(dst_dir_path, 'best_model.pth')
+                    model_path = os.path.join(dst_dir_path, f'best_model.pth')
                     agent.save(model_path)
-                    logger.info(f"[Epoch {epoch}] New best model saved! Test reward: {test_results['mean_reward']:.4f}")
+                    logger.info(f"[Epoch {epoch}] New best model saved!")
                 else:
                     patience_counter += epochs_per_test
                 
-                logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}, "
-                    f"Test reward: {test_results['mean_reward']:.4f} ± {test_results['std_reward']:.4f}")
+                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}, "
+                           f"Test EDR: {test_results['mean_discounted_reward']:.4f} ± {test_results['std_discounted_reward']:.4f}")
                 
                 if patience_counter >= patience and epoch > 100:
                     logger.info(f"Early stopping at epoch {epoch}")
                     break
 
                 try:
-                    plot_train.plot_live_progress(metrics, dst_dir_path, p, epoch)
-                    # Also save metrics periodically
-                    metrics_path = os.path.join(dst_dir_path, 'training_metrics.json')
+                    # Modified plotting to show expected discounted rewards
+                    plot_train.plot_expected_discounted_rewards(metrics, dst_dir_path, p, epoch)
+                    
+                    # Save metrics periodically
+                    metrics_path = os.path.join(dst_dir_path, f'training_metrics_{gnn_type}.json')
                     with open(metrics_path, 'w') as f:
                         json.dump(metrics, f, indent=2)
-                        
                 except Exception as e:
                     logger.warning(f"Failed to create live plot at epoch {epoch}: {e}")
 
             else:
-                logger.info(f"[Epoch {epoch}] Train reward: {mean_train_reward:.4f}")
+                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}")
     
     # catch keyboard interrupt to save final model
     except KeyboardInterrupt:
@@ -572,3 +613,52 @@ if __name__ == "__main__":
     #     T_rl=32
     # )
     # logger.info(f"RL+NLopt optimization: value = {value_hybrid:.4f}")
+
+
+
+# @torch.no_grad()
+# def evaluate_on_test_set(agent: PPO, test_graphs: List[Dict[str, Any]], p: int, 
+#                          T: int = 64, reps: int = 128, L: int = 4, early_stop_patience: int = 16, n_samples_normalization: int = 25) -> Dict[str, float]:
+#     """Evaluate the agent on test set"""
+#     all_rewards = []
+#     all_final_values = []
+    
+#     for i, elem in enumerate(test_graphs):
+#         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
+#         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
+#         env = QAOAEnv(graph, p=p, reps=reps, history_len=L, n_samples_normalization=n_samples_normalization)
+#         state = env.reset()
+#         episode_reward = 0
+
+#         # Track performance for early stopping
+#         best_f_val = -float('inf')
+#         steps_without_improvement = 0
+        
+#         for t in range(T):
+#             action, _ = agent.select_action(state, deterministic=True)
+#             next_state, reward, done, info = env.step(action)
+#             episode_reward += reward
+
+#             if info['f_val'] > best_f_val:
+#                 best_f_val = info['f_val']
+#                 steps_without_improvement = 0
+#             else:
+#                 steps_without_improvement += 1
+                
+#             if steps_without_improvement >= early_stop_patience:
+#                 logger.debug(f"Early stopping after {t} steps due to {steps_without_improvement} steps without improvement.")
+#                 break
+
+#             state = next_state
+#             if done:
+#                 break
+        
+#         all_rewards.append(episode_reward)
+#         all_final_values.append(info['f_val'])
+    
+#     return {
+#         'mean_reward': np.mean(all_rewards),
+#         'std_reward': np.std(all_rewards),
+#         'mean_final_value': np.mean(all_final_values),
+#         'std_final_value': np.std(all_final_values)
+#     }

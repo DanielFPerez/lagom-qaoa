@@ -123,7 +123,7 @@ class TransformerGNNBlock(nn.Module):
             self.gnn_layer = GCNConv(in_dim, out_dim)
             self.gnn_out_dim = out_dim
             
-        elif gnn_type == "TransformerConv":
+        elif gnn_type == "TCN":
             # With concat=True and num_heads heads, output dimension is out_dim * num_heads
             self.gnn_layer = TransformerConv(
                 in_dim, 
@@ -166,7 +166,7 @@ class TransformerGNNBlock(nn.Module):
         x = self.gnn_layer(x, edge_index)
         
         # Handle TransformerConv concatenated output
-        if self.gnn_type == "TransformerConv":
+        if self.gnn_type == "TCN":
             x = self.projection(x)
         
         # Apply dropout
@@ -528,8 +528,8 @@ class GNNPPO:
             'action_dim': self.action_dim,
             'clip_epsilon': self.clip_epsilon,
             'gamma': self.gamma,
-            'gnn_type': self.gnn_type, 
             'hidden_dim': self.hidden_dim,
+            'gnn_type': self.gnn_type, 
             'gnn_hidden_dim': self.gnn_hidden_dim,
             'gnn_num_layers': self.gnn_num_layers,
         }, path)
@@ -544,66 +544,14 @@ class GNNPPO:
 
 
 @torch.no_grad()
-def evaluate_on_test_set(agent: GNNPPO, test_graphs: List[Dict[str, Any]], p: int, 
-                         T: int = 64, reps: int = 128, L: int = 4, 
-                         early_stop_patience: int = 16, 
-                         n_samples_normalization: int = 25) -> Dict[str, float]:
-    """Evaluate the GNN agent on test set"""
-    logger = logging.getLogger(__name__)
-    all_rewards = []
-    all_final_values = []
-    
-    for i, elem in enumerate(test_graphs):
-        logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
-        graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
-        env = QAOAEnvWithGraph(graph, p=p, reps=reps, history_len=L, 
-                               n_samples_normalization=n_samples_normalization)
-        state = env.reset()
-        episode_reward = 0
-
-        # Track performance for early stopping
-        best_f_val = env.f_val
-        steps_without_improvement = 0
-        
-        for t in range(T):
-            action, _ = agent.select_action(state, env.graph_data, deterministic=True)
-            next_state, reward, done, info = env.step(action)
-            episode_reward += reward
-
-            if info['f_val'] > best_f_val:
-                best_f_val = info['f_val']
-                steps_without_improvement = 0
-            else:
-                steps_without_improvement += 1
-                
-            if steps_without_improvement >= early_stop_patience:
-                logger.debug(f"Early stopping after {t} steps")
-                break
-
-            state = next_state
-            if done:
-                break
-        
-        all_rewards.append(episode_reward)
-        all_final_values.append(info['f_val'])
-    
-    return {
-        'mean_reward': np.mean(all_rewards),
-        'std_reward': np.std(all_rewards),
-        'mean_final_value': np.mean(all_final_values),
-        'std_final_value': np.std(all_final_values)
-    }
-
-
-@torch.no_grad()
 def evaluate_expected_discounted_rewards(agent: GNNPPO, test_graphs: List[Dict[str, Any]], 
                                        p: int, T: int = 64, reps: int = 128, 
-                                       L: int = 4, early_stop_patience: int = 16,
-                                       n_samples_normalization: int = 25) -> Dict[str, float]:
+                                       L: int = 4, n_samples_normalization: int = 25) -> Dict[str, float]:
     """Evaluate agent using expected discounted rewards"""
     logger = logging.getLogger(__name__)
     all_discounted_rewards = []
     all_final_values = []
+    early_stop_patience = T//2  # Early stopping patience for no improvement
     
     for i, elem in enumerate(test_graphs):
         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
@@ -614,7 +562,7 @@ def evaluate_expected_discounted_rewards(agent: GNNPPO, test_graphs: List[Dict[s
         
         # Track rewards for this episode
         episode_rewards = []
-        best_f_val = env.f_val
+        best_f_val = -float('inf')
         steps_without_improvement = 0
         
         for t in range(T):
@@ -643,7 +591,7 @@ def evaluate_expected_discounted_rewards(agent: GNNPPO, test_graphs: List[Dict[s
             discounted_reward += (discount_factor ** i) * r
             
         all_discounted_rewards.append(discounted_reward)
-        all_final_values.append(info['f_val'])
+        all_final_values.append(info['f_val']/env.normalization)
     
     return {
         'mean_discounted_reward': np.mean(all_discounted_rewards),
@@ -745,7 +693,7 @@ def train_gnn_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
                     discounted_reward += (discount_factor ** i) * r
                 
                 epoch_discounted_rewards.append(discounted_reward)
-                epoch_final_values.append(info['f_val'])
+                epoch_final_values.append(info['f_val']/env.normalization)
                 batch_memory.extend(memory)
             
             # Update agent with collected batch
@@ -814,7 +762,7 @@ def train_gnn_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]],
                     with open(metrics_path, 'w') as f:
                         json.dump(metrics, f, indent=2)
                 except Exception as e:
-                    logger.warning(f"Failed to create plot: {e}")
+                    logger.warning(f"Failed to create live plot at epoch {epoch}: {e}")
             else:
                 logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}")
     
@@ -930,7 +878,7 @@ def get_parser():
 
     # GNN-specific arguments
     parser.add_argument("--gnn_type", type=str, default="GIN",
-                        choices=["GIN", "GCN", "TransformerConv"],
+                        choices=["GIN", "GCN", "TCN"],
                         help="Type of GNN architecture to use")
     parser.add_argument("--gnn_hidden_dim", type=int, default=64,
                         help="Hidden dimension for GNN layers")
@@ -1028,3 +976,57 @@ if __name__ == "__main__":
         gnn_num_layers=args.gnn_num_layers,
         device=args.device
     )
+
+
+
+
+# @torch.no_grad()
+# def evaluate_on_test_set(agent: GNNPPO, test_graphs: List[Dict[str, Any]], p: int, 
+#                          T: int = 64, reps: int = 128, L: int = 4, 
+#                          early_stop_patience: int = 16, 
+#                          n_samples_normalization: int = 25) -> Dict[str, float]:
+#     """Evaluate the GNN agent on test set"""
+#     logger = logging.getLogger(__name__)
+#     all_rewards = []
+#     all_final_values = []
+    
+#     for i, elem in enumerate(test_graphs):
+#         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
+#         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
+#         env = QAOAEnvWithGraph(graph, p=p, reps=reps, history_len=L, 
+#                                n_samples_normalization=n_samples_normalization)
+#         state = env.reset()
+#         episode_reward = 0
+
+#         # Track performance for early stopping
+#         best_f_val = env.f_val
+#         steps_without_improvement = 0
+        
+#         for t in range(T):
+#             action, _ = agent.select_action(state, env.graph_data, deterministic=True)
+#             next_state, reward, done, info = env.step(action)
+#             episode_reward += reward
+
+#             if info['f_val'] > best_f_val:
+#                 best_f_val = info['f_val']
+#                 steps_without_improvement = 0
+#             else:
+#                 steps_without_improvement += 1
+                
+#             if steps_without_improvement >= early_stop_patience:
+#                 logger.debug(f"Early stopping after {t} steps")
+#                 break
+
+#             state = next_state
+#             if done:
+#                 break
+        
+#         all_rewards.append(episode_reward)
+#         all_final_values.append(info['f_val'])
+    
+#     return {
+#         'mean_reward': np.mean(all_rewards),
+#         'std_reward': np.std(all_rewards),
+#         'mean_final_value': np.mean(all_final_values),
+#         'std_final_value': np.std(all_final_values)
+#     }
