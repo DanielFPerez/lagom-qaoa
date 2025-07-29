@@ -8,7 +8,7 @@ run_gnn_training() {
     local p=$1
     local gnn_type=$2
     local device=$3
-    local timestamp=$(date +"%Y-%m-%d_%H-%M-%S")
+    local timestamp=$(date +"%m-%d_%H-%M")
     
     echo "Starting GNN training for p=$p, GNN=$gnn_type on $device at $timestamp"
     

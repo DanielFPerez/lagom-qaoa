@@ -23,6 +23,7 @@ import logging
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 
 
+
 # Add these plotting functions after your class definitions and before train_rl_qaoa
 def plot_training_progress(metrics: Dict, dst_dir_path: str, p: int):
     """Plot training progress showing expected discounted rewards and final QAOA values."""
@@ -114,6 +115,7 @@ def plot_training_progress(metrics: Dict, dst_dir_path: str, p: int):
     print(f"Training progress plot saved to: {plot_path}")
 
 
+
 def plot_combined_progress(metrics: Dict, dst_dir_path: str, p: int):
     """Plot expected discounted rewards for train and test on the same plot."""
     
@@ -203,6 +205,7 @@ def plot_combined_progress(metrics: Dict, dst_dir_path: str, p: int):
     print(f"Combined progress plot saved to: {plot_path}")
 
 
+
 def plot_live_progress(metrics: Dict, dst_dir_path: str, p: int, epoch: int):
     """Create a live-updating plot during training (called after each test evaluation)."""
     
@@ -278,3 +281,82 @@ def plot_expected_discounted_rewards(metrics, dst_dir, p, epoch):
     plt.tight_layout()
     plt.savefig(os.path.join(dst_dir, f'live_progress_p{p}.png'))
     plt.close()
+
+
+
+
+def plot_training_with_init(metrics, dst_dir_path, p, current_epoch):
+    """Plot training progress including initialization quality"""
+    try:
+        import matplotlib.pyplot as plt
+        
+        fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+        
+        # Plot 1: Expected Discounted Rewards
+        if metrics['train_expected_discounted_rewards']:
+            train_epochs = [x['epoch'] for x in metrics['train_expected_discounted_rewards']]
+            train_rewards = [x['mean_reward'] for x in metrics['train_expected_discounted_rewards']]
+            axes[0, 0].plot(train_epochs, train_rewards, label='Train', color='blue')
+        
+        if metrics['test_expected_discounted_rewards']:
+            test_epochs = [x['epoch'] for x in metrics['test_expected_discounted_rewards']]
+            test_rewards = [x['mean_discounted_reward'] for x in metrics['test_expected_discounted_rewards']]
+            axes[0, 0].plot(test_epochs, test_rewards, label='Test', color='red')
+        
+        axes[0, 0].set_title('Expected Discounted Rewards')
+        axes[0, 0].set_xlabel('Epoch')
+        axes[0, 0].set_ylabel('Reward')
+        axes[0, 0].legend()
+        axes[0, 0].grid(True)
+        
+        # Plot 2: Final QAOA Values
+        if metrics['train_mean_final_values']:
+            train_epochs = [x['epoch'] for x in metrics['train_mean_final_values']]
+            train_values = [x['mean_value'] for x in metrics['train_mean_final_values']]
+            axes[0, 1].plot(train_epochs, train_values, label='Train', color='blue')
+        
+        if metrics['test_mean_final_values']:
+            test_epochs = [x['epoch'] for x in metrics['test_mean_final_values']]
+            test_values = [x['mean_value'] for x in metrics['test_mean_final_values']]
+            axes[0, 1].plot(test_epochs, test_values, label='Test', color='red')
+        
+        axes[0, 1].set_title('Final QAOA Values (Normalized)')
+        axes[0, 1].set_xlabel('Epoch')
+        axes[0, 1].set_ylabel('Value')
+        axes[0, 1].legend()
+        axes[0, 1].grid(True)
+        
+        # Plot 3: Initialization Quality
+        if metrics['initialization_quality']:
+            init_epochs = [x['epoch'] for x in metrics['initialization_quality']]
+            init_improvements = [x['mean_improvement'] for x in metrics['initialization_quality']]
+            axes[1, 0].plot(init_epochs, init_improvements, label='GNN vs Random Init', color='green')
+            axes[1, 0].axhline(y=0, color='black', linestyle='--', alpha=0.5)
+        
+        axes[1, 0].set_title('Initialization Quality')
+        axes[1, 0].set_xlabel('Epoch')
+        axes[1, 0].set_ylabel('Improvement over Random')
+        axes[1, 0].legend()
+        axes[1, 0].grid(True)
+        
+        # Plot 4: Test Initialization Improvement
+        if metrics['test_expected_discounted_rewards']:
+            test_epochs = [x['epoch'] for x in metrics['test_expected_discounted_rewards']]
+            test_init_improvements = [x.get('init_improvement', 0) for x in metrics['test_expected_discounted_rewards']]
+            if any(x != 0 for x in test_init_improvements):
+                axes[1, 1].plot(test_epochs, test_init_improvements, label='Test Init Improvement', color='purple')
+                axes[1, 1].axhline(y=0, color='black', linestyle='--', alpha=0.5)
+        
+        axes[1, 1].set_title('Test Initialization Improvement')
+        axes[1, 1].set_xlabel('Epoch')
+        axes[1, 1].set_ylabel('Improvement')
+        axes[1, 1].legend()
+        axes[1, 1].grid(True)
+        
+        plt.tight_layout()
+        plt.savefig(os.path.join(dst_dir_path, f'live_training_progress_with_init.png'))
+        plt.close()
+        
+    except Exception as e:
+        logger = logging.getLogger(__name__)
+        logger.warning(f"Failed to create initialization plot: {e}")

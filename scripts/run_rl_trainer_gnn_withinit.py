@@ -27,8 +27,8 @@ import src.utils.plot_train as plot_train
 from src.gnns.encoder import GNNEncoder
 
 
-class GNNActor(nn.Module):
-    """GNN-based Actor that uses graph topology to propose QAOA parameter updates"""
+class GNNActorWithInit(nn.Module):
+    """Enhanced GNN-based Actor that handles both initialization and parameter updates"""
     
     def __init__(self, 
                  state_dim: int,
@@ -39,11 +39,13 @@ class GNNActor(nn.Module):
                  gnn_type: str = "GIN",
                  gnn_num_layers: int = 3,
                  dropout: float = 0.0):
-        super(GNNActor, self).__init__()
+        super(GNNActorWithInit, self).__init__()
         
         self.action_dim = action_dim
+        self.p = action_dim // 2  # Number of QAOA layers
+        self.state_dim = state_dim
         
-        # GNN encoder for processing graph structure
+        # GNN encoder for processing graph structure (shared)
         self.gnn_encoder = GNNEncoder(
             node_dim=gnn_hidden_dim,
             hidden_dim=gnn_hidden_dim,
@@ -61,7 +63,7 @@ class GNNActor(nn.Module):
             nn.ReLU()
         )
         
-        # Combine graph and state information
+        # Combine graph and state information for action updates
         # Graph embedding is 2 * gnn_output_dim due to concatenation of mean and max pooling
         self.fusion_layer = nn.Sequential(
             nn.Linear(2 * gnn_output_dim + hidden_dim, hidden_dim),
@@ -70,20 +72,33 @@ class GNNActor(nn.Module):
             nn.ReLU()
         )
         
-        # Output mean actions
+        # Output mean actions (parameter updates)
         self.action_head = nn.Sequential(
             nn.Linear(hidden_dim, action_dim),
             nn.Tanh()
         )
         
-        # Learnable log standard deviation
+        # Initialization head that only uses graph embedding
+        self.init_head = nn.Sequential(
+            nn.Linear(2 * gnn_output_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, action_dim)
+        )
+        
+        # Learnable log standard deviation for actions
         self.log_std = nn.Parameter(torch.ones(action_dim) * -6.0)
         
-    def forward(self, state, graph_data):
+        # Learnable log standard deviation for initialization (higher variance)
+        self.init_log_std = nn.Parameter(torch.ones(action_dim) * -2.0)
+        
+    def forward(self, state, graph_data, mode='action'):
         """
         Args:
             state: Optimization state tensor (batch_size, state_dim) or (state_dim,)
             graph_data: PyTorch Geometric Data object or Batch object
+            mode: 'action' for parameter updates, 'init' for initial parameters
         """
         # Handle single state case
         if state.dim() == 1:
@@ -92,7 +107,7 @@ class GNNActor(nn.Module):
         else:
             single_graph = False
             
-        # Encode graph structure
+        # Encode graph structure (shared encoder)
         if hasattr(graph_data, 'batch'):
             # Batched graphs
             graph_embedding, node_embeddings = self.gnn_encoder(
@@ -106,23 +121,65 @@ class GNNActor(nn.Module):
                 graph_data.x,
                 graph_data.edge_index
             )
+        
+        if mode == 'init':
+            # For initialization, only use graph embedding
+            init_params = self.init_head(graph_embedding)
             
-        # Encode optimization state
-        state_embedding = self.state_encoder(state)
-        
-        # Fuse graph and state information
-        combined = torch.cat([graph_embedding, state_embedding], dim=1)
-        fused = self.fusion_layer(combined)
-        
-        # Generate action parameters
-        mu = 0.1 * self.action_head(fused)
-        std = torch.exp(self.log_std)
-        
-        if single_graph:
-            mu = mu.squeeze(0)
+            # Apply domain-specific transformations
+            # Split into gamma and beta parameters
+            gamma_params = init_params[:, :self.p]
+            beta_params = init_params[:, self.p:]
             
-        return mu, std
-
+            # Apply appropriate ranges: gamma in [0, 2π], beta in [0, π]
+            gamma_params = torch.sigmoid(gamma_params) * 2 * np.pi
+            beta_params = torch.sigmoid(beta_params) * np.pi
+            
+            mu = torch.cat([gamma_params, beta_params], dim=1)
+            std = torch.exp(self.init_log_std)
+            
+            if single_graph:
+                mu = mu.squeeze(0)
+                
+            return mu, std
+            
+        elif mode == 'action':
+            # For actions, use both graph and state information
+            # Encode optimization state
+            state_embedding = self.state_encoder(state)
+            
+            # Fuse graph and state information
+            combined = torch.cat([graph_embedding, state_embedding], dim=1)
+            fused = self.fusion_layer(combined)
+            
+            # Generate action parameters (small updates)
+            mu = 0.1 * self.action_head(fused)
+            std = torch.exp(self.log_std)
+            
+            if single_graph:
+                mu = mu.squeeze(0)
+                
+            return mu, std
+        else:
+            raise ValueError(f"Unknown mode: {mode}")
+    
+    def get_initial_parameters(self, graph_data, deterministic=False):
+        """Get initial parameters for a graph"""
+        with torch.no_grad():
+            # Create dummy state (not used for initialization)
+            device = next(self.parameters()).device
+            dummy_state = torch.zeros(1, self.state_dim, dtype=torch.float32, device=device)
+            # dummy_state = torch.zeros(1, dtype=torch.float32, device=device)
+            
+            mu, std = self.forward(dummy_state, graph_data, mode='init')
+            
+            if deterministic:
+                return mu.detach().cpu().numpy()
+            else:
+                dist = Normal(mu, std)
+                sample = dist.sample()
+                return sample.detach().cpu().numpy()
+            
 
 class Critic(nn.Module):
     """Standard Critic network (unchanged from original)"""
@@ -138,13 +195,15 @@ class Critic(nn.Module):
 
     def forward(self, state):
         return self.net(state)
+    
 
-
-class QAOAEnvWithGraph(gym.Env):
-    """Extended QAOA environment that also provides graph data"""
+# #### QAOA Environment with GNN Initialization ####
+class QAOAEnvWithGraphInitGNN(gym.Env):
+    """Extended QAOA environment that supports GNN-based initialization"""
     
     def __init__(self, graph: nx.Graph, p: int, reps: int = 128, 
-                 history_len: int = 4, n_samples_normalization: int = 100):
+                 history_len: int = 4, n_samples_normalization: int = 100,
+                 gnn_actor=None):
         self.graph = graph
         self.p = p
         self.reps = reps
@@ -155,7 +214,11 @@ class QAOAEnvWithGraph(gym.Env):
         self.normalization = qaoa_model.estimate_random_average_energy(
             graph, p, reps=reps, n_samples=n_samples_normalization
         )
-        self.best_value_seen = -float('inf') # Track best value seen for reward shaping
+        self.best_value_seen = -float('inf')
+        
+        # NEW: Optional GNN actor for initialization
+        self.gnn_actor = gnn_actor
+        
         # Convert NetworkX graph to PyTorch Geometric format
         self.graph_data = self._create_graph_data()
         
@@ -186,6 +249,36 @@ class QAOAEnvWithGraph(gym.Env):
             edge_attr = torch.tensor(weights, dtype=torch.float32).unsqueeze(1)
         
         return Data(x=x, edge_index=edge_index, edge_attr=edge_attr)
+    
+    def reset(self, use_gnn_init=True):
+        """Reset environment with optional GNN-based initialization"""
+        if use_gnn_init and self.gnn_actor is not None:
+            # Use GNN to propose initial parameters
+            try:
+                self.params = self.gnn_actor.get_initial_parameters(
+                    self.graph_data, deterministic=False
+                )
+                # Ensure params is 1D numpy array
+                if len(self.params.shape) > 1:
+                    self.params = self.params.squeeze()
+            except Exception as e:
+                # Fallback to random initialization if GNN fails
+                self.params = self._random_initialization()
+        else:
+            # Use random initialization
+            self.params = self._random_initialization()
+        
+        self.f_val = self.eval_qaoa(self.params)
+        self.best_value_seen = self.f_val  # Reset best value
+        self.history.clear()
+        self.state = self.build_state()
+        return self.state
+    
+    def _random_initialization(self):
+        """Original random initialization method"""
+        beta_params = np.random.uniform(0, np.pi, self.p)
+        gamma_params = np.random.uniform(0, 2*np.pi, self.p)
+        return np.concatenate([gamma_params, beta_params])
 
     def step(self, action):
         new_params = self.params + action
@@ -201,16 +294,6 @@ class QAOAEnvWithGraph(gym.Env):
         self.update_state(new_params, f_new)
         done = False
         return self.state, reward, done, {'f_val': self.f_val}
-
-    def reset(self):
-        beta_params = np.random.uniform(0, np.pi, self.p)
-        gamma_params = np.random.uniform(0, 2*np.pi, self.p)
-        self.params = np.concatenate([gamma_params, beta_params])
-        
-        self.f_val = self.eval_qaoa(self.params)
-        self.history.clear()
-        self.state = self.build_state()
-        return self.state
 
     def update_state(self, new_params, new_f_val):
         delta_f = new_f_val - self.f_val
@@ -230,10 +313,12 @@ class QAOAEnvWithGraph(gym.Env):
         gamma = params[:self.p]
         beta = params[self.p:]
         return qaoa_model.eval_circuit(self.graph, self.p, gamma, beta, self.reps)
+    
 
 
-class GNNPPO:
-    """PPO agent with GNN-based actor"""
+# #### GNN-based PPO Agent with Initialization Support ####
+class GNNPPOWithInit:
+    """Enhanced PPO agent with GNN-based actor supporting initialization"""
     
     def __init__(self, 
                  state_dim: int,
@@ -249,8 +334,8 @@ class GNNPPO:
         
         self.device = torch.device(device)
         
-        # GNN-based actor
-        self.actor = GNNActor(
+        # Enhanced GNN-based actor with initialization capability
+        self.actor = GNNActorWithInit(
             state_dim=state_dim,
             action_dim=action_dim,
             hidden_dim=hidden_dim,
@@ -267,7 +352,23 @@ class GNNPPO:
         # Standard critic (doesn't need graph information)
         self.critic = Critic(state_dim, hidden_dim=hidden_dim).to(self.device)
         
-        self.optimizer_actor = optim.Adam(self.actor.parameters(), lr=lr)
+        # self.optimizer_actor = optim.Adam(self.actor.parameters(), lr=lr)
+        self.optimizer_actor = optim.Adam(
+            list(self.actor.gnn_encoder.parameters()) + 
+            list(self.actor.state_encoder.parameters()) +
+            list(self.actor.fusion_layer.parameters()) +
+            list(self.actor.action_head.parameters()) +
+            [self.actor.log_std], 
+            lr=lr
+        )
+
+        # Separate optimizer for initialization components
+        self.optimizer_init = optim.Adam(
+            list(self.actor.init_head.parameters()) + 
+            [self.actor.init_log_std],
+            lr=5e-4  # Higher learning rate for initialization head
+        )
+
         self.optimizer_critic = optim.Adam(self.critic.parameters(), lr=lr)
         
         self.clip_epsilon = clip_epsilon
@@ -280,7 +381,8 @@ class GNNPPO:
         state = torch.FloatTensor(state).to(self.device)
         graph_data = graph_data.to(self.device)
         
-        mu, std = self.actor(state, graph_data)
+        # Use 'action' mode for parameter updates
+        mu, std = self.actor(state, graph_data, mode='action')
         
         if deterministic:
             action = mu
@@ -307,7 +409,8 @@ class GNNPPO:
         # Move graph data to device
         graph_data = graph_data.to(self.device)
 
-        mu, std = self.actor(state, graph_data)
+        # Use 'action' mode for evaluation
+        mu, std = self.actor(state, graph_data, mode='action')
         dist = Normal(mu, std)
         log_prob = dist.log_prob(action).sum(dim=-1)
         entropy = dist.entropy().sum(dim=-1)
@@ -362,6 +465,7 @@ class GNNPPO:
             'critic_state_dict': self.critic.state_dict(),
             'optimizer_actor_state_dict': self.optimizer_actor.state_dict(),
             'optimizer_critic_state_dict': self.optimizer_critic.state_dict(),
+            'optimizer_init_state_dict': self.optimizer_init.state_dict(),
             'state_dim': self.state_dim,
             'action_dim': self.action_dim,
             'clip_epsilon': self.clip_epsilon,
@@ -379,24 +483,345 @@ class GNNPPO:
         self.critic.load_state_dict(checkpoint['critic_state_dict'])
         self.optimizer_actor.load_state_dict(checkpoint['optimizer_actor_state_dict'])
         self.optimizer_critic.load_state_dict(checkpoint['optimizer_critic_state_dict'])
+        self.optimizer_init.load_state_dict(checkpoint['optimizer_init_state_dict'])
+        self.state_dim = checkpoint['state_dim']
+
+
+# #### Training Function with Initialization Support ####
+def train_gnn_rl_qaoa_with_init(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
+                                p: int, dst_dir_path: str, gnn_type: str = "GIN",
+                                epochs: int = 750, episodes_per_epoch: int = 128, 
+                                T: int = 64, in_graphs_per_epoch: int = 50,
+                                reps: int = 128, L: int = 4, patience: int = 40, 
+                                seed: int = 42, hidden_dim: int = 64, 
+                                gnn_hidden_dim: int = 64, gnn_num_layers: int = 3,
+                                device: str = "cpu", 
+                                training_strategy: str = "joint",
+                                init_training_epochs: int = 50,
+                                evalinit: bool = False) -> Dict:
+    """Train GNN-based RL agent with initialization capability"""
+    logger = logging.getLogger(__name__)
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    logger.info(f"Training GNN-based agent with {gnn_type} architecture and {training_strategy} strategy")
+    logger.info(f"Placing computation in DEVICE: {device}")
+    
+    # Create destination directory
+    os.makedirs(dst_dir_path, exist_ok=True)
+    
+    # Initialize agent
+    state_dim = (2 * p + 1) * L
+    action_dim = 2 * p
+    
+    logger.info(f"Creating enhanced GNN-PPO agent with state_dim: {state_dim}, action_dim: {action_dim}")
+    agent = GNNPPOWithInit(
+        state_dim=state_dim,
+        action_dim=action_dim,
+        hidden_dim=hidden_dim,
+        gnn_type=gnn_type,
+        gnn_hidden_dim=gnn_hidden_dim,
+        gnn_num_layers=gnn_num_layers,
+        device=device
+    )
+    
+    # Training metrics storage
+    metrics = {
+        'train_expected_discounted_rewards': [],
+        'test_expected_discounted_rewards': [],
+        'train_mean_final_values': [],
+        'test_mean_final_values': [],
+        'initialization_quality': [],  # Track initialization improvements
+        'best_test_reward': -float('inf'),
+        'best_epoch': 0,
+        'gnn_type': gnn_type,
+        'training_strategy': training_strategy
+    }
+    
+    patience_counter = 0
+    graphs_per_epoch = min(len(GTrain), in_graphs_per_epoch)
+    graphs_per_epoch_test = graphs_per_epoch // 2
+    epochs_per_test = 5
+    
+    # Stage 1: Pre-train initialization (if using staged strategy)
+    if training_strategy == "staged":
+        raise NotImplementedError("Pre-training initialization is not implemented yet.")
+    
+    try:
+        # Main training loop
+        for epoch in range(epochs):
+            epoch_discounted_rewards = []
+            epoch_final_values = []
+            epoch_init_improvements = []  # Track initialization quality
+            batch_memory = []
+            GTrain_subset = random.sample(GTrain, graphs_per_epoch)
+            t_start = time.time()
+            
+            # Collect trajectories
+            for ep in range(episodes_per_epoch):
+                # Round-robin graph selection
+                graph_idx = ep % len(GTrain_subset)
+                if ep % 10 == 0:
+                    logger.info(f"[Epoch {epoch}] Training on graph {graph_idx}")
+                    
+                graph = graph_utils.read_graph_from_dict(GTrain_subset[graph_idx]["graph_dict"])
+                # Create environment with GNN actor for initialization
+                env = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L, 
+                                              n_samples_normalization=100, gnn_actor=agent.actor)
+                
+                # Track initialization quality
+                if evalinit and training_strategy == "joint" and epoch % 5 == 0:
+                    init_improvement = evaluate_single_graph_init_quality(agent.actor, graph, p, reps, L)
+                    epoch_init_improvements.append(init_improvement)
+                
+                memory = []
+                state = env.reset(use_gnn_init=True)  # Use GNN initialization
+                episode_rewards = []
+                
+                for t in range(T):
+                    action, log_prob = agent.select_action(state, env.graph_data)
+                    next_state, reward, done, info = env.step(action)
+                    memory.append((state, action, log_prob, reward, done, env.graph_data))
+                    episode_rewards.append(reward)
+                    state = next_state
+                    if done:
+                        break
+                
+                # Compute expected discounted reward for this episode
+                discounted_reward = 0
+                discount_factor = agent.gamma
+                for i, r in enumerate(episode_rewards):
+                    discounted_reward += (discount_factor ** i) * r
+                
+                epoch_discounted_rewards.append(discounted_reward)
+                epoch_final_values.append(info['f_val']/env.normalization)
+                batch_memory.extend(memory)
+            
+            # Update agent with collected batch
+            agent.update(batch_memory)
+            
+            # Additional initialization training for joint strategy
+            if training_strategy == "joint" and epoch % 2 == 0:
+                init_loss, init_mean_improvement = train_initialization_step(agent, GTrain_subset, p, reps//2, L)
+                logger.info(f"[Epoch {epoch}] Init-params training - Loss: {init_loss:.4f}, Mean improvement: {init_mean_improvement:.4f}")
+                # Optionally store in metrics
+                if 'init_training_loss' not in metrics:
+                    metrics['init_training_loss'] = []
+                metrics['init_training_loss'].append({
+                    'epoch': epoch,
+                    'loss': init_loss,
+                    'improvement': init_mean_improvement
+                })
+            
+            # Store training metrics
+            mean_discounted_reward = np.mean(epoch_discounted_rewards)
+            mean_final_value = np.mean(epoch_final_values)
+
+            metrics['train_expected_discounted_rewards'].append({
+                'epoch': epoch,
+                'mean_reward': mean_discounted_reward,
+                'std_reward': np.std(epoch_discounted_rewards)
+            })
+            metrics['train_mean_final_values'].append({
+                'epoch': epoch,
+                'mean_value': mean_final_value,
+                'std_value': np.std(epoch_final_values)
+            })
+            
+            # Store initialization quality metrics
+            if evalinit and epoch_init_improvements:
+                metrics['initialization_quality'].append({
+                    'epoch': epoch,
+                    'mean_improvement': np.mean(epoch_init_improvements),
+                    'std_improvement': np.std(epoch_init_improvements)
+                })
+            
+            logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
+            
+            # Evaluate on test set
+            if epoch % epochs_per_test == 0:
+                GTest_sample = random.sample(GTest, min(len(GTest), graphs_per_epoch_test))
+                logger.info(f"Evaluating on test set with {len(GTest_sample)} graphs...")
+
+                t_start_test = time.time()
+                test_results = evaluate_expected_discounted_rewards_with_init(
+                    agent, GTest_sample, p=p, T=T, reps=reps//2, L=L, evalinit=evalinit
+                )
+
+                logger.info(f"[Epoch {epoch}] Test evaluation took {(time.time() - t_start_test)/60:.2f} minutes.")
+
+                test_results['epoch'] = epoch
+                metrics['test_expected_discounted_rewards'].append(test_results)
+                metrics['test_mean_final_values'].append({
+                    'epoch': epoch,
+                    'mean_value': test_results['mean_final_value'],
+                    'std_value': test_results['std_final_value']
+                })
+                
+                # Save best model
+                if test_results['mean_discounted_reward'] > metrics['best_test_reward']:
+                    patience_counter = 0
+                    metrics['best_test_reward'] = test_results['mean_discounted_reward']
+                    metrics['best_epoch'] = epoch
+                    model_path = os.path.join(dst_dir_path, f'best_model_{gnn_type}_with_init.pth')
+                    agent.save(model_path)
+                    logger.info(f"[Epoch {epoch}] New best model saved!")
+                else:
+                    patience_counter += epochs_per_test
+                
+                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}, "
+                           f"Test EDR: {test_results['mean_discounted_reward']:.4f} ± {test_results['std_discounted_reward']:.4f}")
+                
+                if 'init_improvement' in test_results:
+                    logger.info(f"[Epoch {epoch}] Init improvement: {test_results['init_improvement']:.4f}")
+                
+                if patience_counter >= patience and epoch > 100:
+                    logger.info(f"Early stopping at epoch {epoch}")
+                    break
+
+                try:
+                    # Plot training progress including initialization quality
+                    if evalinit:
+                        plot_train.plot_training_with_init(metrics, dst_dir_path, p, epoch)
+                    else: 
+                        plot_train.plot_expected_discounted_rewards(metrics, dst_dir_path, p, epoch)
+                    
+                    # Save metrics periodically
+                    metrics_path = os.path.join(dst_dir_path, f'training_metrics_{gnn_type}_with_init.json')
+                    with open(metrics_path, 'w') as f:
+                        json.dump(metrics, f, indent=2)
+                except Exception as e:
+                    logger.warning(f"Failed to create live plot at epoch {epoch}: {e}")
+            else:
+                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}")
+    
+    except KeyboardInterrupt:
+        logger.info("Training interrupted by user. Saving current model...")
+    
+    # Save final model and metrics
+    final_model_path = os.path.join(dst_dir_path, f'final_model_{gnn_type}_with_init.pth')
+    agent.save(final_model_path)
+    
+    metrics_path = os.path.join(dst_dir_path, f'training_metrics_{gnn_type}_with_init.json')
+    with open(metrics_path, 'w') as f:
+        json.dump(metrics, f, indent=2)
+    
+    try:
+        plot_train.plot_training_progress(metrics, dst_dir_path, p)
+        plot_train.plot_combined_progress(metrics, dst_dir_path, p)
+        logger.info("Final training plots created successfully")
+    except Exception as e:
+        logger.error(f"Failed to create final plots: {e}")
+
+    return metrics
+
+
+def train_initialization_step(agent: GNNPPOWithInit, graph_subset: List[Dict[str, Any]], 
+                             p: int, reps: int, L: int):
+    """Train initialization using policy gradient with improvement as reward"""
+    logger = logging.getLogger(__name__)
+    logger.info("Training GNN initialization with policy gradient...")
+    improvements = []
+    log_probs = []
+
+    # Create proper dummy state with correct dimensions
+    state_dim = (2 * p + 1) * L
+    t_start = time.time()
+    for graph_data in random.sample(graph_subset, min(50, len(graph_subset))):
+        graph = graph_utils.read_graph_from_dict(graph_data["graph_dict"])
+        
+        # Get GNN initialization with log probability
+        env = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L, 
+                                      gnn_actor=agent.actor)
+        
+        # Get initial parameters from GNN (with gradient tracking)
+        dummy_state = torch.zeros(1, state_dim, dtype=torch.float32, device=agent.device)
+        mu, std = agent.actor(dummy_state, env.graph_data.to(agent.device), mode='init')
+        dist = Normal(mu, std)
+        init_params = dist.sample()
+        log_prob = dist.log_prob(init_params).sum()
+
+        # Evaluate GNN initialization
+        init_params_numpy = init_params.squeeze(0).detach().cpu().numpy()
+        gnn_value = env.eval_qaoa(init_params_numpy)
+        
+        # Evaluate random initialization for comparison
+        random_params = env._random_initialization()
+        random_value = env.eval_qaoa(random_params)
+        
+        improvement = (gnn_value - random_value) / (abs(env.normalization) + 1e-8)
+        
+        improvements.append(improvement)
+        log_probs.append(log_prob)
+    
+    if improvements:
+        # Convert to tensors
+        improvements_tensor = torch.tensor(improvements, device=agent.device)
+        log_probs_tensor = torch.stack(log_probs)
+        
+        # Normalize advantages (improvements)
+        advantages = (improvements_tensor - improvements_tensor.mean()) / (improvements_tensor.std() + 1e-8)
+        
+        # Policy gradient loss: -log_prob * advantage
+        loss = -(log_probs_tensor * advantages).mean()
+        
+        agent.optimizer_init.zero_grad()
+        loss.backward()
+        agent.optimizer_init.step()
+        logger.info(f"Initialization training step completed in {(time.time() - t_start)/60:.2f} minutes.")
+        
+        return loss.item(), improvements_tensor.mean().item()
+    else:
+        return 0.0, 0.0
+
+
+def evaluate_single_graph_init_quality(actor, graph: nx.Graph, p: int, 
+                                      reps: int, L: int) -> float:
+    """Evaluate initialization quality for a single graph"""
+    
+    # Random initialization
+    env_random = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L)
+    env_random.reset(use_gnn_init=False)
+    random_value = env_random.f_val
+    
+    # GNN initialization
+    env_gnn = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L, gnn_actor=actor)
+    env_gnn.reset(use_gnn_init=True)
+    gnn_value = env_gnn.f_val
+    
+    # Return normalized improvement
+    improvement = (gnn_value - random_value) / (abs(env_random.normalization) + 1e-8)
+    return improvement
 
 
 @torch.no_grad()
-def evaluate_expected_discounted_rewards(agent: GNNPPO, test_graphs: List[Dict[str, Any]], 
-                                       p: int, T: int = 64, reps: int = 128, 
-                                       L: int = 4, n_samples_normalization: int = 25) -> Dict[str, float]:
-    """Evaluate agent using expected discounted rewards"""
+def evaluate_expected_discounted_rewards_with_init(agent: GNNPPOWithInit, test_graphs: List[Dict[str, Any]], 
+                                                  p: int, T: int = 64, reps: int = 128, 
+                                                  L: int = 4, n_samples_normalization: int = 50,
+                                                  evalinit: bool = False) -> Dict[str, float]:
+    """Evaluate agent with initialization quality tracking"""
     logger = logging.getLogger(__name__)
     all_discounted_rewards = []
     all_final_values = []
-    early_stop_patience = T//2  # Early stopping patience for no improvement
+    all_init_improvements = []
+    early_stop_patience = T//2
     
     for i, elem in enumerate(test_graphs):
         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
-        env = QAOAEnvWithGraph(graph, p=p, reps=reps, history_len=L, 
-                               n_samples_normalization=n_samples_normalization)
-        state = env.reset()
+        
+        # Evaluate initialization quality
+        if evalinit and i % 5 == 0:
+            init_improvement = evaluate_single_graph_init_quality(agent.actor, graph, p, reps//2, L)
+            all_init_improvements.append(init_improvement)
+        
+        # Run optimization with GNN initialization
+        env = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L, 
+                                      n_samples_normalization=n_samples_normalization,
+                                      gnn_actor=agent.actor)
+        state = env.reset(use_gnn_init=True)
         
         # Track rewards for this episode
         episode_rewards = []
@@ -431,202 +856,22 @@ def evaluate_expected_discounted_rewards(agent: GNNPPO, test_graphs: List[Dict[s
         all_discounted_rewards.append(discounted_reward)
         all_final_values.append(info['f_val']/env.normalization)
     
-    return {
+    results = {
         'mean_discounted_reward': np.mean(all_discounted_rewards),
         'std_discounted_reward': np.std(all_discounted_rewards),
         'mean_final_value': np.mean(all_final_values),
-        'std_final_value': np.std(all_final_values)
-    }
-
-
-def train_gnn_rl_qaoa(GTrain: List[Dict[str, Any]], GTest: List[Dict[str, Any]], 
-                      p: int, dst_dir_path: str, gnn_type: str = "GIN",
-                      epochs: int = 750, episodes_per_epoch: int = 128, 
-                      T: int = 64, graphs_per_episode: int = 50,
-                      reps: int = 128, L: int = 4, patience: int = 40, 
-                      seed: int = 42, hidden_dim: int = 64, 
-                      gnn_hidden_dim: int = 64, gnn_num_layers: int = 3,
-                      device: str = "cpu") -> Dict:
-    """Train GNN-based RL agent"""
-    
-    logger = logging.getLogger(__name__)
-
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-
-    logger.info(f"Training GNN-based agent with {gnn_type} architecture")
-    logger.info(f"Placing computation in DEVICE: {device}")
-    
-    # Create destination directory
-    os.makedirs(dst_dir_path, exist_ok=True)
-    
-    # Initialize agent
-    state_dim = (2 * p + 1) * L
-    action_dim = 2 * p
-    
-    logger.info(f"Creating GNN-PPO agent with state_dim: {state_dim}, action_dim: {action_dim}")
-    agent = GNNPPO(
-        state_dim=state_dim,
-        action_dim=action_dim,
-        hidden_dim=hidden_dim,
-        gnn_type=gnn_type,
-        gnn_hidden_dim=gnn_hidden_dim,
-        gnn_num_layers=gnn_num_layers,
-        device=device
-    )
-    
-    # Training metrics storage
-    metrics = {
-        'train_expected_discounted_rewards': [],  # Changed metric name
-        'test_expected_discounted_rewards': [],   # Changed metric name
-        'train_mean_final_values': [],           # Track final QAOA values
-        'test_mean_final_values': [],            # Track final QAOA values
-        'best_test_reward': -float('inf'),
-        'best_epoch': 0,
-        'gnn_type': gnn_type
+        'std_final_value': np.std(all_final_values),
+        'init_improvement': np.mean(all_init_improvements) if len(all_init_improvements) > 0 else 0,
+        'init_improvement_std': np.std(all_init_improvements) if len(all_init_improvements) > 0 else 0
     }
     
-    patience_counter = 0
-    graphs_per_epoch = min(len(GTrain), graphs_per_episode)
-    epochs_per_test = 5
-    
-    try:
-        # Training loop
-        for epoch in range(epochs):
-            epoch_discounted_rewards = []  # Store discounted rewards
-            epoch_final_values = []         # Store final QAOA values
-            batch_memory = []
-            GTrain_subset = random.sample(GTrain, graphs_per_epoch)
-            t_start = time.time()
-            
-            # Collect trajectories with round-robin
-            for ep in range(episodes_per_epoch):
-                # Round-robin graph selection
-                graph_idx = ep % len(GTrain_subset)
-                if ep % 10 == 0:
-                    logger.info(f"[Epoch {epoch}] Training on graph {graph_idx}")
-                    
-                graph = graph_utils.read_graph_from_dict(GTrain_subset[graph_idx]["graph_dict"])
-                env = QAOAEnvWithGraph(graph, p=p, reps=reps, history_len=L, 
-                                      n_samples_normalization=100)
-                
-                memory = []
-                state = env.reset()
-                episode_rewards = []
-                
-                for t in range(T):
-                    action, log_prob = agent.select_action(state, env.graph_data)
-                    next_state, reward, done, info = env.step(action)
-                    memory.append((state, action, log_prob, reward, done, env.graph_data))
-                    episode_rewards.append(reward)
-                    state = next_state
-                    if done:
-                        break
-                
-                # Compute expected discounted reward for this episode
-                discounted_reward = 0
-                discount_factor = agent.gamma
-                for i, r in enumerate(episode_rewards):
-                    discounted_reward += (discount_factor ** i) * r
-                
-                epoch_discounted_rewards.append(discounted_reward)
-                epoch_final_values.append(info['f_val']/env.normalization)
-                batch_memory.extend(memory)
-            
-            # Update agent with collected batch
-            agent.update(batch_memory)
-            
-            # Store training metrics (expected discounted rewards)
-            mean_discounted_reward = np.mean(epoch_discounted_rewards)
-            mean_final_value = np.mean(epoch_final_values)
-
-            metrics['train_expected_discounted_rewards'].append({
-                'epoch': epoch,
-                'mean_reward': mean_discounted_reward,
-                'std_reward': np.std(epoch_discounted_rewards)
-            })
-            metrics['train_mean_final_values'].append({
-                'epoch': epoch,
-                'mean_value': mean_final_value,
-                'std_value': np.std(epoch_final_values)
-            })
-            
-            logger.info(f"[Epoch {epoch}] took {(time.time() - t_start)/60:.2f} minutes.")
-            
-            # Evaluate on test set
-            if epoch % epochs_per_test == 0:
-                GTest_sample = random.sample(GTest, min(len(GTest), graphs_per_episode))
-                logger.info(f"Evaluating on test set with {len(GTest_sample)} graphs...")
-
-                t_start_test = time.time()
-                # Compute expected discounted rewards on test set
-                test_results = evaluate_expected_discounted_rewards(agent, GTest_sample, p=p, T=T, reps=reps, L=L)
-    
-                logger.info(f"[Epoch {epoch}] Test evaluation took {(time.time() - t_start_test)/60:.2f} minutes.")
-
-                test_results['epoch'] = epoch
-                metrics['test_expected_discounted_rewards'].append(test_results)
-                metrics['test_mean_final_values'].append({
-                    'epoch': epoch,
-                    'mean_value': test_results['mean_final_value'],
-                    'std_value': test_results['std_final_value']
-                })
-                
-                # Save best model
-                if test_results['mean_discounted_reward'] > metrics['best_test_reward']:
-                    patience_counter = 0
-                    metrics['best_test_reward'] = test_results['mean_discounted_reward']
-                    metrics['best_epoch'] = epoch
-                    model_path = os.path.join(dst_dir_path, f'best_model_{gnn_type}.pth')
-                    agent.save(model_path)
-                    logger.info(f"[Epoch {epoch}] New best model saved!")
-                else:
-                    patience_counter += epochs_per_test
-                
-                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}, "
-                           f"Test EDR: {test_results['mean_discounted_reward']:.4f} ± {test_results['std_discounted_reward']:.4f}")
-                
-                if patience_counter >= patience and epoch > 100:
-                    logger.info(f"Early stopping at epoch {epoch}")
-                    break
-
-                try:
-                    # Modified plotting to show expected discounted rewards
-                    plot_train.plot_expected_discounted_rewards(metrics, dst_dir_path, p, epoch)
-                    
-                    # Save metrics periodically
-                    metrics_path = os.path.join(dst_dir_path, f'training_metrics_{gnn_type}.json')
-                    with open(metrics_path, 'w') as f:
-                        json.dump(metrics, f, indent=2)
-                except Exception as e:
-                    logger.warning(f"Failed to create live plot at epoch {epoch}: {e}")
-            else:
-                logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}")
-    
-    except KeyboardInterrupt:
-        logger.info("Training interrupted by user. Saving current model...")
-    
-    # Save final model and metrics
-    final_model_path = os.path.join(dst_dir_path, f'final_model_{gnn_type}.pth')
-    agent.save(final_model_path)
-    
-    metrics_path = os.path.join(dst_dir_path, f'training_metrics_{gnn_type}.json')
-    with open(metrics_path, 'w') as f:
-        json.dump(metrics, f, indent=2)
-    
-    try:
-        plot_train.plot_training_progress(metrics, dst_dir_path, p)
-        plot_train.plot_combined_progress(metrics, dst_dir_path, p)
-        logger.info("Final training plots created successfully")
-    except Exception as e:
-        logger.error(f"Failed to create final plots: {e}")
-
-    return metrics
+    return results
 
 
+
+# Enhanced GNNQAOAOptimizer with initialization support
 class GNNQAOAOptimizer:
-    """Class for QAOA optimization using trained GNN-based RL agent"""
+    """Enhanced QAOA optimizer using trained GNN-based RL agent with initialization"""
     
     def __init__(self, model_path: str, p: int, L: int = 4, 
                  gnn_type: str = "GIN", gnn_hidden_dim: int = 64,
@@ -637,8 +882,8 @@ class GNNQAOAOptimizer:
         self.state_dim = (2 * p + 1) * L
         self.action_dim = 2 * p
         
-        # Load trained agent
-        self.agent = GNNPPO(
+        # Load trained agent with initialization capability
+        self.agent = GNNPPOWithInit(
             self.state_dim, 
             self.action_dim,
             hidden_dim=hidden_dim,
@@ -651,11 +896,12 @@ class GNNQAOAOptimizer:
         self.agent.actor.eval()
         self.agent.critic.eval()
     
-    def optimize_rl_only(self, graph: nx.Graph, T: int = 64, 
-                        reps: int = 128) -> Tuple[np.ndarray, float]:
-        """Optimize using only GNN-based RL agent"""
-        env = QAOAEnvWithGraph(graph, self.p, reps=reps, history_len=self.L)
-        state = env.reset()
+    def optimize_rl_with_gnn_init(self, graph: nx.Graph, T: int = 64, 
+                                 reps: int = 128) -> Tuple[np.ndarray, float]:
+        """Optimize using GNN initialization + GNN-based RL agent"""
+        env = QAOAEnvWithGraphInitGNN(graph, self.p, reps=reps, history_len=self.L,
+                               gnn_actor=self.agent.actor)
+        state = env.reset(use_gnn_init=True)  # Use GNN initialization
         
         best_params = env.params.copy()
         best_value = env.f_val
@@ -674,45 +920,10 @@ class GNNQAOAOptimizer:
         
         return best_params, best_value
     
-    def optimize_rl_then_nlopt(self, graph: nx.Graph, optimize_qaoa_nlopt, 
-                              T_rl: int = 32, reps: int = 128,
-                              method: str = 'Nelder-Mead', 
-                              in_xtol_rel: float = 1e-4, 
-                              in_ftol_abs: float = 1e-3) -> Tuple[np.ndarray, float]:
-        """Optimize using GNN-RL for T_rl steps, then continue with NLopt"""
-        
-        # First use GNN-RL to get to a good region
-        env = QAOAEnvWithGraph(graph, self.p, reps=reps, history_len=self.L)
-        state = env.reset()
-        
-        for t in range(T_rl):
-            action, _ = self.agent.select_action(state, env.graph_data, deterministic=True)
-            next_state, reward, done, _ = env.step(action)
-            state = next_state
-            if done:
-                break
-        
-        # Get current parameters from RL
-        rl_params = env.params
-        gamma_init = rl_params[:self.p]
-        beta_init = rl_params[self.p:]
-        
-        # Continue with NLopt optimization
-        final_params, final_opt_value, status_code = classic_nlopt.optimize_qaoa_nlopt(
-            graph=graph,
-            p=self.p,
-            method=method,
-            in_xtol_rel=in_xtol_rel,
-            in_ftol_abs=in_ftol_abs,
-            gamma_init=gamma_init,
-            beta_init=beta_init
-        )
-        
-        return final_params, final_opt_value, status_code
 
 
 def get_parser():
-    parser = argparse.ArgumentParser(description="Train GNN-based QAOA RL agent")
+    parser = argparse.ArgumentParser(description="Train GNN-based QAOA RL agent with initialization")
 
     # GNN-specific arguments
     parser.add_argument("--gnn_type", type=str, default="GIN",
@@ -723,6 +934,17 @@ def get_parser():
     parser.add_argument("--gnn_num_layers", type=int, default=3,
                         help="Number of GNN layers")
     
+    # NEW: Initialization-specific arguments
+    parser.add_argument("--training_strategy", type=str, default="joint",
+                        choices=["joint", "staged"],
+                        help="Training strategy: 'joint' trains both simultaneously, 'staged' pretrains initialization")
+    parser.add_argument("--init_training_epochs", type=int, default=50,
+                        help="Number of epochs for initialization pre-training (if using staged strategy)")
+    parser.add_argument("--use_gnn_init", action="store_true", default=True,
+                        help="Use GNN-based initialization during training")
+    parser.add_argument("--evalinit", action="store_true", default=False,
+                        help="Evaluate initialization quality on test set after training")
+    
     # Original arguments
     parser.add_argument("--device", type=str, default="cpu",
                         help="Device to place the computations for torch.")
@@ -730,14 +952,14 @@ def get_parser():
                         help="Directory with graph datasets")
     parser.add_argument("--p", type=int, default=1, 
                         help="QAOA depth (number of (γ, β) layers)")
-    parser.add_argument("--dst_dir", type=str, default="./outputs/gnn_rl_model",
+    parser.add_argument("--dst_dir", type=str, default="./outputs/gnn_rl_model_with_init",
                         help="Destination directory for checkpoints and metrics")
     parser.add_argument("--n_epochs", type=int, default=600, 
                         help="Number of training epochs")
     parser.add_argument("--eps_per_epoch", type=int, default=128, 
                         help="Number of episodes per epoch")
-    parser.add_argument("--graphs_per_episode", type=int, default=50,
-                        help="Number of graphs to sample per episode")
+    parser.add_argument("--graphs_per_epoch", type=int, default=50,
+                        help="Number of graphs to sample per epoch")
     parser.add_argument("--T", type=int, default=64,
                         help="Episode length (time steps per episode)")
     parser.add_argument("--seed", type=int, default=42,
@@ -748,7 +970,7 @@ def get_parser():
                         help="Hidden dimension for actor and critic network")
     
     # Logging parameters
-    parser.add_argument("--log_filename", type=str, default="gnn_qaoa_solver.log",
+    parser.add_argument("--log_filename", type=str, default="gnn_qaoa_solver_with_init.log",
                         help="Name of the log file")
     parser.add_argument("--log_level", type=str, default="INFO", 
                         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
@@ -784,23 +1006,24 @@ if __name__ == "__main__":
     GTest = graph_utils.open_merged_graph_json(os.path.join(src_read_dir, "test_results.json"))
     logger.info(f"Test set has {len(GTest)} instances")
     
-    # Train the model
+    # Train the model with initialization support
     p = args.p
-    #dst_dir = os.path.join(args.dst_dir, args.gnn_type)
     dst_dir = args.dst_dir
     n_epochs = args.n_epochs
     eps_per_epoch = args.eps_per_epoch
     T = args.T
     
-    logger.info(f"Initializing GNN-based training with:")
+    logger.info(f"Initializing enhanced GNN-based training with:")
     logger.info(f"  GNN type: {args.gnn_type}")
     logger.info(f"  GNN hidden dim: {args.gnn_hidden_dim}")
     logger.info(f"  GNN layers: {args.gnn_num_layers}")
+    logger.info(f"  Training strategy: {args.training_strategy}")
+    logger.info(f"  Use GNN initialization: {args.use_gnn_init}")
     logger.info(f"  p: {p}, n_epochs: {n_epochs}, eps_per_epoch: {eps_per_epoch}, T: {T}")
     logger.info(f"  Destination directory: {dst_dir}")
     
-    logger.info("Starting GNN-based training...")
-    metrics = train_gnn_rl_qaoa(
+    logger.info("Starting enhanced GNN-based training with initialization...")
+    metrics = train_gnn_rl_qaoa_with_init(
         GTrain, GTest, p, dst_dir, 
         gnn_type=args.gnn_type,
         epochs=n_epochs, 
@@ -808,63 +1031,61 @@ if __name__ == "__main__":
         T=T,
         seed=args.seed, 
         patience=args.patience, 
-        graphs_per_episode=args.graphs_per_episode,
+        in_graphs_per_epoch=args.graphs_per_epoch,
         hidden_dim=args.hidden_dim,
         gnn_hidden_dim=args.gnn_hidden_dim,
         gnn_num_layers=args.gnn_num_layers,
-        device=args.device
+        device=args.device,
+        training_strategy=args.training_strategy,
+        init_training_epochs=args.init_training_epochs, 
+        evalinit=args.evalinit
     )
-
-
-
-
-# @torch.no_grad()
-# def evaluate_on_test_set(agent: GNNPPO, test_graphs: List[Dict[str, Any]], p: int, 
-#                          T: int = 64, reps: int = 128, L: int = 4, 
-#                          early_stop_patience: int = 16, 
-#                          n_samples_normalization: int = 25) -> Dict[str, float]:
-#     """Evaluate the GNN agent on test set"""
-#     logger = logging.getLogger(__name__)
-#     all_rewards = []
-#     all_final_values = []
     
-#     for i, elem in enumerate(test_graphs):
-#         logger.debug(f"Evaluating graph {i+1}/{len(test_graphs)}: {elem['id']}")
-#         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
-#         env = QAOAEnvWithGraph(graph, p=p, reps=reps, history_len=L, 
-#                                n_samples_normalization=n_samples_normalization)
-#         state = env.reset()
-#         episode_reward = 0
-
-#         # Track performance for early stopping
-#         best_f_val = env.f_val
-#         steps_without_improvement = 0
-        
-#         for t in range(T):
-#             action, _ = agent.select_action(state, env.graph_data, deterministic=True)
-#             next_state, reward, done, info = env.step(action)
-#             episode_reward += reward
-
-#             if info['f_val'] > best_f_val:
-#                 best_f_val = info['f_val']
-#                 steps_without_improvement = 0
-#             else:
-#                 steps_without_improvement += 1
-                
-#             if steps_without_improvement >= early_stop_patience:
-#                 logger.debug(f"Early stopping after {t} steps")
-#                 break
-
-#             state = next_state
-#             if done:
-#                 break
-        
-#         all_rewards.append(episode_reward)
-#         all_final_values.append(info['f_val'])
+    logger.info("Training completed successfully!")
+    logger.info(f"Best test reward: {metrics['best_test_reward']:.4f} at epoch {metrics['best_epoch']}")
     
-#     return {
-#         'mean_reward': np.mean(all_rewards),
-#         'std_reward': np.std(all_rewards),
-#         'mean_final_value': np.mean(all_final_values),
-#         'std_final_value': np.std(all_final_values)
-#     }
+    # Optional: Evaluate initialization quality on test set
+    logger.info("Evaluating final initialization quality...")
+    
+    # Load best model for final evaluation
+    best_model_path = os.path.join(dst_dir, f'best_model_{args.gnn_type}_with_init.pth')
+    if os.path.exists(best_model_path):
+        final_agent = GNNPPOWithInit(
+            state_dim=(2 * p + 1) * args.L if hasattr(args, 'L') else (2 * p + 1) * 4,
+            action_dim=2 * p,
+            hidden_dim=args.hidden_dim,
+            gnn_type=args.gnn_type,
+            gnn_hidden_dim=args.gnn_hidden_dim,
+            gnn_num_layers=args.gnn_num_layers,
+            device=args.device
+        )
+        final_agent.load(best_model_path)
+        
+        # Evaluate initialization quality on a subset of test graphs
+        test_sample = random.sample(GTest, min(20, len(GTest)))
+        init_improvements = []
+        
+        for graph_data in test_sample:
+            graph = graph_utils.read_graph_from_dict(graph_data["graph_dict"])
+            improvement = evaluate_single_graph_init_quality(
+                final_agent.actor, graph, p, reps=128, L=4
+            )
+            init_improvements.append(improvement)
+        
+        mean_init_improvement = np.mean(init_improvements)
+        logger.info(f"Final initialization improvement over random: {mean_init_improvement:.4f} ± {np.std(init_improvements):.4f}")
+        
+        # Save final initialization quality results
+        init_results = {
+            'mean_improvement': mean_init_improvement,
+            'std_improvement': np.std(init_improvements),
+            'all_improvements': init_improvements
+        }
+        
+        init_results_path = os.path.join(dst_dir, 'final_initialization_quality.json')
+        with open(init_results_path, 'w') as f:
+            json.dump(init_results, f, indent=2)
+        
+        logger.info(f"Final initialization quality results saved to {init_results_path}")
+    else:
+        logger.warning("Best model not found for final evaluation")

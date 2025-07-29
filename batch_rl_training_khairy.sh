@@ -6,7 +6,7 @@ mkdir -p logs
 # Function to run training
 run_training() {
     local p=$1
-    local timestamp=$(date +"%Y-%m-%d_%H-%M")
+    local timestamp=$(date +"%m-%d_%H-%M")
     
     echo "Starting training for p=$p at $timestamp"
     
@@ -20,7 +20,7 @@ run_training() {
         --eps_per_epoch 110 \
         --hidden_dim 64 \
         --graphs_per_episode 10 \
-        --T 32 \
+        --T 64 \
         --patience 2 \
         --seed 42 \
         > logs/training_p${p}_${timestamp}.out 2>&1
