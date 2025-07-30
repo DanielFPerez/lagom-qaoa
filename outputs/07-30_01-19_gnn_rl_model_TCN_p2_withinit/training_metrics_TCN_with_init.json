@@ -1,0 +1,1650 @@
+{
+  "train_expected_discounted_rewards": [
+    {
+      "epoch": 0,
+      "mean_reward": 0.755286242743561,
+      "std_reward": 0.6530975304727118
+    },
+    {
+      "epoch": 1,
+      "mean_reward": 0.6520107311558566,
+      "std_reward": 0.4629696352738177
+    },
+    {
+      "epoch": 2,
+      "mean_reward": 0.6288821803357968,
+      "std_reward": 0.41389714203765227
+    },
+    {
+      "epoch": 3,
+      "mean_reward": 0.575131750084373,
+      "std_reward": 0.41860689190232175
+    },
+    {
+      "epoch": 4,
+      "mean_reward": 0.5943412410036348,
+      "std_reward": 0.39100239954581273
+    },
+    {
+      "epoch": 5,
+      "mean_reward": 0.6365654362407721,
+      "std_reward": 0.4152239267274927
+    },
+    {
+      "epoch": 6,
+      "mean_reward": 0.644344973138874,
+      "std_reward": 0.46822325638793244
+    },
+    {
+      "epoch": 7,
+      "mean_reward": 0.6491227526497829,
+      "std_reward": 0.42371760274086145
+    },
+    {
+      "epoch": 8,
+      "mean_reward": 0.5819689822250289,
+      "std_reward": 0.44385067727419103
+    },
+    {
+      "epoch": 9,
+      "mean_reward": 0.5446270142747343,
+      "std_reward": 0.3596483885229826
+    },
+    {
+      "epoch": 10,
+      "mean_reward": 0.48335679363265704,
+      "std_reward": 0.33838844301973
+    },
+    {
+      "epoch": 11,
+      "mean_reward": 0.4129579563434671,
+      "std_reward": 0.3338575619152657
+    },
+    {
+      "epoch": 12,
+      "mean_reward": 0.4840691400463325,
+      "std_reward": 0.3199547194387496
+    },
+    {
+      "epoch": 13,
+      "mean_reward": 0.4596393499510511,
+      "std_reward": 0.36229663255427486
+    },
+    {
+      "epoch": 14,
+      "mean_reward": 0.5363872113650895,
+      "std_reward": 0.3770717156495983
+    },
+    {
+      "epoch": 15,
+      "mean_reward": 0.4685362692585024,
+      "std_reward": 0.32972369483767827
+    },
+    {
+      "epoch": 16,
+      "mean_reward": 0.49915305811552135,
+      "std_reward": 0.3141197491132882
+    },
+    {
+      "epoch": 17,
+      "mean_reward": 0.45202122716709314,
+      "std_reward": 0.32665191941592625
+    },
+    {
+      "epoch": 18,
+      "mean_reward": 0.488109009357006,
+      "std_reward": 0.33487825671806754
+    },
+    {
+      "epoch": 19,
+      "mean_reward": 0.4871640236561685,
+      "std_reward": 0.3183735694768373
+    },
+    {
+      "epoch": 20,
+      "mean_reward": 0.5268418126530937,
+      "std_reward": 0.29991722399895426
+    },
+    {
+      "epoch": 21,
+      "mean_reward": 0.4466288468398352,
+      "std_reward": 0.28896087781766483
+    },
+    {
+      "epoch": 22,
+      "mean_reward": 0.4697794974971395,
+      "std_reward": 0.3398744657474746
+    },
+    {
+      "epoch": 23,
+      "mean_reward": 0.4233653106850257,
+      "std_reward": 0.3139015101445218
+    },
+    {
+      "epoch": 24,
+      "mean_reward": 0.4109422226112943,
+      "std_reward": 0.3041771758356349
+    },
+    {
+      "epoch": 25,
+      "mean_reward": 0.4988989170803802,
+      "std_reward": 0.31421176062865436
+    },
+    {
+      "epoch": 26,
+      "mean_reward": 0.47668541346000004,
+      "std_reward": 0.31442284006640703
+    },
+    {
+      "epoch": 27,
+      "mean_reward": 0.5283099455515202,
+      "std_reward": 0.3206001705468356
+    },
+    {
+      "epoch": 28,
+      "mean_reward": 0.44170791411543026,
+      "std_reward": 0.3220000002148022
+    },
+    {
+      "epoch": 29,
+      "mean_reward": 0.44545365397868447,
+      "std_reward": 0.316961103639824
+    },
+    {
+      "epoch": 30,
+      "mean_reward": 0.4628304417418709,
+      "std_reward": 0.3305052734646846
+    },
+    {
+      "epoch": 31,
+      "mean_reward": 0.4559967169315469,
+      "std_reward": 0.3073977917803976
+    },
+    {
+      "epoch": 32,
+      "mean_reward": 0.4564354083906206,
+      "std_reward": 0.3428221806866454
+    },
+    {
+      "epoch": 33,
+      "mean_reward": 0.45976573789096337,
+      "std_reward": 0.32805230939693963
+    },
+    {
+      "epoch": 34,
+      "mean_reward": 0.4395829394687121,
+      "std_reward": 0.3469527701315288
+    },
+    {
+      "epoch": 35,
+      "mean_reward": 0.49140487561375373,
+      "std_reward": 0.29654319465207285
+    },
+    {
+      "epoch": 36,
+      "mean_reward": 0.442229142882069,
+      "std_reward": 0.3247189270055136
+    },
+    {
+      "epoch": 37,
+      "mean_reward": 0.43397654969258215,
+      "std_reward": 0.342664326478457
+    },
+    {
+      "epoch": 38,
+      "mean_reward": 0.4662982196685733,
+      "std_reward": 0.35957978846361544
+    },
+    {
+      "epoch": 39,
+      "mean_reward": 0.41271813962966597,
+      "std_reward": 0.2950776587272758
+    },
+    {
+      "epoch": 40,
+      "mean_reward": 0.5065112978887656,
+      "std_reward": 0.34651356023307717
+    },
+    {
+      "epoch": 41,
+      "mean_reward": 0.46806609671412835,
+      "std_reward": 0.3091997170502714
+    },
+    {
+      "epoch": 42,
+      "mean_reward": 0.4717039509081662,
+      "std_reward": 0.315868379225783
+    },
+    {
+      "epoch": 43,
+      "mean_reward": 0.4865427221411977,
+      "std_reward": 0.3195369507428368
+    },
+    {
+      "epoch": 44,
+      "mean_reward": 0.45223331634178093,
+      "std_reward": 0.34700604394356704
+    },
+    {
+      "epoch": 45,
+      "mean_reward": 0.4746043676663352,
+      "std_reward": 0.32766847676379496
+    },
+    {
+      "epoch": 46,
+      "mean_reward": 0.4729387292053326,
+      "std_reward": 0.2838734272717157
+    },
+    {
+      "epoch": 47,
+      "mean_reward": 0.5013636845834548,
+      "std_reward": 0.3465737095037956
+    },
+    {
+      "epoch": 48,
+      "mean_reward": 0.4658739689303776,
+      "std_reward": 0.3379230900776307
+    },
+    {
+      "epoch": 49,
+      "mean_reward": 0.473844858911505,
+      "std_reward": 0.33420176365031234
+    },
+    {
+      "epoch": 50,
+      "mean_reward": 0.4678144455969732,
+      "std_reward": 0.3608083766548468
+    },
+    {
+      "epoch": 51,
+      "mean_reward": 0.5010461806716748,
+      "std_reward": 0.32390494381913715
+    },
+    {
+      "epoch": 52,
+      "mean_reward": 0.4776905187970066,
+      "std_reward": 0.37735819171697793
+    },
+    {
+      "epoch": 53,
+      "mean_reward": 0.48300996763030357,
+      "std_reward": 0.3340646455269235
+    },
+    {
+      "epoch": 54,
+      "mean_reward": 0.4611177083005858,
+      "std_reward": 0.32230544253874305
+    },
+    {
+      "epoch": 55,
+      "mean_reward": 0.4522687623845447,
+      "std_reward": 0.3763794465437154
+    },
+    {
+      "epoch": 56,
+      "mean_reward": 0.4852035865425601,
+      "std_reward": 0.3281633146579484
+    },
+    {
+      "epoch": 57,
+      "mean_reward": 0.4827563770283143,
+      "std_reward": 0.32147167989911307
+    },
+    {
+      "epoch": 58,
+      "mean_reward": 0.5028622547749382,
+      "std_reward": 0.36358255692514735
+    },
+    {
+      "epoch": 59,
+      "mean_reward": 0.45523909998377604,
+      "std_reward": 0.3259820562139984
+    },
+    {
+      "epoch": 60,
+      "mean_reward": 0.4685521949161539,
+      "std_reward": 0.34611732730001876
+    },
+    {
+      "epoch": 61,
+      "mean_reward": 0.4722692316324647,
+      "std_reward": 0.31332886874915894
+    },
+    {
+      "epoch": 62,
+      "mean_reward": 0.5010553637112474,
+      "std_reward": 0.332246729082889
+    },
+    {
+      "epoch": 63,
+      "mean_reward": 0.4689158508863056,
+      "std_reward": 0.3209910184192132
+    },
+    {
+      "epoch": 64,
+      "mean_reward": 0.46552568344900974,
+      "std_reward": 0.34778329200732333
+    },
+    {
+      "epoch": 65,
+      "mean_reward": 0.46899746913614687,
+      "std_reward": 0.32765672196870876
+    },
+    {
+      "epoch": 66,
+      "mean_reward": 0.4634583312304947,
+      "std_reward": 0.35719163546217525
+    },
+    {
+      "epoch": 67,
+      "mean_reward": 0.48649275531894925,
+      "std_reward": 0.3183494131725777
+    },
+    {
+      "epoch": 68,
+      "mean_reward": 0.43260683961374147,
+      "std_reward": 0.34090507958590693
+    },
+    {
+      "epoch": 69,
+      "mean_reward": 0.48669101991895813,
+      "std_reward": 0.34846326068897515
+    },
+    {
+      "epoch": 70,
+      "mean_reward": 0.44558449899076713,
+      "std_reward": 0.34855947999066683
+    },
+    {
+      "epoch": 71,
+      "mean_reward": 0.46417726500810935,
+      "std_reward": 0.3747317615149708
+    },
+    {
+      "epoch": 72,
+      "mean_reward": 0.4483826430091214,
+      "std_reward": 0.3455500770732736
+    },
+    {
+      "epoch": 73,
+      "mean_reward": 0.43059658438955317,
+      "std_reward": 0.3396522374388927
+    },
+    {
+      "epoch": 74,
+      "mean_reward": 0.4556831387588615,
+      "std_reward": 0.29844235249193907
+    },
+    {
+      "epoch": 75,
+      "mean_reward": 0.4957919939158302,
+      "std_reward": 0.33927372989435106
+    },
+    {
+      "epoch": 76,
+      "mean_reward": 0.4697670998394282,
+      "std_reward": 0.31801018366198736
+    },
+    {
+      "epoch": 77,
+      "mean_reward": 0.4776398900993731,
+      "std_reward": 0.30513368550403297
+    },
+    {
+      "epoch": 78,
+      "mean_reward": 0.4378917309530278,
+      "std_reward": 0.33437123066534297
+    },
+    {
+      "epoch": 79,
+      "mean_reward": 0.49736516419235594,
+      "std_reward": 0.31579964174341224
+    },
+    {
+      "epoch": 80,
+      "mean_reward": 0.48525854097541865,
+      "std_reward": 0.3203598318444538
+    },
+    {
+      "epoch": 81,
+      "mean_reward": 0.5078979626305761,
+      "std_reward": 0.345910762669705
+    },
+    {
+      "epoch": 82,
+      "mean_reward": 0.4575598673589167,
+      "std_reward": 0.35163468589688246
+    },
+    {
+      "epoch": 83,
+      "mean_reward": 0.4568084297032225,
+      "std_reward": 0.31606854076851176
+    },
+    {
+      "epoch": 84,
+      "mean_reward": 0.46412762617528264,
+      "std_reward": 0.32466566278069925
+    },
+    {
+      "epoch": 85,
+      "mean_reward": 0.45463776767198943,
+      "std_reward": 0.34889289985700056
+    },
+    {
+      "epoch": 86,
+      "mean_reward": 0.5164208782321286,
+      "std_reward": 0.36007323260464047
+    },
+    {
+      "epoch": 87,
+      "mean_reward": 0.46506968692929596,
+      "std_reward": 0.34850478339455115
+    },
+    {
+      "epoch": 88,
+      "mean_reward": 0.4600588113063051,
+      "std_reward": 0.3258084690809058
+    },
+    {
+      "epoch": 89,
+      "mean_reward": 0.43305025789489693,
+      "std_reward": 0.34265683011908565
+    },
+    {
+      "epoch": 90,
+      "mean_reward": 0.46627812094348786,
+      "std_reward": 0.3672581999299317
+    },
+    {
+      "epoch": 91,
+      "mean_reward": 0.471907577262326,
+      "std_reward": 0.34783423972414085
+    },
+    {
+      "epoch": 92,
+      "mean_reward": 0.45145560579129324,
+      "std_reward": 0.3324971372265522
+    },
+    {
+      "epoch": 93,
+      "mean_reward": 0.44821791615983075,
+      "std_reward": 0.3913042307169404
+    },
+    {
+      "epoch": 94,
+      "mean_reward": 0.4242239202413563,
+      "std_reward": 0.3696303156124331
+    },
+    {
+      "epoch": 95,
+      "mean_reward": 0.4618665442868831,
+      "std_reward": 0.35024895569454817
+    },
+    {
+      "epoch": 96,
+      "mean_reward": 0.4378734412946428,
+      "std_reward": 0.33830220376259224
+    },
+    {
+      "epoch": 97,
+      "mean_reward": 0.4456901905941544,
+      "std_reward": 0.32490478440772513
+    },
+    {
+      "epoch": 98,
+      "mean_reward": 0.4481020014237701,
+      "std_reward": 0.34105464100817473
+    },
+    {
+      "epoch": 99,
+      "mean_reward": 0.45377085050060467,
+      "std_reward": 0.3597362679081685
+    },
+    {
+      "epoch": 100,
+      "mean_reward": 0.4786327699324687,
+      "std_reward": 0.3210293105715137
+    },
+    {
+      "epoch": 101,
+      "mean_reward": 0.41299323808632227,
+      "std_reward": 0.3310093313158391
+    },
+    {
+      "epoch": 102,
+      "mean_reward": 0.4606421541496048,
+      "std_reward": 0.3258339464311465
+    },
+    {
+      "epoch": 103,
+      "mean_reward": 0.41525491533497283,
+      "std_reward": 0.31895042412089875
+    },
+    {
+      "epoch": 104,
+      "mean_reward": 0.5056189915472469,
+      "std_reward": 0.34986132474727005
+    },
+    {
+      "epoch": 105,
+      "mean_reward": 0.4396347741660591,
+      "std_reward": 0.3445485685868839
+    }
+  ],
+  "test_expected_discounted_rewards": [
+    {
+      "mean_discounted_reward": 0.7197008902004067,
+      "std_discounted_reward": 0.47286479008315924,
+      "mean_final_value": 0.9973178430514786,
+      "std_final_value": 0.08499811508615743,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 0
+    },
+    {
+      "mean_discounted_reward": 0.6150148556452955,
+      "std_discounted_reward": 0.40189061413097577,
+      "mean_final_value": 0.9973202850412315,
+      "std_final_value": 0.10425639462949417,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 5
+    },
+    {
+      "mean_discounted_reward": 0.5242533661956029,
+      "std_discounted_reward": 0.4181548887601577,
+      "mean_final_value": 1.0010405136933072,
+      "std_final_value": 0.1141645340247583,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 10
+    },
+    {
+      "mean_discounted_reward": 0.5445430680110224,
+      "std_discounted_reward": 0.30545247299905276,
+      "mean_final_value": 1.0086862276986666,
+      "std_final_value": 0.11631398693414403,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 15
+    },
+    {
+      "mean_discounted_reward": 0.5105311699806175,
+      "std_discounted_reward": 0.31680742081866065,
+      "mean_final_value": 1.0318863256404787,
+      "std_final_value": 0.09611916940583795,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 20
+    },
+    {
+      "mean_discounted_reward": 0.5296677451794815,
+      "std_discounted_reward": 0.3415560555421619,
+      "mean_final_value": 0.9996210574554868,
+      "std_final_value": 0.10972414835452403,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 25
+    },
+    {
+      "mean_discounted_reward": 0.4379565317716038,
+      "std_discounted_reward": 0.3443794028624227,
+      "mean_final_value": 0.9950877416795461,
+      "std_final_value": 0.11953679817943394,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 30
+    },
+    {
+      "mean_discounted_reward": 0.48930485629983955,
+      "std_discounted_reward": 0.34544696388502205,
+      "mean_final_value": 1.0013613498652152,
+      "std_final_value": 0.1050584471512393,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 35
+    },
+    {
+      "mean_discounted_reward": 0.520102857714949,
+      "std_discounted_reward": 0.30587946849772657,
+      "mean_final_value": 1.0058078030997473,
+      "std_final_value": 0.10035900896431624,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 40
+    },
+    {
+      "mean_discounted_reward": 0.4651303532954531,
+      "std_discounted_reward": 0.33458301738841,
+      "mean_final_value": 0.9892265010486612,
+      "std_final_value": 0.10599309110124712,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 45
+    },
+    {
+      "mean_discounted_reward": 0.5159958248078064,
+      "std_discounted_reward": 0.3518131413185618,
+      "mean_final_value": 0.9962013017621341,
+      "std_final_value": 0.08638630639228302,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 50
+    },
+    {
+      "mean_discounted_reward": 0.4652198143529242,
+      "std_discounted_reward": 0.34376177909938366,
+      "mean_final_value": 0.994454561003707,
+      "std_final_value": 0.11549103481318043,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 55
+    },
+    {
+      "mean_discounted_reward": 0.5538234634349718,
+      "std_discounted_reward": 0.3223795467875348,
+      "mean_final_value": 1.0005553007297043,
+      "std_final_value": 0.10908495880577002,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 60
+    },
+    {
+      "mean_discounted_reward": 0.5058991099124247,
+      "std_discounted_reward": 0.34718118074060283,
+      "mean_final_value": 0.9920557878627982,
+      "std_final_value": 0.09375709474648997,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 65
+    },
+    {
+      "mean_discounted_reward": 0.485035946980771,
+      "std_discounted_reward": 0.33392710126774416,
+      "mean_final_value": 1.0002804422289329,
+      "std_final_value": 0.11739863833126483,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 70
+    },
+    {
+      "mean_discounted_reward": 0.5734965454191365,
+      "std_discounted_reward": 0.3121191628801252,
+      "mean_final_value": 1.0015653080179252,
+      "std_final_value": 0.10385147948997932,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 75
+    },
+    {
+      "mean_discounted_reward": 0.47452840849424327,
+      "std_discounted_reward": 0.3088343796039105,
+      "mean_final_value": 1.0045909218355513,
+      "std_final_value": 0.10717265175787409,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 80
+    },
+    {
+      "mean_discounted_reward": 0.5174989695384398,
+      "std_discounted_reward": 0.33790062488826283,
+      "mean_final_value": 0.989215740693982,
+      "std_final_value": 0.11900329671411135,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 85
+    },
+    {
+      "mean_discounted_reward": 0.44905433244579046,
+      "std_discounted_reward": 0.3219352235473732,
+      "mean_final_value": 0.9948234261449702,
+      "std_final_value": 0.09855680401084342,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 90
+    },
+    {
+      "mean_discounted_reward": 0.49936228571958147,
+      "std_discounted_reward": 0.3361741926962239,
+      "mean_final_value": 0.9703911234499001,
+      "std_final_value": 0.12001977447030503,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 95
+    },
+    {
+      "mean_discounted_reward": 0.4093282877495539,
+      "std_discounted_reward": 0.2982892250858664,
+      "mean_final_value": 0.9845318250902472,
+      "std_final_value": 0.07768694480577883,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 100
+    },
+    {
+      "mean_discounted_reward": 0.48369528368164366,
+      "std_discounted_reward": 0.35012781144851074,
+      "mean_final_value": 0.9976508417539526,
+      "std_final_value": 0.09750019625515569,
+      "init_improvement": 0,
+      "init_improvement_std": 0,
+      "epoch": 105
+    }
+  ],
+  "train_mean_final_values": [
+    {
+      "epoch": 0,
+      "mean_value": 0.9849364490145665,
+      "std_value": 0.14984235775003418
+    },
+    {
+      "epoch": 1,
+      "mean_value": 0.9955414322835168,
+      "std_value": 0.17563204662868803
+    },
+    {
+      "epoch": 2,
+      "mean_value": 0.9855876958863541,
+      "std_value": 0.1455483947262223
+    },
+    {
+      "epoch": 3,
+      "mean_value": 1.0113884657713894,
+      "std_value": 0.14259533465507196
+    },
+    {
+      "epoch": 4,
+      "mean_value": 0.998700185896497,
+      "std_value": 0.1470033115100585
+    },
+    {
+      "epoch": 5,
+      "mean_value": 0.99261708497839,
+      "std_value": 0.14968201789440316
+    },
+    {
+      "epoch": 6,
+      "mean_value": 1.020842107534379,
+      "std_value": 0.1386519585175322
+    },
+    {
+      "epoch": 7,
+      "mean_value": 0.9888320376527937,
+      "std_value": 0.15353464229116148
+    },
+    {
+      "epoch": 8,
+      "mean_value": 0.977027839050988,
+      "std_value": 0.16726115845813305
+    },
+    {
+      "epoch": 9,
+      "mean_value": 1.012897810445105,
+      "std_value": 0.1469903482045991
+    },
+    {
+      "epoch": 10,
+      "mean_value": 1.0037450174882443,
+      "std_value": 0.13784344974118456
+    },
+    {
+      "epoch": 11,
+      "mean_value": 0.9864603930640984,
+      "std_value": 0.15976274097989193
+    },
+    {
+      "epoch": 12,
+      "mean_value": 1.0059244943951686,
+      "std_value": 0.1535867151124272
+    },
+    {
+      "epoch": 13,
+      "mean_value": 0.9997353354161794,
+      "std_value": 0.1543413178004068
+    },
+    {
+      "epoch": 14,
+      "mean_value": 0.9937468423726382,
+      "std_value": 0.15142612737492103
+    },
+    {
+      "epoch": 15,
+      "mean_value": 0.9965463088629615,
+      "std_value": 0.14513244111065796
+    },
+    {
+      "epoch": 16,
+      "mean_value": 1.0069487572557345,
+      "std_value": 0.1446484409199855
+    },
+    {
+      "epoch": 17,
+      "mean_value": 1.0163236829749285,
+      "std_value": 0.15587622601321052
+    },
+    {
+      "epoch": 18,
+      "mean_value": 1.0241403929922182,
+      "std_value": 0.1313432614068008
+    },
+    {
+      "epoch": 19,
+      "mean_value": 1.0055667935208092,
+      "std_value": 0.15951282439663567
+    },
+    {
+      "epoch": 20,
+      "mean_value": 1.0168599811816887,
+      "std_value": 0.13788652383322575
+    },
+    {
+      "epoch": 21,
+      "mean_value": 0.9991455047142082,
+      "std_value": 0.1542052397977177
+    },
+    {
+      "epoch": 22,
+      "mean_value": 1.0130425469869946,
+      "std_value": 0.1481311438787154
+    },
+    {
+      "epoch": 23,
+      "mean_value": 1.0071597575501967,
+      "std_value": 0.1363703247000683
+    },
+    {
+      "epoch": 24,
+      "mean_value": 0.9868659007567547,
+      "std_value": 0.1619778925533688
+    },
+    {
+      "epoch": 25,
+      "mean_value": 1.018290201052429,
+      "std_value": 0.12217226229448735
+    },
+    {
+      "epoch": 26,
+      "mean_value": 1.0024409663450242,
+      "std_value": 0.1431208128153673
+    },
+    {
+      "epoch": 27,
+      "mean_value": 1.0091233076826958,
+      "std_value": 0.1574488891297474
+    },
+    {
+      "epoch": 28,
+      "mean_value": 0.9914464539996427,
+      "std_value": 0.14901932631167153
+    },
+    {
+      "epoch": 29,
+      "mean_value": 1.0077174925007901,
+      "std_value": 0.14082111592497226
+    },
+    {
+      "epoch": 30,
+      "mean_value": 1.0260369105714817,
+      "std_value": 0.1364931892821693
+    },
+    {
+      "epoch": 31,
+      "mean_value": 0.9896365416990088,
+      "std_value": 0.1603958505918263
+    },
+    {
+      "epoch": 32,
+      "mean_value": 1.0065924711897074,
+      "std_value": 0.15212601021554223
+    },
+    {
+      "epoch": 33,
+      "mean_value": 1.0173983015207784,
+      "std_value": 0.13180964695994818
+    },
+    {
+      "epoch": 34,
+      "mean_value": 1.0034379368797832,
+      "std_value": 0.16742534131118153
+    },
+    {
+      "epoch": 35,
+      "mean_value": 0.9902259825814546,
+      "std_value": 0.14669253034526067
+    },
+    {
+      "epoch": 36,
+      "mean_value": 1.0203049267293545,
+      "std_value": 0.13550387063785432
+    },
+    {
+      "epoch": 37,
+      "mean_value": 0.9980684415260219,
+      "std_value": 0.15786342223692001
+    },
+    {
+      "epoch": 38,
+      "mean_value": 0.9856174098550541,
+      "std_value": 0.1213615041435053
+    },
+    {
+      "epoch": 39,
+      "mean_value": 1.016289456852278,
+      "std_value": 0.14487626018037597
+    },
+    {
+      "epoch": 40,
+      "mean_value": 0.9992523008551403,
+      "std_value": 0.1425990959793305
+    },
+    {
+      "epoch": 41,
+      "mean_value": 1.008073909580262,
+      "std_value": 0.1424739797601255
+    },
+    {
+      "epoch": 42,
+      "mean_value": 0.9991883544022948,
+      "std_value": 0.13520022323185546
+    },
+    {
+      "epoch": 43,
+      "mean_value": 1.01257743312466,
+      "std_value": 0.15542047090437913
+    },
+    {
+      "epoch": 44,
+      "mean_value": 0.9984404937642762,
+      "std_value": 0.16493880709193992
+    },
+    {
+      "epoch": 45,
+      "mean_value": 1.0044496897385413,
+      "std_value": 0.13551391289097944
+    },
+    {
+      "epoch": 46,
+      "mean_value": 1.0069586561397723,
+      "std_value": 0.1494851181453177
+    },
+    {
+      "epoch": 47,
+      "mean_value": 1.0286538667753102,
+      "std_value": 0.13917936097328168
+    },
+    {
+      "epoch": 48,
+      "mean_value": 0.9994167652733204,
+      "std_value": 0.16193097160494704
+    },
+    {
+      "epoch": 49,
+      "mean_value": 0.9964282201373519,
+      "std_value": 0.14411115691394258
+    },
+    {
+      "epoch": 50,
+      "mean_value": 0.9911080169133444,
+      "std_value": 0.15370718044376025
+    },
+    {
+      "epoch": 51,
+      "mean_value": 1.010514603690117,
+      "std_value": 0.1565406832497112
+    },
+    {
+      "epoch": 52,
+      "mean_value": 1.0047727929760304,
+      "std_value": 0.14072340342356507
+    },
+    {
+      "epoch": 53,
+      "mean_value": 1.0087565711409454,
+      "std_value": 0.16129515264273103
+    },
+    {
+      "epoch": 54,
+      "mean_value": 0.9951858027950405,
+      "std_value": 0.1422065694317176
+    },
+    {
+      "epoch": 55,
+      "mean_value": 0.99159029118708,
+      "std_value": 0.1503795505290107
+    },
+    {
+      "epoch": 56,
+      "mean_value": 0.9978248624930424,
+      "std_value": 0.1599846120359978
+    },
+    {
+      "epoch": 57,
+      "mean_value": 0.987511595971749,
+      "std_value": 0.15162510745699104
+    },
+    {
+      "epoch": 58,
+      "mean_value": 1.0009723571856475,
+      "std_value": 0.14906576585517511
+    },
+    {
+      "epoch": 59,
+      "mean_value": 0.974114948506965,
+      "std_value": 0.17426934962907567
+    },
+    {
+      "epoch": 60,
+      "mean_value": 0.9842147407628179,
+      "std_value": 0.1328786829704399
+    },
+    {
+      "epoch": 61,
+      "mean_value": 0.9982778973519286,
+      "std_value": 0.14496251051007397
+    },
+    {
+      "epoch": 62,
+      "mean_value": 0.9963071078853655,
+      "std_value": 0.16224489590293778
+    },
+    {
+      "epoch": 63,
+      "mean_value": 1.0220416387987419,
+      "std_value": 0.13706724300174214
+    },
+    {
+      "epoch": 64,
+      "mean_value": 1.0105952789288637,
+      "std_value": 0.14857227642345142
+    },
+    {
+      "epoch": 65,
+      "mean_value": 0.9980782626239761,
+      "std_value": 0.1347718756218355
+    },
+    {
+      "epoch": 66,
+      "mean_value": 1.0135993132719219,
+      "std_value": 0.13326121373131994
+    },
+    {
+      "epoch": 67,
+      "mean_value": 0.9880133466717818,
+      "std_value": 0.1553469280934705
+    },
+    {
+      "epoch": 68,
+      "mean_value": 0.9939640834964245,
+      "std_value": 0.12683149637112492
+    },
+    {
+      "epoch": 69,
+      "mean_value": 1.0235308958047267,
+      "std_value": 0.13312845495653902
+    },
+    {
+      "epoch": 70,
+      "mean_value": 0.9930592599930791,
+      "std_value": 0.13446924187827358
+    },
+    {
+      "epoch": 71,
+      "mean_value": 0.9754311547276454,
+      "std_value": 0.16536346780403177
+    },
+    {
+      "epoch": 72,
+      "mean_value": 1.0030830429339785,
+      "std_value": 0.124426069597705
+    },
+    {
+      "epoch": 73,
+      "mean_value": 0.9925388380488869,
+      "std_value": 0.15483112115421055
+    },
+    {
+      "epoch": 74,
+      "mean_value": 0.9911108688022874,
+      "std_value": 0.14379806114855542
+    },
+    {
+      "epoch": 75,
+      "mean_value": 1.007951508887139,
+      "std_value": 0.16553220294447032
+    },
+    {
+      "epoch": 76,
+      "mean_value": 1.0064795176958485,
+      "std_value": 0.14759129282550784
+    },
+    {
+      "epoch": 77,
+      "mean_value": 1.0161831793306404,
+      "std_value": 0.12399120507143584
+    },
+    {
+      "epoch": 78,
+      "mean_value": 0.9914294130894469,
+      "std_value": 0.1488748927731105
+    },
+    {
+      "epoch": 79,
+      "mean_value": 1.0312753742954115,
+      "std_value": 0.15871998084420005
+    },
+    {
+      "epoch": 80,
+      "mean_value": 0.984986115147644,
+      "std_value": 0.17783807006300315
+    },
+    {
+      "epoch": 81,
+      "mean_value": 0.9959325740346693,
+      "std_value": 0.1315798600808929
+    },
+    {
+      "epoch": 82,
+      "mean_value": 0.9963243199838488,
+      "std_value": 0.16480071945636576
+    },
+    {
+      "epoch": 83,
+      "mean_value": 1.0248891010721297,
+      "std_value": 0.1205875499191718
+    },
+    {
+      "epoch": 84,
+      "mean_value": 1.0157526505029568,
+      "std_value": 0.1375010141357331
+    },
+    {
+      "epoch": 85,
+      "mean_value": 0.9824381304468337,
+      "std_value": 0.16400123582867293
+    },
+    {
+      "epoch": 86,
+      "mean_value": 1.0123084401500617,
+      "std_value": 0.1488894605874088
+    },
+    {
+      "epoch": 87,
+      "mean_value": 1.0212645906579054,
+      "std_value": 0.1428191474300301
+    },
+    {
+      "epoch": 88,
+      "mean_value": 1.0017575560122856,
+      "std_value": 0.13226671699344775
+    },
+    {
+      "epoch": 89,
+      "mean_value": 0.9847071668120331,
+      "std_value": 0.13279865170202393
+    },
+    {
+      "epoch": 90,
+      "mean_value": 0.9931624951454809,
+      "std_value": 0.15680541405928955
+    },
+    {
+      "epoch": 91,
+      "mean_value": 1.0181298356583413,
+      "std_value": 0.133591838042447
+    },
+    {
+      "epoch": 92,
+      "mean_value": 0.9976187245474769,
+      "std_value": 0.16221608990235173
+    },
+    {
+      "epoch": 93,
+      "mean_value": 1.0112728560049151,
+      "std_value": 0.1381403805309474
+    },
+    {
+      "epoch": 94,
+      "mean_value": 0.9672675894396412,
+      "std_value": 0.1732315282630584
+    },
+    {
+      "epoch": 95,
+      "mean_value": 0.9915226746158861,
+      "std_value": 0.15526005149794853
+    },
+    {
+      "epoch": 96,
+      "mean_value": 0.9975861557171163,
+      "std_value": 0.13498280427463147
+    },
+    {
+      "epoch": 97,
+      "mean_value": 0.9906253624755856,
+      "std_value": 0.16405273099060225
+    },
+    {
+      "epoch": 98,
+      "mean_value": 0.9878069564612993,
+      "std_value": 0.1541792129295254
+    },
+    {
+      "epoch": 99,
+      "mean_value": 0.9933947876536657,
+      "std_value": 0.15917084868994508
+    },
+    {
+      "epoch": 100,
+      "mean_value": 1.0117603027954252,
+      "std_value": 0.12986692656428656
+    },
+    {
+      "epoch": 101,
+      "mean_value": 0.9752086002253634,
+      "std_value": 0.14828493923124922
+    },
+    {
+      "epoch": 102,
+      "mean_value": 1.000272474555954,
+      "std_value": 0.1298675637745992
+    },
+    {
+      "epoch": 103,
+      "mean_value": 0.981910279770806,
+      "std_value": 0.17106315221871013
+    },
+    {
+      "epoch": 104,
+      "mean_value": 1.0179607261989903,
+      "std_value": 0.16705104532789153
+    },
+    {
+      "epoch": 105,
+      "mean_value": 1.0066965634710963,
+      "std_value": 0.1552329199640269
+    }
+  ],
+  "test_mean_final_values": [
+    {
+      "epoch": 0,
+      "mean_value": 0.9973178430514786,
+      "std_value": 0.08499811508615743
+    },
+    {
+      "epoch": 5,
+      "mean_value": 0.9973202850412315,
+      "std_value": 0.10425639462949417
+    },
+    {
+      "epoch": 10,
+      "mean_value": 1.0010405136933072,
+      "std_value": 0.1141645340247583
+    },
+    {
+      "epoch": 15,
+      "mean_value": 1.0086862276986666,
+      "std_value": 0.11631398693414403
+    },
+    {
+      "epoch": 20,
+      "mean_value": 1.0318863256404787,
+      "std_value": 0.09611916940583795
+    },
+    {
+      "epoch": 25,
+      "mean_value": 0.9996210574554868,
+      "std_value": 0.10972414835452403
+    },
+    {
+      "epoch": 30,
+      "mean_value": 0.9950877416795461,
+      "std_value": 0.11953679817943394
+    },
+    {
+      "epoch": 35,
+      "mean_value": 1.0013613498652152,
+      "std_value": 0.1050584471512393
+    },
+    {
+      "epoch": 40,
+      "mean_value": 1.0058078030997473,
+      "std_value": 0.10035900896431624
+    },
+    {
+      "epoch": 45,
+      "mean_value": 0.9892265010486612,
+      "std_value": 0.10599309110124712
+    },
+    {
+      "epoch": 50,
+      "mean_value": 0.9962013017621341,
+      "std_value": 0.08638630639228302
+    },
+    {
+      "epoch": 55,
+      "mean_value": 0.994454561003707,
+      "std_value": 0.11549103481318043
+    },
+    {
+      "epoch": 60,
+      "mean_value": 1.0005553007297043,
+      "std_value": 0.10908495880577002
+    },
+    {
+      "epoch": 65,
+      "mean_value": 0.9920557878627982,
+      "std_value": 0.09375709474648997
+    },
+    {
+      "epoch": 70,
+      "mean_value": 1.0002804422289329,
+      "std_value": 0.11739863833126483
+    },
+    {
+      "epoch": 75,
+      "mean_value": 1.0015653080179252,
+      "std_value": 0.10385147948997932
+    },
+    {
+      "epoch": 80,
+      "mean_value": 1.0045909218355513,
+      "std_value": 0.10717265175787409
+    },
+    {
+      "epoch": 85,
+      "mean_value": 0.989215740693982,
+      "std_value": 0.11900329671411135
+    },
+    {
+      "epoch": 90,
+      "mean_value": 0.9948234261449702,
+      "std_value": 0.09855680401084342
+    },
+    {
+      "epoch": 95,
+      "mean_value": 0.9703911234499001,
+      "std_value": 0.12001977447030503
+    },
+    {
+      "epoch": 100,
+      "mean_value": 0.9845318250902472,
+      "std_value": 0.07768694480577883
+    },
+    {
+      "epoch": 105,
+      "mean_value": 0.9976508417539526,
+      "std_value": 0.09750019625515569
+    }
+  ],
+  "initialization_quality": [],
+  "best_test_reward": 0.7197008902004067,
+  "best_epoch": 0,
+  "gnn_type": "TCN",
+  "training_strategy": "joint",
+  "init_training_loss": [
+    {
+      "epoch": 0,
+      "loss": -0.10711349546909332,
+      "improvement": 0.10534206032752991
+    },
+    {
+      "epoch": 2,
+      "loss": 0.2815820574760437,
+      "improvement": 0.047902967780828476
+    },
+    {
+      "epoch": 4,
+      "loss": 0.17321380972862244,
+      "improvement": -0.008693180046975613
+    },
+    {
+      "epoch": 6,
+      "loss": -0.017962131649255753,
+      "improvement": 0.0481410026550293
+    },
+    {
+      "epoch": 8,
+      "loss": 0.07474997639656067,
+      "improvement": 0.008780283853411674
+    },
+    {
+      "epoch": 10,
+      "loss": -0.2586868405342102,
+      "improvement": 0.09456353634595871
+    },
+    {
+      "epoch": 12,
+      "loss": -0.06612454354763031,
+      "improvement": 0.00834943912923336
+    },
+    {
+      "epoch": 14,
+      "loss": -0.46389710903167725,
+      "improvement": 0.10019540786743164
+    },
+    {
+      "epoch": 16,
+      "loss": -0.2541408836841583,
+      "improvement": 0.04615303874015808
+    },
+    {
+      "epoch": 18,
+      "loss": -0.09838182479143143,
+      "improvement": 0.06788574159145355
+    },
+    {
+      "epoch": 20,
+      "loss": 0.03515614569187164,
+      "improvement": 0.08975593000650406
+    },
+    {
+      "epoch": 22,
+      "loss": -0.0139978788793087,
+      "improvement": 0.07043756544589996
+    },
+    {
+      "epoch": 24,
+      "loss": -0.010071849450469017,
+      "improvement": -0.007169482763856649
+    },
+    {
+      "epoch": 26,
+      "loss": 0.3554408550262451,
+      "improvement": 0.025270650163292885
+    },
+    {
+      "epoch": 28,
+      "loss": -0.0029985904693603516,
+      "improvement": 0.03330371901392937
+    },
+    {
+      "epoch": 30,
+      "loss": -0.13284410536289215,
+      "improvement": 0.030765874311327934
+    },
+    {
+      "epoch": 32,
+      "loss": -0.10520298033952713,
+      "improvement": -0.006964684464037418
+    },
+    {
+      "epoch": 34,
+      "loss": 0.027415484189987183,
+      "improvement": 0.03284496068954468
+    },
+    {
+      "epoch": 36,
+      "loss": 0.019933337345719337,
+      "improvement": -0.0315302349627018
+    },
+    {
+      "epoch": 38,
+      "loss": -0.040678709745407104,
+      "improvement": 0.0151255177333951
+    },
+    {
+      "epoch": 40,
+      "loss": 0.20513129234313965,
+      "improvement": 0.01918860897421837
+    },
+    {
+      "epoch": 42,
+      "loss": -0.22663988173007965,
+      "improvement": 0.021453315392136574
+    },
+    {
+      "epoch": 44,
+      "loss": 0.41647249460220337,
+      "improvement": -0.04815138876438141
+    },
+    {
+      "epoch": 46,
+      "loss": 0.3531237840652466,
+      "improvement": -0.028140418231487274
+    },
+    {
+      "epoch": 48,
+      "loss": 0.011215400882065296,
+      "improvement": -0.013824310153722763
+    },
+    {
+      "epoch": 50,
+      "loss": -0.07417213171720505,
+      "improvement": 0.02878010831773281
+    },
+    {
+      "epoch": 52,
+      "loss": 0.3683145046234131,
+      "improvement": 0.033544473350048065
+    },
+    {
+      "epoch": 54,
+      "loss": -0.008671502582728863,
+      "improvement": -0.023029543459415436
+    },
+    {
+      "epoch": 56,
+      "loss": 0.2177298665046692,
+      "improvement": 0.015244812704622746
+    },
+    {
+      "epoch": 58,
+      "loss": -0.15311521291732788,
+      "improvement": 0.0327841192483902
+    },
+    {
+      "epoch": 60,
+      "loss": -0.035361889749765396,
+      "improvement": 0.08440525084733963
+    },
+    {
+      "epoch": 62,
+      "loss": 0.21970435976982117,
+      "improvement": 0.02691032364964485
+    },
+    {
+      "epoch": 64,
+      "loss": -0.5557616353034973,
+      "improvement": 0.049831587821245193
+    },
+    {
+      "epoch": 66,
+      "loss": 0.057579781860113144,
+      "improvement": 0.05615658685564995
+    },
+    {
+      "epoch": 68,
+      "loss": 0.04150199890136719,
+      "improvement": 0.026824159547686577
+    },
+    {
+      "epoch": 70,
+      "loss": 0.41246986389160156,
+      "improvement": 0.025023307651281357
+    },
+    {
+      "epoch": 72,
+      "loss": 0.2893555462360382,
+      "improvement": -0.0021573251578956842
+    },
+    {
+      "epoch": 74,
+      "loss": -0.2057555764913559,
+      "improvement": 0.03743249177932739
+    },
+    {
+      "epoch": 76,
+      "loss": 0.10063818097114563,
+      "improvement": 0.03770071268081665
+    },
+    {
+      "epoch": 78,
+      "loss": -0.11995238065719604,
+      "improvement": 0.04717738553881645
+    },
+    {
+      "epoch": 80,
+      "loss": 0.08322896808385849,
+      "improvement": 0.0335342213511467
+    },
+    {
+      "epoch": 82,
+      "loss": -0.24747003614902496,
+      "improvement": 0.020553752779960632
+    },
+    {
+      "epoch": 84,
+      "loss": 0.33713871240615845,
+      "improvement": -0.01022627018392086
+    },
+    {
+      "epoch": 86,
+      "loss": 0.021124381572008133,
+      "improvement": 0.09149940311908722
+    },
+    {
+      "epoch": 88,
+      "loss": 0.13693729043006897,
+      "improvement": 0.05001256242394447
+    },
+    {
+      "epoch": 90,
+      "loss": 0.09942130744457245,
+      "improvement": 0.03359539434313774
+    },
+    {
+      "epoch": 92,
+      "loss": -0.48927924036979675,
+      "improvement": -0.05567079037427902
+    },
+    {
+      "epoch": 94,
+      "loss": -0.2559579908847809,
+      "improvement": 0.01186665240675211
+    },
+    {
+      "epoch": 96,
+      "loss": 0.12996338307857513,
+      "improvement": 0.023946847766637802
+    },
+    {
+      "epoch": 98,
+      "loss": 0.1242709681391716,
+      "improvement": 0.024207033216953278
+    },
+    {
+      "epoch": 100,
+      "loss": 0.3586288094520569,
+      "improvement": 0.007845168001949787
+    },
+    {
+      "epoch": 102,
+      "loss": -0.3148527145385742,
+      "improvement": 0.03040359914302826
+    },
+    {
+      "epoch": 104,
+      "loss": -0.16198182106018066,
+      "improvement": 0.0019222914706915617
+    }
+  ]
+}

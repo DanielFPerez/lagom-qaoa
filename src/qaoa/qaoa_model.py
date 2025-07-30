@@ -48,8 +48,8 @@ def estimate_random_average_energy(graph: nx.Graph, p: int, reps: int = 128, n_s
     avg_energy = 0.0
 
     for _ in range(n_samples):
-        beta = np.random.uniform(-np.pi, np.pi, p)
-        gamma = np.random.uniform(-np.pi, np.pi, p)
+        beta = np.random.uniform(0, np.pi, p)
+        gamma = np.random.uniform(0, 2*np.pi, p)
         
         avg_energy += eval_circuit(graph, p, gamma, beta, reps)
 

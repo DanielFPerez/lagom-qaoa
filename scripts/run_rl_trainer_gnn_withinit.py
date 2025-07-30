@@ -544,7 +544,9 @@ def train_gnn_rl_qaoa_with_init(GTrain: List[Dict[str, Any]], GTest: List[Dict[s
     graphs_per_epoch = min(len(GTrain), in_graphs_per_epoch)
     graphs_per_epoch_test = graphs_per_epoch // 2
     epochs_per_test = 5
-    
+
+    logger.info(f"Training with {graphs_per_epoch} training graphs and {graphs_per_epoch_test} test graphs PER EPOCH.")
+
     # Stage 1: Pre-train initialization (if using staged strategy)
     if training_strategy == "staged":
         raise NotImplementedError("Pre-training initialization is not implemented yet.")
@@ -647,7 +649,7 @@ def train_gnn_rl_qaoa_with_init(GTrain: List[Dict[str, Any]], GTest: List[Dict[s
 
                 t_start_test = time.time()
                 test_results = evaluate_expected_discounted_rewards_with_init(
-                    agent, GTest_sample, p=p, T=T, reps=reps//2, L=L, evalinit=evalinit
+                    agent, GTest_sample, p=p, T=T, reps=reps//2, L=L, evalinit=evalinit, n_samples_normalization=25
                 )
 
                 logger.info(f"[Epoch {epoch}] Test evaluation took {(time.time() - t_start_test)/60:.2f} minutes.")
@@ -674,10 +676,10 @@ def train_gnn_rl_qaoa_with_init(GTrain: List[Dict[str, Any]], GTest: List[Dict[s
                 logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}, "
                            f"Test EDR: {test_results['mean_discounted_reward']:.4f} ± {test_results['std_discounted_reward']:.4f}")
                 
-                if 'init_improvement' in test_results:
-                    logger.info(f"[Epoch {epoch}] Init improvement: {test_results['init_improvement']:.4f}")
+                if evalinit and 'init_improvement' in test_results:
+                    logger.info(f"[Epoch {epoch}] Init-params improvement: {test_results['init_improvement']:.4f}")
                 
-                if patience_counter >= patience and epoch > 100:
+                if patience_counter >= patience:
                     logger.info(f"Early stopping at epoch {epoch}")
                     break
 
@@ -698,7 +700,7 @@ def train_gnn_rl_qaoa_with_init(GTrain: List[Dict[str, Any]], GTest: List[Dict[s
                 logger.info(f"[Epoch {epoch}] Train EDR: {mean_discounted_reward:.4f}")
     
     except KeyboardInterrupt:
-        logger.info("Training interrupted by user. Saving current model...")
+        logger.warning("Training interrupted by user. Saving current model...")
     
     # Save final model and metrics
     final_model_path = os.path.join(dst_dir_path, f'final_model_{gnn_type}_with_init.pth')
@@ -813,9 +815,9 @@ def evaluate_expected_discounted_rewards_with_init(agent: GNNPPOWithInit, test_g
         graph = graph_utils.read_graph_from_dict(elem["graph_dict"])
         
         # Evaluate initialization quality
-        if evalinit and i % 5 == 0:
-            init_improvement = evaluate_single_graph_init_quality(agent.actor, graph, p, reps//2, L)
-            all_init_improvements.append(init_improvement)
+        # if evalinit and i % 5 == 0:
+        #     init_improvement = evaluate_single_graph_init_quality(agent.actor, graph, p, reps//2, L)
+        #     all_init_improvements.append(init_improvement)
         
         # Run optimization with GNN initialization
         env = QAOAEnvWithGraphInitGNN(graph, p=p, reps=reps, history_len=L, 
@@ -840,7 +842,7 @@ def evaluate_expected_discounted_rewards_with_init(agent: GNNPPOWithInit, test_g
                 steps_without_improvement += 1
                 
             if steps_without_improvement >= early_stop_patience:
-                logger.debug(f"Early stopping after {t} steps")
+                logger.info(f"Early stopping for graph {i+1}/{len(test_graphs)} at step {t+1}")
                 break
 
             state = next_state
@@ -1044,48 +1046,48 @@ if __name__ == "__main__":
     logger.info("Training completed successfully!")
     logger.info(f"Best test reward: {metrics['best_test_reward']:.4f} at epoch {metrics['best_epoch']}")
     
-    # Optional: Evaluate initialization quality on test set
-    logger.info("Evaluating final initialization quality...")
+    # # Optional: Evaluate initialization quality on test set
+    # logger.info("Evaluating final initialization quality...")
     
-    # Load best model for final evaluation
-    best_model_path = os.path.join(dst_dir, f'best_model_{args.gnn_type}_with_init.pth')
-    if os.path.exists(best_model_path):
-        final_agent = GNNPPOWithInit(
-            state_dim=(2 * p + 1) * args.L if hasattr(args, 'L') else (2 * p + 1) * 4,
-            action_dim=2 * p,
-            hidden_dim=args.hidden_dim,
-            gnn_type=args.gnn_type,
-            gnn_hidden_dim=args.gnn_hidden_dim,
-            gnn_num_layers=args.gnn_num_layers,
-            device=args.device
-        )
-        final_agent.load(best_model_path)
+    # # Load best model for final evaluation
+    # best_model_path = os.path.join(dst_dir, f'best_model_{args.gnn_type}_with_init.pth')
+    # if os.path.exists(best_model_path):
+    #     final_agent = GNNPPOWithInit(
+    #         state_dim=(2 * p + 1) * args.L if hasattr(args, 'L') else (2 * p + 1) * 4,
+    #         action_dim=2 * p,
+    #         hidden_dim=args.hidden_dim,
+    #         gnn_type=args.gnn_type,
+    #         gnn_hidden_dim=args.gnn_hidden_dim,
+    #         gnn_num_layers=args.gnn_num_layers,
+    #         device=args.device
+    #     )
+    #     final_agent.load(best_model_path)
         
-        # Evaluate initialization quality on a subset of test graphs
-        test_sample = random.sample(GTest, min(20, len(GTest)))
-        init_improvements = []
+    #     # Evaluate initialization quality on a subset of test graphs
+    #     test_sample = random.sample(GTest, min(20, len(GTest)))
+    #     init_improvements = []
         
-        for graph_data in test_sample:
-            graph = graph_utils.read_graph_from_dict(graph_data["graph_dict"])
-            improvement = evaluate_single_graph_init_quality(
-                final_agent.actor, graph, p, reps=128, L=4
-            )
-            init_improvements.append(improvement)
+    #     for graph_data in test_sample:
+    #         graph = graph_utils.read_graph_from_dict(graph_data["graph_dict"])
+    #         improvement = evaluate_single_graph_init_quality(
+    #             final_agent.actor, graph, p, reps=128, L=4
+    #         )
+    #         init_improvements.append(improvement)
         
-        mean_init_improvement = np.mean(init_improvements)
-        logger.info(f"Final initialization improvement over random: {mean_init_improvement:.4f} ± {np.std(init_improvements):.4f}")
+    #     mean_init_improvement = np.mean(init_improvements)
+    #     logger.info(f"Final initialization improvement over random: {mean_init_improvement:.4f} ± {np.std(init_improvements):.4f}")
         
-        # Save final initialization quality results
-        init_results = {
-            'mean_improvement': mean_init_improvement,
-            'std_improvement': np.std(init_improvements),
-            'all_improvements': init_improvements
-        }
+    #     # Save final initialization quality results
+    #     init_results = {
+    #         'mean_improvement': mean_init_improvement,
+    #         'std_improvement': np.std(init_improvements),
+    #         'all_improvements': init_improvements
+    #     }
         
-        init_results_path = os.path.join(dst_dir, 'final_initialization_quality.json')
-        with open(init_results_path, 'w') as f:
-            json.dump(init_results, f, indent=2)
+    #     init_results_path = os.path.join(dst_dir, 'final_initialization_quality.json')
+    #     with open(init_results_path, 'w') as f:
+    #         json.dump(init_results, f, indent=2)
         
-        logger.info(f"Final initialization quality results saved to {init_results_path}")
-    else:
-        logger.warning("Best model not found for final evaluation")
+    #     logger.info(f"Final initialization quality results saved to {init_results_path}")
+    # else:
+    #     logger.warning("Best model not found for final evaluation")
