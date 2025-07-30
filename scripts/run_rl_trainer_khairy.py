@@ -452,6 +452,8 @@ class QAOAOptimizer:
         # Load trained agent
         self.agent = PPO(self.state_dim, self.action_dim, hidden_dim=hidden_dim, device=device)
         self.agent.load(model_path)
+        self.agent.actor.to(device)
+        self.agent.critic.to(device)
         self.agent.actor.eval()
         self.agent.critic.eval()
     

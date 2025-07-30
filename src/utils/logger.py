@@ -6,7 +6,8 @@ import os
 STD_LOG_FORMAT = "%(levelname)s\t%(name)s |:|\t%(message)s" # \t%(asctime)s
 
 def setup_logger(log_file_path="./app.log", log_format: str = str(),
-                 console_level = logging.DEBUG, file_level = logging.DEBUG):
+                 console_level = logging.DEBUG, file_level = logging.DEBUG,
+                 console_logging : bool = True):
     """
     Set up logging with a specified log file path and log format.
     
@@ -37,10 +38,11 @@ def setup_logger(log_file_path="./app.log", log_format: str = str(),
     # Create a formatter
     log_formatter = logging.Formatter(log_format)
 
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(console_level)
-    console_handler.setFormatter(log_formatter)
+    if console_logging:
+        # Console handler
+        console_handler = logging.StreamHandler()
+        console_handler.setLevel(console_level)
+        console_handler.setFormatter(log_formatter)
 
     # File handler
     file_handler = logging.FileHandler(log_file_path, mode="a")
@@ -53,7 +55,7 @@ def setup_logger(log_file_path="./app.log", log_format: str = str(),
     # Prevent adding multiple handlers (avoids duplicate logs)
     if not root_logger.hasHandlers():
         root_logger.setLevel(logging.DEBUG)
-        root_logger.addHandler(console_handler)
+        if console_logging: root_logger.addHandler(console_handler)
         root_logger.addHandler(file_handler)
 
     logging.getLogger(__name__).info(f"logger initialized with file: {log_file_path}")

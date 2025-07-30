@@ -895,6 +895,8 @@ class GNNQAOAOptimizer:
             device=device
         )
         self.agent.load(model_path)
+        self.agent.actor.to(device)
+        self.agent.critic.to(device)
         self.agent.actor.eval()
         self.agent.critic.eval()
     
