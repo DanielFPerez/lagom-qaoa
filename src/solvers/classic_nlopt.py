@@ -34,7 +34,7 @@ def qaoa_gradient(params, graph, p, shift=np.pi/8):
 
 # ----------------- NLopt Optimization ----------------- #
 def optimize_qaoa_nlopt(graph: nx.Graph, p: int, method='COBYLA', in_xtol_rel: float = 1e-4, in_ftol_abs: float = 1e-3,
-                        gamma_init = None, beta_init=None):
+                        gamma_init = None, beta_init=None, enforce_bouds: bool = True):
     logger = logging.getLogger(__name__)
     dim = 2 * p
     method = method.upper()
@@ -52,12 +52,13 @@ def optimize_qaoa_nlopt(graph: nx.Graph, p: int, method='COBYLA', in_xtol_rel: f
 
     opt = nlopt.opt(algorithm, dim)
     
-    # Set bounds: gamma ∈ [0, 2π], beta ∈ [0, π]
-    lower_bounds = [0] * p + [0] * p  # gamma lower, beta lower
-    upper_bounds = [2 * np.pi] * p + [np.pi] * p  # gamma upper, beta upper
+    if enforce_bouds:
+        # Set bounds: gamma ∈ [0, 2π], beta ∈ [0, π]
+        lower_bounds = [0] * p + [0] * p  # gamma lower, beta lower
+        upper_bounds = [2 * np.pi] * p + [np.pi] * p  # gamma upper, beta upper
     
-    opt.set_lower_bounds(lower_bounds)
-    opt.set_upper_bounds(upper_bounds)
+        opt.set_lower_bounds(lower_bounds)
+        opt.set_upper_bounds(upper_bounds)
     
     logging.debug(f"Setting NLopt Maxeval: {maxeval}, Xtol_rel: {in_xtol_rel}, Ftol_abs: {in_ftol_abs}")
     opt.set_xtol_rel(in_xtol_rel)   

@@ -478,7 +478,7 @@ class QAOAOptimizer:
         
         return best_params, best_value
     
-    def optimize_rl_then_nlopt(self, graph: nx.Graph, optimize_qaoa_nlopt, 
+    def optimize_rl_then_nlopt(self, graph: nx.Graph, 
                               T_rl: int = 32, reps: int = 128,
                               method: str = 'Nelder-Mead', 
                               in_xtol_rel: float = 1e-4, 
@@ -500,7 +500,7 @@ class QAOAOptimizer:
         rl_params = env.params
         gamma_init = rl_params[:self.p]
         beta_init = rl_params[self.p:]
-        
+        # print(f"Initial parameters found: {rl_params}")
         # Continue with NLopt optimization
         final_params, final_opt_value, status_code  = classic_nlopt.optimize_qaoa_nlopt(
             graph=graph,
@@ -509,7 +509,8 @@ class QAOAOptimizer:
             in_xtol_rel=in_xtol_rel,
             in_ftol_abs=in_ftol_abs,
             gamma_init=gamma_init,
-            beta_init=beta_init
+            beta_init=beta_init,
+            enforce_bouds=False 
         )
         
         return final_params, final_opt_value, status_code

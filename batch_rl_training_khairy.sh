@@ -10,18 +10,18 @@ run_training() {
     
     echo "Starting training for p=$p at $timestamp"
     
-    python3 -m scripts.run_rl_trainer_khairy \
+    python -m scripts.run_rl_trainer_khairy \
         --graphs_dir data/optimized_graphs_classic \
         --device "cuda:0" \
         --p $p \
         --dst_dir "outputs/${timestamp}_rl_model_khairy_p${p}" \
         --log_filename "${timestamp}_rl_trainer_khairy_p${p}.log" \
-        --n_epochs 20 \
-        --eps_per_epoch 110 \
+        --n_epochs 500 \
+        --eps_per_epoch 150 \
         --hidden_dim 64 \
-        --graphs_per_episode 10 \
+        --graphs_per_episode 150 \
         --T 64 \
-        --patience 2 \
+        --patience 40 \
         --seed 42 \
         > logs/training_p${p}_${timestamp}.out 2>&1
     
