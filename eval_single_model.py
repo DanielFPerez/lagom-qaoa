@@ -79,7 +79,7 @@ def evaluate_single_model(args):
     solver_name = f"{args.model_type}{ "_" + str(args.gnn_type) if args.model_type == 'gnn' else ''}_{args.hidden_dim}_p{args.p}"
     logger.info(f"Evaluating model {solver_name} on {len(graphs)} graphs...")
     comp_classic_name = f"nelder-mead_p{args.p}"
-    graphs = graphs[0:3]
+
     for i, g in enumerate(graphs):
         logger.debug(f"\nEvaluating graph {g['id']} (index {i+1}/{len(graphs)})")
         if i % 10 == 0:
